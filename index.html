@@ -70,11 +70,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
   font-size:13px;font-family:inherit;color:var(--tx);background:#fff;outline:none;transition:border-color .15s}
 .fi:focus{border-color:var(--base);box-shadow:0 0 0 3px rgba(45,140,110,.1)}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:1000;
   display:flex;align-items:center;justify-content:center;padding:16px}
-.modal{background:#fff;border-radius:var(--r);padding:24px;width:560px;max-width:100%;
-  max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
-.modal-lg{width:820px}
+.modal{background:#fff;border-radius:var(--r);padding:24px;width:600px;max-width:100%;
+  max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-lg{width:860px}
 .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .mt{font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--dk)}
 .mf{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--br)}
@@ -115,27 +116,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .empty{text-align:center;padding:48px 20px;color:var(--mu)}
 .ei{font-size:36px;margin-bottom:10px;opacity:.4}
 /* QUOTE EDITOR */
-.quote-editor{border:1px solid var(--br);border-radius:6px;min-height:120px;padding:12px;
-  font-size:13px;font-family:inherit;outline:none;line-height:1.6;color:var(--tx)}
+.quote-editor{border:1px solid var(--br);border-radius:6px;min-height:200px;padding:12px;
+  font-size:13px;font-family:inherit;outline:none;line-height:1.5;color:var(--tx)}
 .quote-editor:focus{border-color:var(--base);box-shadow:0 0 0 3px rgba(45,140,110,.1)}
+.quote-editor p{margin:0 0 4px 0}
+.quote-editor br{display:none}
 .editor-toolbar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;padding:8px;background:#f8fdfc;border:1px solid var(--br);border-radius:6px}
 .tb-btn{padding:4px 8px;border:1px solid var(--br);border-radius:4px;background:#fff;cursor:pointer;font-size:12px;font-family:inherit;color:var(--mu);transition:all .1s}
 .tb-btn:hover{background:var(--tp);border-color:var(--base)}
 /* TASK DETAIL MODAL */
-.task-detail{padding:4px 0}
 .task-detail .td-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px}
 .task-detail .td-label{font-weight:600;color:var(--mu);min-width:80px;font-size:12px}
 /* NOTIF BANNER */
 .notif-bar{background:linear-gradient(135deg,var(--mid),var(--base));color:#fff;padding:8px 24px;
   font-size:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .notif-bar.hide{display:none}
+/* TAX SECTION */
+.tax-section{background:#f8fdfc;border:1px solid var(--br);border-radius:var(--rs);padding:12px;margin-bottom:12px}
+.tax-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+.tax-row:last-child{margin-bottom:0}
+.tax-label{display:flex;align-items:center;gap:6px;cursor:pointer;min-width:160px}
+.tax-amount{font-weight:600;color:var(--base);margin-left:auto;font-size:12px}
 @media(max-width:900px){.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){
   .sb{width:54px}.logo-name,.logo-sub,.sbfoot,.ni span:not(.nbadge){display:none}
-  .ni{justify-content:center}.g2,.g4{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
+  .ni{justify-content:center}.g2,.g4{grid-template-columns:1fr}.fr,.fr3{grid-template-columns:1fr}
   .modal{padding:16px}.content{padding:16px}
 }
-/* PRINT / PDF quote */
 @media print{
   .sb,.topbar,.notif-bar,.twrap{display:none!important}
   .main{overflow:visible}
@@ -149,16 +156,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 <div class="app" id="app"></div>
 
 <script>
-// ============================================================
-//  CONFIG SUPABASE — pon tus keys aquí cuando tengas
-// ============================================================
-const SB_URL = '';
-const SB_KEY = '';
-const USE_SB = SB_URL !== '' && SB_KEY !== '';
+const SB_URL='';const SB_KEY='';const USE_SB=false;
 
-// ============================================================
-//  HELPERS
-// ============================================================
 const $=id=>document.getElementById(id);
 const today=()=>new Date().toISOString().split('T')[0];
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);
@@ -168,8 +167,7 @@ const fmtM=n=>'$'+(Number(n)||0).toLocaleString('es-EC',{minimumFractionDigits:2
 const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
 function toast(msg,type='ts'){
-  const el=document.createElement('div');
-  el.className=`toast ${type}`;el.textContent=msg;
+  const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
   $('tw').appendChild(el);setTimeout(()=>el.remove(),3200);
 }
 
@@ -196,9 +194,6 @@ function ic(name,size=17){
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${p[name]||p.dash}"/></svg>`;
 }
 
-// ============================================================
-//  DEMO DATA
-// ============================================================
 const DEMO={
   clients:[
     {id:'c1',name:'Agroexport Cía. Ltda.',ruc:'0990123456001',rep:'Carlos Andrade',cedula:'0923456789',created_at:'2025-01-15'},
@@ -223,19 +218,19 @@ const DEMO={
     {id:'t5',project_id:'p2',title:'Análisis aranceles importación',description:'Análisis detallado de aranceles para vehículos',step_order:2,due_date:'2025-05-10',due_time:'',location:'',done:false}
   ],
   orders:[
-    {id:'o1',code:'ODC-0001-2025',project_id:'p1',type:'income',concept:'Anticipo 30% - Regulación Sanitaria',amount:2550,order_date:'2025-02-05',status:'paid',invoice_num:'001-001-000000001',has_iva:true,iva_amount:382.5,has_retention:false,retention_amount:0},
-    {id:'o2',code:'ODP-0001-2025',project_id:'p1',type:'expense',concept:'Tasas ARCSA fase inicial',amount:380,order_date:'2025-02-12',status:'paid',invoice_num:'',has_iva:false,iva_amount:0,has_retention:false,retention_amount:0},
-    {id:'o3',code:'ODC-0002-2025',project_id:'p2',type:'income',concept:'Anticipo 50% - Importación vehículos',amount:2600,order_date:'2025-04-05',status:'paid',invoice_num:'001-001-000000002',has_iva:true,iva_amount:390,has_retention:false,retention_amount:0},
-    {id:'o4',code:'ODP-0002-2025',project_id:'p1',type:'expense',concept:'Honorarios abogado externo',amount:600,order_date:'2025-03-20',status:'paid',invoice_num:'',has_iva:false,iva_amount:0,has_retention:false,retention_amount:0}
+    {id:'o1',code:'ODC-0001-2025',project_id:'p1',type:'income',concept:'Anticipo 30% - Regulación Sanitaria',amount:2550,order_date:'2025-02-05',status:'paid',invoice_num:'001-001-000000001',has_iva:true,iva_amount:382.5,has_retention:false,retention_pct:0,retention_amount:0,has_iva_retention:false,iva_retention_amount:0},
+    {id:'o2',code:'ODP-0001-2025',project_id:'p1',type:'expense',concept:'Tasas ARCSA fase inicial',amount:380,order_date:'2025-02-12',status:'paid',invoice_num:'',has_iva:false,iva_amount:0,has_retention:false,retention_pct:0,retention_amount:0,has_iva_retention:false,iva_retention_amount:0},
+    {id:'o3',code:'ODC-0002-2025',project_id:'p2',type:'income',concept:'Anticipo 50% - Importación vehículos',amount:2600,order_date:'2025-04-05',status:'paid',invoice_num:'001-001-000000002',has_iva:true,iva_amount:390,has_retention:false,retention_pct:0,retention_amount:0,has_iva_retention:false,iva_retention_amount:0},
+    {id:'o4',code:'ODP-0002-2025',project_id:'p1',type:'expense',concept:'Honorarios abogado externo',amount:600,order_date:'2025-03-20',status:'paid',invoice_num:'',has_iva:false,iva_amount:0,has_retention:false,retention_pct:0,retention_amount:0,has_iva_retention:false,iva_retention_amount:0}
   ],
   quotes:[]
 };
 
 function loadDB(){
-  try{const s=localStorage.getItem('oceango_v3');return s?JSON.parse(s):JSON.parse(JSON.stringify(DEMO));}
+  try{const s=localStorage.getItem('oceango_v4');return s?JSON.parse(s):JSON.parse(JSON.stringify(DEMO));}
   catch{return JSON.parse(JSON.stringify(DEMO));}
 }
-function saveDB(){try{localStorage.setItem('oceango_v3',JSON.stringify(DB));}catch{}}
+function saveDB(){try{localStorage.setItem('oceango_v4',JSON.stringify(DB));}catch{}}
 let DB=loadDB();
 
 function nextCode(prefix){
@@ -245,9 +240,6 @@ function nextCode(prefix){
   return `${prefix}-${String(n).padStart(4,'0')}-${new Date().getFullYear()}`;
 }
 
-// ============================================================
-//  LOCAL CRUD (swap to Supabase when keys set)
-// ============================================================
 async function dbInsert(table,row){
   const r={...row,id:uid(),created_at:new Date().toISOString()};
   DB[table]=[...(DB[table]||[]),r];saveDB();return r;
@@ -257,42 +249,27 @@ async function dbUpdate(table,id,changes){
 }
 async function dbDelete(table,id){DB[table]=DB[table].filter(r=>r.id!==id);saveDB();return true;}
 
-// ============================================================
-//  NOTIFICATIONS
-// ============================================================
 function requestNotifPermission(){
   if('Notification' in window && Notification.permission==='default'){
-    Notification.requestPermission().then(p=>{
-      if(p==='granted'){toast('Notificaciones activadas','ts');scheduleNotifs();}
-    });
+    Notification.requestPermission().then(p=>{if(p==='granted'){toast('Notificaciones activadas');scheduleNotifs();}});
   }
 }
 function scheduleNotifs(){
-  const td=today();
   DB.tasks.filter(t=>!t.done&&t.due_date).forEach(t=>{
     const diff=Math.round((new Date(t.due_date+'T12:00:00')-new Date())/86400000);
-    if(diff===0||diff===1){
-      const msg=diff===0?`HOY: ${t.title}${t.due_time?' a las '+t.due_time.slice(0,5):''}`:
-        `MAÑANA: ${t.title}`;
-      if(Notification.permission==='granted'){
-        new Notification('Oceango — Tarea próxima',{body:msg,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%230a3628"/><text y=".9em" font-size="80" x="10">🌊</text></svg>'});
-      }
+    if((diff===0||diff===1)&&Notification.permission==='granted'){
+      new Notification('Oceango — Tarea próxima',{body:diff===0?`HOY: ${t.title}${t.due_time?' a las '+t.due_time.slice(0,5):''}`:
+        `MAÑANA: ${t.title}`});
     }
   });
 }
 
-// ============================================================
-//  STATE
-// ============================================================
 let S={
   tab:'dashboard',filterClient:null,filterProject:null,
   projFilter:'all',taskFilter:'',finFilter:'all',
   calYear:new Date().getFullYear(),calMonth:new Date().getMonth()
 };
 
-// ============================================================
-//  RENDER ROOT
-// ============================================================
 function render(){
   const pend=DB.tasks.filter(t=>!t.done&&t.due_date&&t.due_date>=today()).length;
   const todayTasks=DB.tasks.filter(t=>!t.done&&t.due_date===today());
@@ -328,7 +305,7 @@ function render(){
         ${ic('bell',14)} <span>Activar notificaciones</span>
       </button>
     </div>
-    <div class="sbfoot">Oceango SAS · v2.0${USE_SB?' · ☁️ Supabase':' · 💾 Local'}</div>
+    <div class="sbfoot">Oceango SAS · v4.0 · 💾 Local</div>
   </aside>
   <div class="main">
     ${notifBar}
@@ -346,13 +323,11 @@ function render(){
 function goTab(t){S.tab=t;if(t!=='projects')S.filterClient=null;if(t!=='tasks')S.filterProject=null;render();}
 function goProjects(cid){S.filterClient=cid;S.tab='projects';render();}
 function goTasks(pid){S.filterProject=pid;S.tab='tasks';render();}
-async function reload(){render();}
 
 // ============================================================
 //  DASHBOARD
 // ============================================================
 function renderDash(){
-  // FIX: sumar TODOS los registros sin filtrar por status para que pending también cuente en vista
   const allIncome=DB.orders.filter(o=>o.type==='income');
   const allExpense=DB.orders.filter(o=>o.type==='expense');
   const ti=allIncome.reduce((s,o)=>s+Number(o.amount),0);
@@ -361,7 +336,6 @@ function renderDash(){
   const tePaid=allExpense.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
   const bal=tiPaid-tePaid;
   const ap=DB.projects.filter(p=>p.status==='active');
-  const td=today();
   const up=DB.tasks.filter(t=>{
     if(t.done||!t.due_date)return false;
     const d=(new Date(t.due_date+'T12:00:00')-new Date())/86400000;
@@ -400,9 +374,6 @@ function renderDash(){
               <span style="font-family:Sora;font-weight:700;font-size:15px;color:var(--base)">${pc}%</span>
             </div>
             <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
-            <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--mu)">
-              <span>${fmtD(p.start_date)}</span><span>${fmtD(p.end_date)}</span>
-            </div>
             <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">
               ${ps.map(x=>`<span class="tag ${x.paid?'tg':'tgr'}" style="cursor:pointer;font-size:10px" onclick="togglePS('${x.id}',${!x.paid})">${x.label} ${x.pct}%${x.paid?' ✓':''}</span>`).join('')}
             </div>
@@ -432,7 +403,7 @@ function renderDash(){
               <div style="display:flex;gap:5px;align-items:center;margin-top:3px;flex-wrap:wrap">
                 ${dl}
                 ${t.due_time?`<span style="font-size:10px;color:var(--mu)">${ic('clk',10)} ${t.due_time.slice(0,5)}</span>`:''}
-                ${t.location?`<span style="font-size:10px;color:var(--mu);max-width:90px;overflow:hidden;text-overflow:ellipsis">${ic('pin',10)} ${t.location}</span>`:''}
+                ${t.location?`<span style="font-size:10px;color:var(--mu)">${ic('pin',10)} ${t.location}</span>`:''}
                 <span class="tag ttl" style="font-size:10px">${(proj?.name||'?').slice(0,14)}</span>
               </div>
             </div>
@@ -444,42 +415,23 @@ function renderDash(){
   <div id="modals"></div>`;
 }
 
-// ============================================================
-//  FULL CALENDAR
-// ============================================================
 function renderCalendar(){
   const yr=S.calYear,mo=S.calMonth;
   const firstDay=new Date(yr,mo,1).getDay();
   const daysInMonth=new Date(yr,mo+1,0).getDate();
   const td=today();
   const days=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-
-  // Build calendar cells
   let cells='';
-  // Empty cells before first day
-  for(let i=0;i<firstDay;i++){
-    const prevDays=new Date(yr,mo,0).getDate();
-    cells+=`<div class="cal-day other-month"><div class="cal-dn">${prevDays-firstDay+i+1}</div></div>`;
-  }
-  // Days of month
+  for(let i=0;i<firstDay;i++){const prevDays=new Date(yr,mo,0).getDate();cells+=`<div class="cal-day other-month"><div class="cal-dn">${prevDays-firstDay+i+1}</div></div>`;}
   for(let d=1;d<=daysInMonth;d++){
     const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isT=ds===td;
     const evts=DB.tasks.filter(t=>t.due_date===ds);
-    const evHTML=evts.map(e=>{
-      const cl=e.done?'done-ev':
-        e.due_date<td?'urgent':'';
-      return `<div class="cal-ev ${cl}" onclick="event.stopPropagation();showTaskDetail('${e.id}')" title="${e.title}">${e.due_time?e.due_time.slice(0,5)+' ':''}${e.title}</div>`;
-    }).join('');
+    const evHTML=evts.map(e=>`<div class="cal-ev ${e.done?'done-ev':e.due_date<td?'urgent':''}" onclick="event.stopPropagation();showTaskDetail('${e.id}')" title="${e.title}">${e.due_time?e.due_time.slice(0,5)+' ':''}${e.title}</div>`).join('');
     cells+=`<div class="cal-day${isT?' today':''}"><div class="cal-dn">${d}</div>${evHTML}</div>`;
   }
-  // Fill remaining cells
-  const totalCells=firstDay+daysInMonth;
-  const remaining=(7-totalCells%7)%7;
-  for(let i=1;i<=remaining;i++){
-    cells+=`<div class="cal-day other-month"><div class="cal-dn">${i}</div></div>`;
-  }
-
+  const remaining=(7-(firstDay+daysInMonth)%7)%7;
+  for(let i=1;i<=remaining;i++)cells+=`<div class="cal-day other-month"><div class="cal-dn">${i}</div></div>`;
   return `<div class="cal-wrap" style="margin-bottom:0">
     <div class="cal-header">
       <button class="cal-nav" onclick="calNav(-1)">&#8249;</button>
@@ -500,29 +452,19 @@ function calNav(dir){
   render();
 }
 
-// ============================================================
-//  TASK DETAIL MODAL
-// ============================================================
 function showTaskDetail(tid){
   const t=DB.tasks.find(x=>x.id===tid);if(!t)return;
   const proj=DB.projects.find(p=>p.id===t.project_id);
   const cl=DB.clients.find(c=>c.id===proj?.client_id);
   const diff=t.due_date?Math.round((new Date(t.due_date+'T12:00:00')-new Date())/86400000):null;
-  const dlTag=diff===null?'':diff===0?`<span class="tag tg">Hoy</span>`:
-    diff===1?`<span class="tag ty">Mañana</span>`:
-    diff<0?`<span class="tag tr">Vencida hace ${Math.abs(diff)} días</span>`:
-    `<span class="tag ttl">En ${diff} días</span>`;
-
-  const wrap=document.createElement('div');wrap.className='ov';
-  wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
+  const dlTag=diff===null?'':diff===0?`<span class="tag tg">Hoy</span>`:diff===1?`<span class="tag ty">Mañana</span>`:diff<0?`<span class="tag tr">Vencida hace ${Math.abs(diff)} días</span>`:`<span class="tag ttl">En ${diff} días</span>`;
+  const wrap=document.createElement('div');wrap.className='ov';wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
   wrap.innerHTML=`<div class="modal">
-    <div class="mh">
-      <div class="mt">${ic('tasks',16)} Detalle de Tarea</div>
-      <button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',14)}</button>
-    </div>
+    <div class="mh"><div class="mt">${ic('tasks',16)} Detalle de Tarea</div>
+      <button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',14)}</button></div>
     <div class="task-detail">
       <div style="font-family:Sora;font-weight:600;font-size:16px;color:var(--dk);margin-bottom:12px">${t.step_order||'·'}. ${t.title}</div>
-      <div class="td-row"><span class="td-label">Estado</span> <span class="tag ${t.done?'tg':'ty'}">${t.done?'Completada':'Pendiente'}</span> ${dlTag}</div>
+      <div class="td-row"><span class="td-label">Estado</span><span class="tag ${t.done?'tg':'ty'}">${t.done?'Completada':'Pendiente'}</span> ${dlTag}</div>
       ${t.description?`<div class="td-row"><span class="td-label">Descripción</span><span style="color:var(--mu)">${t.description}</span></div>`:''}
       <div class="td-row"><span class="td-label">Proyecto</span><span class="tag ttl">${proj?.name||'—'}</span></div>
       <div class="td-row"><span class="td-label">Cliente</span><span>${cl?.name||'—'}</span></div>
@@ -532,9 +474,7 @@ function showTaskDetail(tid){
     <div class="mf">
       <button class="btn bo" onclick="this.closest('.ov').remove()">Cerrar</button>
       <button class="btn bp" onclick="this.closest('.ov').remove();openTaskModal('${t.id}')">${ic('edit',14)} Editar</button>
-      <button class="btn ${t.done?'bo':'bp'}" onclick="toggleTask('${t.id}',${!t.done});this.closest('.ov').remove()">
-        ${t.done?'Marcar pendiente':'Marcar completada'}
-      </button>
+      <button class="btn ${t.done?'bo':'bp'}" onclick="toggleTask('${t.id}',${!t.done});this.closest('.ov').remove()">${t.done?'Marcar pendiente':'Marcar completada'}</button>
     </div>
   </div>`;
   document.body.appendChild(wrap);
@@ -699,17 +639,16 @@ function renderTasks(){
 }
 
 // ============================================================
-//  FINANCE
+//  FINANCE — con IVA, Retención %, Retención IVA 100%, editar
 // ============================================================
 function renderFinance(){
   const ff=S.finFilter||'all';
-  // FIX: mostrar todos los montos, no solo paid
   const tiAll=DB.orders.filter(o=>o.type==='income').reduce((s,o)=>s+Number(o.amount),0);
   const teAll=DB.orders.filter(o=>o.type==='expense').reduce((s,o)=>s+Number(o.amount),0);
   const tiPaid=DB.orders.filter(o=>o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
   const tePaid=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
   const bal=tiPaid-tePaid;
-  const iva=DB.orders.filter(o=>o.type==='income'&&o.has_iva).reduce((s,o)=>s+Number(o.iva_amount||o.amount*.15),0);
+  const iva=DB.orders.filter(o=>o.has_iva).reduce((s,o)=>s+Number(o.iva_amount||0),0);
 
   let ords=[...DB.orders];
   if(ff!=='all')ords=ords.filter(o=>o.type===ff);
@@ -719,7 +658,7 @@ function renderFinance(){
   <div class="g4" style="margin-bottom:20px">
     <div class="card csm"><div class="lbl">Total ingresos</div><div class="val" style="color:var(--base)">${fmtM(tiAll)}</div><div style="font-size:11px;color:var(--mu)">${fmtM(tiPaid)} cobrado</div></div>
     <div class="card csm"><div class="lbl">Total gastos</div><div class="val" style="color:var(--re)">${fmtM(teAll)}</div><div style="font-size:11px;color:var(--mu)">${fmtM(tePaid)} pagado</div></div>
-    <div class="card csm"><div class="lbl">Balance (cobrado-pagado)</div><div class="val" style="color:${bal>=0?'var(--dk)':'var(--re)'}">${fmtM(bal)}</div></div>
+    <div class="card csm"><div class="lbl">Balance cobrado-pagado</div><div class="val" style="color:${bal>=0?'var(--dk)':'var(--re)'}">${fmtM(bal)}</div></div>
     <div class="card csm"><div class="lbl">IVA acumulado 15%</div><div class="val" style="color:var(--mu)">${fmtM(iva)}</div></div>
   </div>
   <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap">
@@ -732,10 +671,14 @@ function renderFinance(){
   </div>
   <div class="card" style="padding:0;overflow:hidden">
     <div class="tw"><table class="tbl">
-      <thead><tr><th>Código</th><th>Fecha</th><th>Proyecto</th><th>Concepto</th><th>Tipo</th><th>Monto</th><th>Fiscal</th><th>Factura</th><th>Estado</th><th></th></tr></thead>
+      <thead><tr><th>Código</th><th>Fecha</th><th>Proyecto</th><th>Concepto</th><th>Tipo</th><th>Monto</th><th>Fiscal</th><th>Factura</th><th>Estado</th><th>Acciones</th></tr></thead>
       <tbody>${ords.length===0?`<tr><td colspan="10"><div class="empty"><div class="ei">💳</div>Sin órdenes</div></td></tr>`:
         ords.map(o=>{
           const proj=DB.projects.find(p=>p.id===o.project_id);
+          const tags=[];
+          if(o.has_iva)tags.push(`<span class="tag tb" style="font-size:10px">IVA 15%</span>`);
+          if(o.has_retention)tags.push(`<span class="tag ty" style="font-size:10px">Ret. ${o.retention_pct||''}%</span>`);
+          if(o.has_iva_retention)tags.push(`<span class="tag tr" style="font-size:10px">Ret.IVA 100%</span>`);
           return `<tr>
             <td><span style="font-family:monospace;font-size:11px;color:var(--base);font-weight:600">${o.code}</span></td>
             <td style="font-size:12px">${fmtD(o.order_date)}</td>
@@ -743,10 +686,13 @@ function renderFinance(){
             <td style="font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.concept}</td>
             <td><span class="tag ${o.type==='income'?'tg':'tr'}">${o.type==='income'?'Cobro':'Gasto'}</span></td>
             <td><span style="font-weight:600;font-size:13px;color:${o.type==='income'?'var(--base)':'var(--re)'}">${o.type==='income'?'+':'-'}${fmtM(o.amount)}</span></td>
-            <td>${o.has_iva?`<span class="tag tb" style="font-size:10px;margin-right:2px">IVA</span>`:''}${o.has_retention?`<span class="tag ty" style="font-size:10px">Ret.</span>`:''}${!o.has_iva&&!o.has_retention?`<span style="color:var(--so)">—</span>`:''}</td>
+            <td><div style="display:flex;gap:3px;flex-wrap:wrap">${tags.length?tags.join(''):'<span style="color:var(--so)">—</span>'}</div></td>
             <td style="font-family:monospace;font-size:11px;color:var(--mu)">${o.invoice_num||'—'}</td>
             <td><span class="tag ${o.status==='paid'?'tg':'ty'}" style="cursor:pointer" onclick="toggleOrder('${o.id}','${o.status}')">${o.status==='paid'?'Pagado':'Pendiente'}</span></td>
-            <td><button class="btn bd bxs" onclick="deleteOrder('${o.id}')">${ic('trash',12)}</button></td>
+            <td><div style="display:flex;gap:4px">
+              <button class="btn bo bxs" onclick="openOrderModal('${o.id}')">${ic('edit',12)}</button>
+              <button class="btn bd bxs" onclick="deleteOrder('${o.id}')">${ic('trash',12)}</button>
+            </div></td>
           </tr>`;
         }).join('')}
       </tbody>
@@ -876,48 +822,100 @@ function openProjectModal(pid=null){
     </div>`);
 }
 
-function openOrderModal(){
+// ============================================================
+//  ORDER MODAL — nueva y edición, con Ret. IVA 100%
+// ============================================================
+function openOrderModal(oid=null){
+  const o=oid?DB.orders.find(x=>x.id===oid):null;
   const ap=DB.projects.filter(p=>p.status==='active'||p.status==='paused');
-  modal('order','Nueva Orden',`
+
+  modal('order',o?'Editar Orden':'Nueva Orden',`
     <div class="fr">
       <div class="fg"><label class="fl">Tipo *</label>
         <select class="fi" id="or_tp" onchange="togInv()">
-          <option value="income">Orden de Cobro (ingreso)</option>
-          <option value="expense">Orden de Pago (gasto)</option>
+          <option value="income"${o?.type==='income'?' selected':''}>Orden de Cobro (ingreso)</option>
+          <option value="expense"${o?.type==='expense'?' selected':''}>Orden de Pago (gasto)</option>
         </select></div>
       <div class="fg"><label class="fl">Proyecto *</label>
-        <select class="fi" id="or_pj"><option value="">Seleccionar...</option>
-          ${ap.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}
+        <select class="fi" id="or_pj">
+          <option value="">Seleccionar...</option>
+          ${ap.map(p=>`<option value="${p.id}"${o?.project_id===p.id?' selected':''}>${p.name}</option>`).join('')}
+          ${o&&!ap.find(p=>p.id===o.project_id)?`<option value="${o.project_id}" selected>${DB.projects.find(p=>p.id===o.project_id)?.name||'Proyecto archivado'}</option>`:''}
         </select></div>
     </div>
-    <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="or_cn" placeholder="Descripción del cobro o gasto"></div>
+    <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="or_cn" value="${o?.concept||''}" placeholder="Descripción del cobro o gasto"></div>
     <div class="fr">
-      <div class="fg"><label class="fl">Monto ($) *</label><input class="fi" type="number" id="or_am" placeholder="0.00" oninput="calcTax()"></div>
-      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="or_dt" value="${today()}"></div>
+      <div class="fg"><label class="fl">Monto ($) *</label><input class="fi" type="number" id="or_am" value="${o?.amount||''}" placeholder="0.00" oninput="calcTax()"></div>
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="or_dt" value="${o?.order_date||today()}"></div>
     </div>
-    <div class="fg" id="or_inv_g"><label class="fl">N° Factura (trazabilidad SRI)</label><input class="fi" id="or_iv" placeholder="001-001-000000000"></div>
-    <div style="display:flex;gap:16px;margin-bottom:10px">
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="or_iva" onchange="calcTax()"> IVA 15%</label>
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="or_ret" onchange="calcTax()"> Retención
-        <input class="fi" type="number" id="or_rp" style="width:54px;padding:4px 6px;font-size:12px" placeholder="%" value="2" onchange="calcTax()">%
-      </label>
+    <div class="fg" id="or_inv_g" style="display:${!o||o?.type==='income'?'block':'none'}">
+      <label class="fl">N° Factura (trazabilidad SRI)</label>
+      <input class="fi" id="or_iv" value="${o?.invoice_num||''}" placeholder="001-001-000000000">
     </div>
-    <div id="tax_prev" style="display:none;background:var(--tp);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--mid);margin-bottom:10px"></div>
-    <div class="fg"><label class="fl">Categoría</label>
-      <select class="fi" id="or_cat"><option value="">— sin categoría —</option>
-        <option value="proveedor">Proveedor</option><option value="operativo">Operativo</option>
-        <option value="tasa_regulatoria">Tasa regulatoria</option><option value="honorarios">Honorarios</option><option value="otro">Otro</option>
+
+    <div class="tax-section">
+      <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:10px;text-transform:uppercase;letter-spacing:.6px">Campos Fiscales</div>
+      
+      <div class="tax-row">
+        <label class="tax-label">
+          <input type="checkbox" id="or_iva" ${o?.has_iva?'checked':''} onchange="calcTax()">
+          <span>IVA 15%</span>
+        </label>
+        <span id="iva_show" class="tax-amount" style="display:${o?.has_iva?'inline':'none'}">${o?.has_iva?fmtM(o.iva_amount||0):''}</span>
+      </div>
+
+      <div class="tax-row">
+        <label class="tax-label">
+          <input type="checkbox" id="or_ret" ${o?.has_retention?'checked':''} onchange="calcTax()">
+          <span>Retención %</span>
+        </label>
+        <input class="fi" type="number" id="or_rp" style="width:70px;padding:4px 8px;font-size:12px;margin-left:8px" placeholder="%" value="${o?.retention_pct||2}" min="0" max="100" oninput="calcTax()">
+        <span id="ret_show" class="tax-amount" style="display:${o?.has_retention?'inline':'none'}">${o?.has_retention?fmtM(o.retention_amount||0):''}</span>
+      </div>
+
+      <div class="tax-row">
+        <label class="tax-label">
+          <input type="checkbox" id="or_ivaret" ${o?.has_iva_retention?'checked':''} onchange="calcTax()">
+          <span>Retención del IVA 100%</span>
+        </label>
+        <span id="ivaret_show" class="tax-amount" style="display:${o?.has_iva_retention?'inline':'none'}">${o?.has_iva_retention?fmtM(o.iva_retention_amount||0):''}</span>
+      </div>
+
+      <div id="tax_summary" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--br);display:none">
+        <div id="tax_lines" style="font-size:12px;color:var(--mu);line-height:1.8"></div>
+        <div id="tax_total" style="font-size:13px;font-weight:700;color:var(--base);margin-top:4px"></div>
+      </div>
+    </div>
+
+    <div class="fg"><label class="fl">Estado</label>
+      <select class="fi" id="or_st">
+        <option value="pending"${o?.status==='pending'?' selected':''}>Pendiente</option>
+        <option value="paid"${o?.status==='paid'?' selected':''}>Pagado</option>
       </select></div>
+
+    <div class="fg"><label class="fl">Categoría</label>
+      <select class="fi" id="or_cat">
+        <option value="">— sin categoría —</option>
+        <option value="proveedor"${o?.expense_category==='proveedor'?' selected':''}>Proveedor</option>
+        <option value="operativo"${o?.expense_category==='operativo'?' selected':''}>Operativo</option>
+        <option value="tasa_regulatoria"${o?.expense_category==='tasa_regulatoria'?' selected':''}>Tasa regulatoria</option>
+        <option value="honorarios"${o?.expense_category==='honorarios'?' selected':''}>Honorarios</option>
+        <option value="otro"${o?.expense_category==='otro'?' selected':''}>Otro</option>
+      </select></div>
+
     <div class="mf">
       <button class="btn bo" onclick="document.getElementById('order_wrap').remove()">Cancelar</button>
-      <button class="btn bp" onclick="saveOrder()">Registrar Orden</button>
+      <button class="btn bp" onclick="saveOrder('${oid||''}')">${o?'Actualizar':'Registrar'} Orden</button>
     </div>`);
+
+  // Recalculate on open if editing
+  if(o)setTimeout(calcTax,50);
 }
 
 // QUOTE MODAL
 function openQuoteModal(qid=null){
   const q=qid?DB.quotes.find(x=>x.id===qid):null;
-  modal('quote_edit','Nueva Cotización',`
+  modal('quote_edit',q?'Editar Cotización':'Nueva Cotización',`
     <div class="fr">
       <div class="fg"><label class="fl">Destinatario / Empresa</label><input class="fi" id="q_rec" value="${q?.recipient||''}" placeholder="Nombre del cliente o empresa"></div>
       <div class="fg"><label class="fl">Asunto / Servicio</label><input class="fi" id="q_sub" value="${q?.subject||''}" placeholder="Ej: Asesoría regulatoria"></div>
@@ -954,78 +952,91 @@ function openQuoteModal(qid=null){
 
 function fmt(cmd,val){document.execCommand(cmd,false,val||null);}
 function insertTable(){
-  const tbl=`<br><table border="1" style="border-collapse:collapse;width:100%;font-size:13px;margin:8px 0">
-    <tr style="background:#f0faf8"><th style="padding:6px 10px;text-align:left">Descripción del Servicio</th><th style="padding:6px 10px;width:100px">Cantidad</th><th style="padding:6px 10px;width:120px">Precio Unit.</th><th style="padding:6px 10px;width:120px">Total</th></tr>
-    <tr><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td></tr>
-    <tr><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td></tr>
-    <tr style="background:#e0f7f6;font-weight:bold"><td colspan="3" style="padding:6px 10px;text-align:right">TOTAL</td><td style="padding:6px 10px"> </td></tr>
-  </table><br>`;
-  document.execCommand('insertHTML',false,tbl);
+  document.execCommand('insertHTML',false,`<table border="1" style="border-collapse:collapse;width:100%;font-size:12px;margin:6px 0">
+    <tr style="background:#f0faf8"><th style="padding:5px 8px;text-align:left">Descripción del Servicio</th><th style="padding:5px 8px;width:80px">Cant.</th><th style="padding:5px 8px;width:100px">Precio Unit.</th><th style="padding:5px 8px;width:100px">Total</th></tr>
+    <tr><td style="padding:5px 8px"> </td><td style="padding:5px 8px"> </td><td style="padding:5px 8px"> </td><td style="padding:5px 8px"> </td></tr>
+    <tr><td style="padding:5px 8px"> </td><td style="padding:5px 8px"> </td><td style="padding:5px 8px"> </td><td style="padding:5px 8px"> </td></tr>
+    <tr style="background:#e0f7f6;font-weight:bold"><td colspan="3" style="padding:5px 8px;text-align:right">TOTAL</td><td style="padding:5px 8px"> </td></tr>
+  </table>`);
 }
+
 function getQuoteTemplate(){
-  return `<p>Estimados señores,</p><p><br></p><p>Por medio de la presente, tenemos el agrado de presentarles nuestra propuesta de servicios de asesoría comercial y gestión de trámites regulatorios.</p><p><br></p><p><strong>Servicios incluidos:</strong></p><ul><li>Asesoría y gestión de trámites regulatorios</li><li>Seguimiento de procesos ante entidades competentes</li><li>Elaboración de informes de avance</li></ul><p><br></p><p>Quedamos a su disposición para cualquier consulta adicional.</p><p><br></p><p>Atentamente,</p><p><strong>Equipo Oceango</strong></p>`;
+  return `<p>Estimados señores,</p><p>Por medio de la presente, tenemos el agrado de presentarles nuestra propuesta de servicios.</p><p><strong>Servicios incluidos:</strong></p><ul><li>Asesoría y gestión de trámites regulatorios</li><li>Seguimiento de procesos ante entidades competentes</li><li>Elaboración de informes de avance</li></ul><p>Quedamos a su disposición para cualquier consulta.</p><p>Atentamente,<br><strong>Equipo Oceango</strong></p>`;
 }
 
 // ============================================================
-//  QUOTE PRINT (con hoja membretada)
+//  QUOTE PRINT — hoja membretada fiel al PDF original
 // ============================================================
 function printQuote(qid){
   const q=DB.quotes.find(x=>x.id===qid);if(!q)return;
+
+  // Logo SVG extraído fielmente del diseño Oceango
+  const logoSVG=`<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+    <!-- Forma principal del logo: cuadrado redondeado con abertura -->
+    <rect x="8" y="4" width="50" height="62" rx="6" ry="6" fill="none" stroke="#1a5c45" stroke-width="6"/>
+    <rect x="8" y="4" width="26" height="62" rx="6" ry="0" fill="#1a5c45"/>
+    <!-- Corte derecho arriba -->
+    <rect x="34" y="4" width="24" height="20" rx="4" ry="4" fill="#fff"/>
+    <!-- Línea diagonal decorativa inferior -->
+    <line x1="34" y1="46" x2="58" y2="66" stroke="#1a5c45" stroke-width="6" stroke-linecap="round"/>
+  </svg>`;
+
+  // Watermarks del PDF original
+  const wm1=`<svg style="position:absolute;top:30mm;right:8mm;opacity:0.04;pointer-events:none;z-index:0" width="280" height="300" viewBox="0 0 80 80"><rect x="8" y="4" width="50" height="62" rx="6" fill="none" stroke="#1a5c45" stroke-width="6"/><rect x="8" y="4" width="26" height="62" rx="0" fill="#1a5c45"/><rect x="34" y="4" width="24" height="20" rx="4" fill="#fff"/><line x1="34" y1="46" x2="58" y2="66" stroke="#1a5c45" stroke-width="6" stroke-linecap="round"/></svg>`;
+  const wm2=`<svg style="position:absolute;bottom:40mm;left:5mm;opacity:0.04;pointer-events:none;z-index:0" width="200" height="220" viewBox="0 0 80 80"><rect x="8" y="4" width="50" height="62" rx="6" fill="none" stroke="#1a5c45" stroke-width="6"/><rect x="8" y="4" width="26" height="62" rx="0" fill="#1a5c45"/><rect x="34" y="4" width="24" height="20" rx="4" fill="#fff"/><line x1="34" y1="46" x2="58" y2="66" stroke="#1a5c45" stroke-width="6" stroke-linecap="round"/></svg>`;
+
   const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
   <title>Cotización ${q.code} - Oceango</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'DM Sans',Arial,sans-serif;color:#0a3628;font-size:13px;background:#fff;position:relative}
-    /* HOJA MEMBRETADA */
-    .page{min-height:297mm;width:210mm;margin:0 auto;position:relative;padding:28mm 20mm 32mm 20mm}
-    /* HEADER */
-    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px}
-    .logo-area{display:flex;align-items:center;gap:10px}
-    .logo-icon{width:44px;height:52px}
-    .logo-text .brand{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:#0a3628;line-height:1}
-    .logo-text .tagline{font-size:10px;color:#4a7c6b;margin-top:2px}
-    .header-right{text-align:right;font-size:11px;color:#4a7c6b;line-height:1.6}
-    /* WATERMARK */
-    .watermark{position:absolute;top:40mm;right:10mm;opacity:.04;z-index:0;pointer-events:none}
-    .watermark2{position:absolute;bottom:40mm;left:5mm;opacity:.04;z-index:0;pointer-events:none}
-    /* CONTENT */
+    body{font-family:'DM Sans',Arial,sans-serif;color:#0a3628;font-size:13px;background:#fff}
+    .page{min-height:297mm;width:210mm;margin:0 auto;position:relative;padding:22mm 18mm 30mm 18mm}
+    /* HEADER — fiel al membrete */
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0f7f6}
+    .logo-area{display:flex;align-items:center;gap:12px}
+    .logo-text .brand{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:#0a3628;line-height:1.1;letter-spacing:-0.5px}
+    .logo-text .tagline{font-size:9px;color:#4a7c6b;margin-top:3px;letter-spacing:1px;text-transform:uppercase}
+    .header-right{text-align:right;font-size:11px;color:#4a7c6b;line-height:1.7}
+    /* Línea vertical izquierda del diseño original */
+    .left-line{position:absolute;left:12mm;top:24mm;bottom:30mm;width:2px;background:#e0f7f6}
+    /* BODY */
     .content{position:relative;z-index:1}
-    .quote-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:#0a3628;margin-bottom:4px}
-    .quote-code{font-size:11px;color:#4a7c6b;font-family:monospace;margin-bottom:20px}
-    .meta-row{display:flex;gap:40px;margin-bottom:20px;padding:14px 18px;background:#f0faf8;border-radius:8px;border-left:4px solid #2d8c6e}
-    .meta-item label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:#8ab8ac;display:block;margin-bottom:2px}
-    .meta-item span{font-size:13px;font-weight:500;color:#0a3628}
-    .divider{height:1px;background:#c8ede6;margin:18px 0}
-    .body-content{line-height:1.7;color:#1a3a2a}
-    .body-content table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
-    .body-content th{background:#f0faf8;padding:6px 10px;text-align:left;font-weight:600;border:1px solid #c8ede6}
-    .body-content td{padding:6px 10px;border:1px solid #e0f0ec}
-    .body-content p{margin-bottom:8px}
-    .body-content ul,.body-content ol{padding-left:18px;margin-bottom:8px}
+    .doc-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:#0a3628;margin-bottom:2px;letter-spacing:0.5px;text-transform:uppercase}
+    .doc-code{font-size:11px;color:#4a7c6b;font-family:monospace;margin-bottom:16px}
+    .meta-box{display:flex;gap:0;margin-bottom:18px;background:#f0faf8;border-radius:6px;border:1px solid #c8ede6;overflow:hidden}
+    .meta-item{flex:1;padding:10px 14px;border-right:1px solid #c8ede6}
+    .meta-item:last-child{border-right:none}
+    .meta-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#8ab8ac;display:block;margin-bottom:3px}
+    .meta-value{font-size:12px;font-weight:600;color:#0a3628}
+    .divider{height:1px;background:#c8ede6;margin:14px 0}
+    .body-content{line-height:1.55;color:#1a3a2a;font-size:12.5px}
+    .body-content p{margin:0 0 6px}
+    .body-content ul,.body-content ol{padding-left:16px;margin:0 0 6px}
     .body-content li{margin-bottom:3px}
-    /* FOOTER */
-    .footer{position:absolute;bottom:0;left:0;right:0;padding:12px 20mm;display:flex;justify-content:space-between;align-items:center;background:#1a5c45}
-    .footer-left{font-size:10px;color:rgba(255,255,255,.7);line-height:1.6}
-    .footer-right{font-size:10px;color:rgba(255,255,255,.7);text-align:right}
-    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{margin:0;width:100%}}
+    .body-content table{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+    .body-content th{background:#f0faf8;padding:5px 8px;text-align:left;font-weight:600;border:1px solid #c8ede6;font-size:10px}
+    .body-content td{padding:5px 8px;border:1px solid #e0f0ec}
+    /* FOOTER — barra verde inferior como en el PDF */
+    .footer{position:fixed;bottom:0;left:0;right:0;background:#1a5c45;padding:8px 18mm;display:flex;justify-content:space-between;align-items:center}
+    .footer-col{font-size:10px;color:rgba(255,255,255,.75);line-height:1.6}
+    @page{margin:0;size:A4}
+    @media print{
+      body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .page{margin:0;width:100%;padding-bottom:20mm}
+    }
   </style>
   </head><body>
   <div class="page">
-    <!-- Marca de agua fondo -->
-    <svg class="watermark" width="320" height="380" viewBox="0 0 100 100"><text x="5" y="80" font-size="90" fill="#0a3628" font-family="Sora,sans-serif" font-weight="700">G</text></svg>
-    <svg class="watermark2" width="240" height="280" viewBox="0 0 100 100"><text x="5" y="80" font-size="90" fill="#0a3628" font-family="Sora,sans-serif" font-weight="700">O</text></svg>
+    <!-- Línea vertical izquierda -->
+    <div class="left-line"></div>
+    <!-- Watermarks de fondo -->
+    ${wm1}${wm2}
 
-    <!-- HEADER membretado -->
+    <!-- HEADER MEMBRETADO -->
     <div class="header">
       <div class="logo-area">
-        <!-- Logo SVG replicado de la hoja membretada -->
-        <svg class="logo-icon" viewBox="0 0 44 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 2 C10 2 4 10 4 22 C4 34 10 42 22 42 C34 42 40 34 40 22" stroke="#0a3628" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-          <path d="M22 2 L22 42" stroke="#0a3628" stroke-width="2" stroke-linecap="round"/>
-          <path d="M4 22 L22 22" stroke="#0a3628" stroke-width="2" stroke-linecap="round"/>
-          <path d="M22 42 L36 50" stroke="#0a3628" stroke-width="3" stroke-linecap="round"/>
-        </svg>
+        ${logoSVG}
         <div class="logo-text">
           <div class="brand">OCEAN<br>GO</div>
           <div class="tagline">Commercial assesor · Proyects develop</div>
@@ -1039,31 +1050,32 @@ function printQuote(qid){
     </div>
 
     <div class="content">
-      <div class="quote-title">COTIZACIÓN DE SERVICIOS</div>
-      <div class="quote-code">${q.code} · Emitida: ${fmtD(q.date)}${q.valid_until?` · Válida hasta: ${fmtD(q.valid_until)}`:''}</div>
+      <div class="doc-title">Cotización de Servicios</div>
+      <div class="doc-code">${q.code} · Emitida: ${fmtD(q.date)}${q.valid_until?' · Válida hasta: '+fmtD(q.valid_until):''}</div>
 
-      <div class="meta-row">
-        <div class="meta-item"><label>Dirigido a</label><span>${q.recipient||'—'}</span></div>
-        <div class="meta-item"><label>Asunto</label><span>${q.subject||'—'}</span></div>
-        <div class="meta-item"><label>Fecha de emisión</label><span>${fmtD(q.date)}</span></div>
+      <div class="meta-box">
+        <div class="meta-item"><span class="meta-label">Dirigido a</span><span class="meta-value">${q.recipient||'—'}</span></div>
+        <div class="meta-item"><span class="meta-label">Asunto</span><span class="meta-value">${q.subject||'—'}</span></div>
+        <div class="meta-item"><span class="meta-label">Fecha de emisión</span><span class="meta-value">${fmtD(q.date)}</span></div>
       </div>
 
       <div class="divider"></div>
       <div class="body-content">${q.body||''}</div>
       <div class="divider"></div>
 
-      <div style="font-size:11px;color:#4a7c6b;text-align:center;margin-top:24px">
+      <div style="font-size:10px;color:#4a7c6b;text-align:center;margin-top:16px;line-height:1.6">
         Esta cotización es válida conforme a los términos y condiciones de Oceango SAS.<br>
         Para consultas: oceango.ec@gmail.com · +593 969245676
       </div>
     </div>
 
+    <!-- FOOTER VERDE -->
     <div class="footer">
-      <div class="footer-left">Commercial assesor · Proyects develop<br>oceango.ec@gmail.com</div>
-      <div class="footer-right">Guayaquil - Ecuador<br>+593 969245676</div>
+      <div class="footer-col">Commercial assesor · Proyects develop<br>oceango.ec@gmail.com</div>
+      <div class="footer-col" style="text-align:right">Guayaquil - Ecuador<br>+593 969245676</div>
     </div>
   </div>
-  <script>window.onload=()=>window.print();<\/script>
+  <script>window.onload=()=>{window.print();}<\/script>
   </body></html>`;
 
   const w=window.open('','_blank','width=900,height=750');
@@ -1073,18 +1085,53 @@ function printQuote(qid){
 // ============================================================
 //  MODAL HELPERS
 // ============================================================
-function togInv(){const t=$('or_tp')?.value;const g=$('or_inv_g');if(g)g.style.display=t==='income'?'block':'none';}
+function togInv(){
+  const t=$('or_tp')?.value;
+  const g=$('or_inv_g');
+  if(g)g.style.display=t==='income'?'block':'none';
+}
+
 function calcTax(){
   const a=parseFloat($('or_am')?.value||0);
-  const iva=$('or_iva')?.checked;const ret=$('or_ret')?.checked;
+  if(!a)return;
+
+  const hasIva=$('or_iva')?.checked;
+  const hasRet=$('or_ret')?.checked;
+  const hasIvaRet=$('or_ivaret')?.checked;
   const rp=parseFloat($('or_rp')?.value||0);
-  const p=$('tax_prev');if(!p)return;
-  if(!a||(!iva&&!ret)){p.style.display='none';return;}
-  let t=`Base: ${fmtM(a)}`;
-  if(iva)t+=` · IVA 15%: ${fmtM(a*.15)} → Total: ${fmtM(a*1.15)}`;
-  if(ret&&rp)t+=` · Ret. ${rp}%: -${fmtM(a*rp/100)}`;
-  p.textContent=t;p.style.display='block';
+
+  const ivaAmt=hasIva?a*0.15:0;
+  const retAmt=hasRet&&rp?a*rp/100:0;
+  const ivaRetAmt=hasIvaRet?ivaAmt:0; // Retención 100% del IVA
+
+  // Show individual amounts
+  const ivaShow=$('iva_show');
+  if(ivaShow){ivaShow.style.display=hasIva?'inline':'none';ivaShow.textContent=fmtM(ivaAmt);}
+
+  const retShow=$('ret_show');
+  if(retShow){retShow.style.display=hasRet?'inline':'none';retShow.textContent='-'+fmtM(retAmt);}
+
+  const ivaRetShow=$('ivaret_show');
+  if(ivaRetShow){ivaRetShow.style.display=hasIvaRet?'inline':'none';ivaRetShow.textContent='-'+fmtM(ivaRetAmt);}
+
+  const summary=$('tax_summary');
+  const lines=$('tax_lines');
+  const totalEl=$('tax_total');
+  if(!summary)return;
+
+  if(!hasIva&&!hasRet&&!hasIvaRet){summary.style.display='none';return;}
+
+  let linesHTML=`<span>Base: ${fmtM(a)}</span>`;
+  if(hasIva)linesHTML+=` &nbsp;+&nbsp; <span>IVA 15%: +${fmtM(ivaAmt)}</span>`;
+  if(hasRet&&rp)linesHTML+=` &nbsp;-&nbsp; <span>Ret. ${rp}%: -${fmtM(retAmt)}</span>`;
+  if(hasIvaRet)linesHTML+=` &nbsp;-&nbsp; <span>Ret. IVA 100%: -${fmtM(ivaRetAmt)}</span>`;
+
+  const net=a+ivaAmt-retAmt-ivaRetAmt;
+  if(lines)lines.innerHTML=linesHTML;
+  if(totalEl)totalEl.textContent=`Neto a ${$('or_tp')?.value==='income'?'cobrar':'pagar'}: ${fmtM(net)}`;
+  summary.style.display='block';
 }
+
 function addPR(){
   const n=window._prc||0;
   const d=document.createElement('div');d.id=`pr_${n}`;
@@ -1107,23 +1154,15 @@ function calcPT(){
 async function saveTask(tid){
   const pid=$('t_proj')?.value;const ttl=$('t_ttl')?.value?.trim();
   if(!pid||!ttl){toast('Completa los campos obligatorios','te');return;}
-  const proj=DB.projects.find(p=>p.id===pid);
-  if(proj?.status==='finished'||proj?.status==='inactive'){toast('Proyecto cerrado','te');return;}
   const d={project_id:pid,title:ttl,description:$('t_dsc')?.value||null,
     step_order:parseInt($('t_ord')?.value)||1,due_date:$('t_dt')?.value||null,
     due_time:$('t_tm')?.value||null,location:$('t_loc')?.value||null};
-  if(tid){await dbUpdate('tasks',tid,d);}
-  else{await dbInsert('tasks',{...d,done:false});}
+  if(tid){await dbUpdate('tasks',tid,d);}else{await dbInsert('tasks',{...d,done:false});}
   toast(tid?'Tarea actualizada':'Tarea registrada');
   document.getElementById('task_wrap')?.remove();render();
 }
-async function toggleTask(id,done){
-  await dbUpdate('tasks',id,{done,done_at:done?new Date().toISOString():null});render();
-}
-async function deleteTask(id){
-  if(!confirm('¿Eliminar tarea?'))return;
-  await dbDelete('tasks',id);toast('Tarea eliminada');render();
-}
+async function toggleTask(id,done){await dbUpdate('tasks',id,{done,done_at:done?new Date().toISOString():null});render();}
+async function deleteTask(id){if(!confirm('¿Eliminar tarea?'))return;await dbDelete('tasks',id);toast('Tarea eliminada');render();}
 
 async function saveClient(cid){
   const nm=$('cl_nm')?.value?.trim();const ru=$('cl_ru')?.value?.trim();
@@ -1171,29 +1210,44 @@ async function deleteProject(id){
   DB.payment_schedule=DB.payment_schedule.filter(x=>x.project_id!==id);
   saveDB();await dbDelete('projects',id);toast('Proyecto eliminado');render();
 }
-async function togglePS(id,paid){
-  await dbUpdate('payment_schedule',id,{paid,paid_at:paid?new Date().toISOString():null});render();
-}
+async function togglePS(id,paid){await dbUpdate('payment_schedule',id,{paid,paid_at:paid?new Date().toISOString():null});render();}
 
-async function saveOrder(){
+// ============================================================
+//  SAVE ORDER — crea o actualiza
+// ============================================================
+async function saveOrder(oid=''){
   const pid=$('or_pj')?.value;const cn=$('or_cn')?.value?.trim();const am=parseFloat($('or_am')?.value||0);
   if(!pid||!cn||!am){toast('Completa los campos obligatorios','te');return;}
-  const proj=DB.projects.find(p=>p.id===pid);
-  if(proj?.status==='finished'||proj?.status==='inactive'){toast('Proyecto cerrado','te');return;}
   const tp=$('or_tp')?.value;
   const hasIva=$('or_iva')?.checked||false;
   const hasRet=$('or_ret')?.checked||false;
+  const hasIvaRet=$('or_ivaret')?.checked||false;
   const retPct=hasRet?parseFloat($('or_rp')?.value||0):0;
-  await dbInsert('orders',{
+  const ivaAmt=hasIva?am*0.15:0;
+  const retAmt=hasRet?am*retPct/100:0;
+  const ivaRetAmt=hasIvaRet?ivaAmt:0;
+
+  const d={
     project_id:pid,type:tp,concept:cn,amount:am,order_date:$('or_dt')?.value||today(),
-    status:'pending',invoice_num:tp==='income'?($('or_iv')?.value||null):null,
-    has_iva:hasIva,iva_amount:hasIva?am*.15:0,
-    has_retention:hasRet,retention_pct:retPct,retention_amount:hasRet?am*retPct/100:0,
-    expense_category:$('or_cat')?.value||null,
-    code:nextCode(tp==='income'?'ODC':'ODP')
-  });
-  toast('Orden registrada');document.getElementById('order_wrap')?.remove();render();
+    status:$('or_st')?.value||'pending',
+    invoice_num:tp==='income'?($('or_iv')?.value||null):null,
+    has_iva:hasIva,iva_amount:ivaAmt,
+    has_retention:hasRet,retention_pct:retPct,retention_amount:retAmt,
+    has_iva_retention:hasIvaRet,iva_retention_amount:ivaRetAmt,
+    expense_category:$('or_cat')?.value||null
+  };
+
+  if(oid){
+    await dbUpdate('orders',oid,d);
+    toast('Orden actualizada');
+  }else{
+    d.code=nextCode(tp==='income'?'ODC':'ODP');
+    await dbInsert('orders',d);
+    toast('Orden registrada');
+  }
+  document.getElementById('order_wrap')?.remove();render();
 }
+
 async function toggleOrder(id,cur){
   const ns=cur==='paid'?'pending':'paid';
   await dbUpdate('orders',id,{status:ns,paid_at:ns==='paid'?new Date().toISOString():null});render();
@@ -1211,7 +1265,7 @@ async function saveQuote(qid,status){
   const d={recipient:rec,subject:sub,body,date:$('q_dt')?.value||today(),
     valid_until:$('q_vld')?.value||null,notes:$('q_notes')?.value||null,status};
   let saved;
-  if(qid){await dbUpdate('quotes',qid,d);saved=DB.quotes.find(x=>x.id===qid);}
+  if(qid){await dbUpdate('quotes',qid,d);saved={id:qid,...d};}
   else{d.code=nextCode('COT');saved=await dbInsert('quotes',d);}
   toast(status==='sent'?'Cotización emitida':'Borrador guardado');
   document.getElementById('quote_edit_wrap')?.remove();
@@ -1235,39 +1289,46 @@ function genPDF(cid){
   const doneT=tasks.filter(t=>t.done).length;
   const total=cobros.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
 
-  let html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
   <title>Informe ${cl?.name}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'DM Sans',Arial,sans-serif;color:#0a3628;font-size:13px;background:#fff}
-    .page{min-height:297mm;width:210mm;margin:0 auto;padding:28mm 20mm 32mm 20mm;position:relative}
-    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
-    .logo-text .brand{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:#0a3628}
-    .logo-text .tagline{font-size:10px;color:#4a7c6b;margin-top:2px}
-    .header-right{text-align:right;font-size:11px;color:#4a7c6b;line-height:1.6}
-    .doc-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px}
-    .subtitle{font-size:11px;color:#4a7c6b;margin-bottom:20px}
-    .section{margin-bottom:20px}
-    .section h2{font-size:13px;font-weight:700;color:#0a3628;border-bottom:2px solid #2d8c6e;padding-bottom:4px;margin-bottom:10px}
-    .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #e0f7f6;font-size:12px}
-    .proj-card{border:1px solid #c8ede6;border-radius:8px;padding:12px 16px;margin-bottom:10px}
-    .proj-name{font-weight:700;font-size:13px;margin-bottom:3px}
-    .pb{height:7px;background:#e2e8f0;border-radius:4px;margin:6px 0}
+    .page{min-height:297mm;width:210mm;margin:0 auto;padding:22mm 18mm 28mm 18mm;position:relative}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:14px;border-bottom:2px solid #e0f7f6}
+    .brand{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:#0a3628}
+    .tagline{font-size:9px;color:#4a7c6b;margin-top:3px;letter-spacing:1px;text-transform:uppercase}
+    .header-right{text-align:right;font-size:11px;color:#4a7c6b;line-height:1.7}
+    .left-line{position:absolute;left:12mm;top:24mm;bottom:28mm;width:2px;background:#e0f7f6}
+    .doc-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;margin-bottom:3px;text-transform:uppercase}
+    .subtitle{font-size:11px;color:#4a7c6b;margin-bottom:16px}
+    .section{margin-bottom:18px}
+    .section h2{font-size:11px;font-weight:700;color:#0a3628;border-bottom:2px solid #2d8c6e;padding-bottom:4px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+    .row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #e0f7f6;font-size:12px}
+    .proj-card{border:1px solid #c8ede6;border-radius:6px;padding:10px 14px;margin-bottom:8px}
+    .proj-name{font-weight:700;font-size:13px;margin-bottom:2px}
+    .pb{height:6px;background:#e2e8f0;border-radius:4px;margin:5px 0}
     .pf{height:100%;background:#2d8c6e;border-radius:4px}
-    table{width:100%;border-collapse:collapse;font-size:12px}
-    th{text-align:left;background:#f0faf8;padding:7px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
-    td{padding:7px 10px;border-bottom:1px solid #f1f5f9}
+    table{width:100%;border-collapse:collapse;font-size:11px}
+    th{text-align:left;background:#f0faf8;padding:6px 8px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #c8ede6}
+    td{padding:6px 8px;border-bottom:1px solid #f1f5f9}
     .totrow{font-weight:700;background:#e0f7f6}
-    .footer{position:fixed;bottom:0;left:0;right:0;padding:10px 20mm;display:flex;justify-content:space-between;background:#1a5c45;color:rgba(255,255,255,.8);font-size:10px}
+    .footer{position:fixed;bottom:0;left:0;right:0;padding:8px 18mm;display:flex;justify-content:space-between;background:#1a5c45;color:rgba(255,255,255,.8);font-size:10px}
     @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{margin:0;width:100%}}
   </style></head><body>
   <div class="page">
+  <div class="left-line"></div>
   <div class="header">
-    <div class="logo-text"><div class="brand">OCEANGO</div><div class="tagline">Commercial assesor · Proyects develop</div></div>
+    <div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <svg viewBox="0 0 80 80" width="44" height="44" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="4" width="50" height="62" rx="6" fill="none" stroke="#1a5c45" stroke-width="6"/><rect x="8" y="4" width="26" height="62" rx="0" fill="#1a5c45"/><rect x="34" y="4" width="24" height="20" rx="4" fill="#fff"/><line x1="34" y1="46" x2="58" y2="66" stroke="#1a5c45" stroke-width="6" stroke-linecap="round"/></svg>
+        <div><div class="brand">OCEAN GO</div><div class="tagline">Commercial assesor · Proyects develop</div></div>
+      </div>
+    </div>
     <div class="header-right">oceango.ec@gmail.com<br>+593 969245676<br>Guayaquil - Ecuador</div>
   </div>
-  <div class="doc-title">INFORME DE ESTADO DE PROYECTO</div>
+  <div class="doc-title">Informe de Estado de Proyecto</div>
   <div class="subtitle">Cliente: ${cl?.name||'—'} · Emitido: ${fmtD(today())}</div>
   <div class="section"><h2>Datos del Cliente</h2>
     <div class="row"><span>Empresa</span><strong>${cl?.name||'—'}</strong></div>
@@ -1284,15 +1345,15 @@ function genPDF(cid){
       const cob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
       return `<div class="proj-card">
         <div class="proj-name">${p.name}</div>
-        <div style="font-size:11px;color:#4a7c6b;font-family:monospace;margin-bottom:6px">${p.code}</div>
+        <div style="font-size:10px;color:#4a7c6b;font-family:monospace;margin-bottom:5px">${p.code}</div>
         <div class="row"><span>Estado</span><span>${{active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'}[p.status]||p.status}</span></div>
         <div class="row"><span>Período</span><span>${fmtD(p.start_date)} → ${fmtD(p.end_date)}</span></div>
         <div class="row"><span>Valor Contrato</span><strong>${fmtM(p.contract_value)}</strong></div>
         <div class="row"><span>Total Cobrado</span><strong style="color:#2d8c6e">${fmtM(cob)}</strong></div>
-        <div style="font-size:11px;color:#4a7c6b;margin-top:6px">Avance: ${dn}/${pt.length} tareas (${pc}%)</div>
+        <div style="font-size:10px;color:#4a7c6b;margin-top:5px">Avance: ${dn}/${pt.length} tareas (${pc}%)</div>
         <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
-          ${ps.map(x=>`<span style="padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;background:${x.paid?'#d1fae5':'#f1f5f9'};color:${x.paid?'#065f46':'#475569'}">${x.label} ${x.pct}% ${x.paid?'✓':''}</span>`).join('')}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">
+          ${ps.map(x=>`<span style="padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;background:${x.paid?'#d1fae5':'#f1f5f9'};color:${x.paid?'#065f46':'#475569'}">${x.label} ${x.pct}% ${x.paid?'✓':''}</span>`).join('')}
         </div>
       </div>`;
     }).join('')}
@@ -1300,7 +1361,7 @@ function genPDF(cid){
   <div class="section"><h2>Pagos Recibidos</h2>
     <table><thead><tr><th>Código</th><th>Fecha</th><th>Concepto</th><th>Factura</th><th>Monto</th><th>Estado</th></tr></thead>
     <tbody>
-      ${cobros.map(o=>`<tr><td style="font-family:monospace;font-size:11px">${o.code}</td><td>${fmtD(o.order_date)}</td><td>${o.concept}</td><td style="font-family:monospace;font-size:11px">${o.invoice_num||'—'}</td><td><strong>${fmtM(o.amount)}</strong></td><td style="color:${o.status==='paid'?'#065f46':'#92400e'};font-weight:600">${o.status==='paid'?'Pagado':'Pendiente'}</td></tr>`).join('')}
+      ${cobros.map(o=>`<tr><td style="font-family:monospace;font-size:10px">${o.code}</td><td>${fmtD(o.order_date)}</td><td>${o.concept}</td><td style="font-family:monospace;font-size:10px">${o.invoice_num||'—'}</td><td><strong>${fmtM(o.amount)}</strong></td><td style="color:${o.status==='paid'?'#065f46':'#92400e'};font-weight:600">${o.status==='paid'?'Pagado':'Pendiente'}</td></tr>`).join('')}
       <tr class="totrow"><td colspan="4">TOTAL COBRADO</td><td colspan="2">${fmtM(total)}</td></tr>
     </tbody></table>
   </div>
@@ -1327,10 +1388,16 @@ function setFF(v){S.finFilter=v;render();}
 // ============================================================
 //  BOOT
 // ============================================================
-if(!DB.quotes)DB.quotes=[];saveDB();
+if(!DB.quotes)DB.quotes=[];
+// Migrar órdenes antiguas para añadir campos nuevos
+DB.orders=DB.orders.map(o=>({
+  has_iva_retention:false,iva_retention_amount:0,
+  retention_pct:0,has_retention:false,retention_amount:0,
+  ...o
+}));
+saveDB();
 render();
-// Notificaciones al cargar
-if('Notification' in window && Notification.permission==='granted') scheduleNotifs();
+if('Notification' in window && Notification.permission==='granted')scheduleNotifs();
 </script>
 </body>
 </html>
