@@ -10,7 +10,7 @@
 :root{
   --dk:#0a3628;--mid:#1a5c45;--base:#2d8c6e;--light:#4fbf99;
   --teal:#3ec8c0;--tl:#a8ede9;--tp:#e0f7f6;
-  --bg:#f0faf8;--wh:#ffffff;--br:#c8ede6;
+  --bg:#f0faf8;--wh:#fff;--br:#c8ede6;
   --tx:#0a3628;--mu:#4a7c6b;--so:#8ab8ac;
   --re:#dc2626;--rb:#fee2e2;--rt:#991b1b;
   --yb:#fef3c7;--yt:#92400e;
@@ -20,8 +20,6 @@
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow:hidden}
 .app{display:flex;height:100vh}
-
-/* SIDEBAR */
 .sb{width:224px;background:var(--dk);display:flex;flex-direction:column;flex-shrink:0}
 .logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
 .logo-name{font-family:'Sora',sans-serif;font-size:24px;font-weight:700;color:#fff;letter-spacing:-.5px;line-height:1}
@@ -36,70 +34,52 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .ni svg{width:17px;height:17px;flex-shrink:0}
 .nbadge{background:var(--teal);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:auto}
 .sbfoot{padding:12px 14px;border-top:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(255,255,255,.2)}
-
-/* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .topbar{background:#fff;border-bottom:1px solid var(--br);padding:0 24px;height:56px;
   display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .ptitle{font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--dk)}
 .dchip{font-size:12px;color:var(--mu);background:var(--bg);padding:4px 12px;border-radius:20px;border:1px solid var(--br)}
 .content{flex:1;overflow-y:auto;padding:24px}
-
-/* BUTTONS */
 .btn{padding:7px 14px;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;
   border:none;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px;line-height:1}
 .bp{background:var(--base);color:#fff}.bp:hover{background:var(--mid)}
 .bo{background:transparent;border:1px solid var(--br);color:var(--mid)}.bo:hover{background:var(--tp)}
 .bd{background:var(--rb);color:var(--rt)}.bd:hover{background:#fecaca}
 .bsm{padding:5px 10px;font-size:12px}.bxs{padding:3px 7px;font-size:11px}
-
-/* CARDS */
 .card{background:#fff;border:1px solid var(--br);border-radius:var(--r);padding:20px}
 .csm{padding:14px 16px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px}
-
-/* TAGS */
 .tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
 .tg{background:var(--gb);color:var(--gt)}.ty{background:var(--yb);color:var(--yt)}
 .tb{background:var(--bb);color:var(--bt)}.tr{background:var(--rb);color:var(--rt)}
 .tgr{background:#f1f5f9;color:#475569}.ttl{background:var(--tp);color:var(--mid)}
-
-/* LABEL/VAL */
 .lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--so);margin-bottom:6px}
 .val{font-family:'Sora',sans-serif;font-size:24px;font-weight:700;color:var(--dk)}
-
-/* PROGRESS */
 .pb{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
 .pf{height:100%;background:linear-gradient(90deg,var(--base),var(--teal));border-radius:4px;transition:width .5s}
-
-/* TABLE */
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--so);border-bottom:1px solid var(--br)}
 .tbl td{padding:11px 12px;border-bottom:1px solid #f1f5f9;color:var(--tx);vertical-align:middle}
 .tbl tr:hover td{background:var(--bg)}
 .tbl tr:last-child td{border-bottom:none}
 .tw{overflow-x:auto}
-
-/* FORM */
 .fg{margin-bottom:13px}
 .fl{font-size:12px;font-weight:600;color:var(--mu);margin-bottom:5px;display:block}
 .fi{width:100%;padding:8px 10px;border:1px solid var(--br);border-radius:var(--rs);
   font-size:13px;font-family:inherit;color:var(--tx);background:#fff;outline:none;transition:border-color .15s}
 .fi:focus{border-color:var(--base);box-shadow:0 0 0 3px rgba(45,140,110,.1)}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-/* MODAL */
-.ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
-.modal{background:#fff;border-radius:var(--r);padding:24px;width:560px;max-width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:1000;
+  display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:var(--r);padding:24px;width:560px;max-width:100%;
+  max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-lg{width:820px}
 .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .mt{font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--dk)}
 .mf{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--br)}
 .div{height:1px;background:var(--br);margin:16px 0}
 .stitle{font-family:'Sora',sans-serif;font-size:14px;font-weight:600;color:var(--dk);margin-bottom:12px}
-
-/* TASK */
 .ti{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--rs);
   border:1px solid var(--br);margin-bottom:8px;background:#fff;transition:all .15s}
 .ti:hover{border-color:var(--base);background:var(--tp)}
@@ -107,31 +87,60 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .chk{width:18px;height:18px;border-radius:4px;border:2px solid var(--br);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;margin-top:1px}
 .chk.on{background:var(--base);border-color:var(--base)}
-
 /* CALENDAR */
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cah{text-align:center;font-size:11px;font-weight:600;color:var(--so);padding:4px;text-transform:uppercase}
-.cad{min-height:64px;border-radius:var(--rs);border:1px solid var(--br);padding:5px;font-size:11px}
-.cad.today{border-color:var(--base);background:var(--tp)}
-.cdn{font-weight:600;font-size:11px;color:var(--mu);margin-bottom:2px}
-.cev{background:var(--base);color:#fff;border-radius:3px;padding:1px 5px;font-size:10px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
+.cal-wrap{background:#fff;border:1px solid var(--br);border-radius:var(--r);overflow:hidden}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--dk);color:#fff}
+.cal-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:600}
+.cal-nav{background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;padding:5px 10px;border-radius:6px;font-size:14px;font-family:inherit;transition:background .15s}
+.cal-nav:hover{background:rgba(255,255,255,.25)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dh{text-align:center;font-size:11px;font-weight:600;color:var(--so);padding:8px 4px;background:#f8fdfc;border-bottom:1px solid var(--br);text-transform:uppercase}
+.cal-day{min-height:80px;border-right:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;padding:6px;cursor:pointer;transition:background .1s;position:relative}
+.cal-day:hover{background:var(--tp)}
+.cal-day.today{background:#e0f7f6}
+.cal-day.today .cal-dn{color:var(--base);font-weight:700}
+.cal-day.other-month{opacity:.35}
+.cal-day:nth-child(7n){border-right:none}
+.cal-dn{font-size:12px;font-weight:500;color:var(--mu);margin-bottom:3px}
+.cal-ev{background:var(--base);color:#fff;border-radius:3px;padding:2px 5px;
+  font-size:10px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;line-height:1.4}
+.cal-ev:hover{background:var(--mid)}
+.cal-ev.urgent{background:#dc2626}
+.cal-ev.done-ev{background:var(--so)}
 /* TOAST */
 .twrap{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
 .toast{padding:10px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;color:#fff;animation:sin .25s ease;max-width:300px}
 .ts{background:var(--base)}.te{background:var(--re)}.ti2{background:#3b82f6}
 @keyframes sin{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-
-/* EMPTY */
 .empty{text-align:center;padding:48px 20px;color:var(--mu)}
 .ei{font-size:36px;margin-bottom:10px;opacity:.4}
-
-/* RESPONSIVE */
-@media(max-width:900px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
+/* QUOTE EDITOR */
+.quote-editor{border:1px solid var(--br);border-radius:6px;min-height:120px;padding:12px;
+  font-size:13px;font-family:inherit;outline:none;line-height:1.6;color:var(--tx)}
+.quote-editor:focus{border-color:var(--base);box-shadow:0 0 0 3px rgba(45,140,110,.1)}
+.editor-toolbar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;padding:8px;background:#f8fdfc;border:1px solid var(--br);border-radius:6px}
+.tb-btn{padding:4px 8px;border:1px solid var(--br);border-radius:4px;background:#fff;cursor:pointer;font-size:12px;font-family:inherit;color:var(--mu);transition:all .1s}
+.tb-btn:hover{background:var(--tp);border-color:var(--base)}
+/* TASK DETAIL MODAL */
+.task-detail{padding:4px 0}
+.task-detail .td-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px}
+.task-detail .td-label{font-weight:600;color:var(--mu);min-width:80px;font-size:12px}
+/* NOTIF BANNER */
+.notif-bar{background:linear-gradient(135deg,var(--mid),var(--base));color:#fff;padding:8px 24px;
+  font-size:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.notif-bar.hide{display:none}
+@media(max-width:900px){.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){
   .sb{width:54px}.logo-name,.logo-sub,.sbfoot,.ni span:not(.nbadge){display:none}
-  .ni{justify-content:center}.g2,.g3,.g4{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
+  .ni{justify-content:center}.g2,.g4{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
   .modal{padding:16px}.content{padding:16px}
+}
+/* PRINT / PDF quote */
+@media print{
+  .sb,.topbar,.notif-bar,.twrap{display:none!important}
+  .main{overflow:visible}
+  .content{padding:0;overflow:visible}
+  body{overflow:visible}
 }
 </style>
 </head>
@@ -141,12 +150,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 
 <script>
 // ============================================================
-//  CONFIGURACIÓN SUPABASE
-//  Cuando tengas las keys, reemplaza estos dos valores:
+//  CONFIG SUPABASE — pon tus keys aquí cuando tengas
 // ============================================================
-const SB_URL  = '';   // ej: 'https://nnprymjwaxtpbiitlcyh.supabase.co'
-const SB_KEY  = '';   // ej: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ucHJ5bWp3YXh0cGJpaXRsY3loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzkwODIsImV4cCI6MjA5MzE1NTA4Mn0.K7Zo3z0rrZea-iipqARGOC4iQdS1bJXVCLksxI_Ru0w'
-const USE_SB  = SB_URL !== '' && SB_KEY !== '';
+const SB_URL = '';
+const SB_KEY = '';
+const USE_SB = SB_URL !== '' && SB_KEY !== '';
 
 // ============================================================
 //  HELPERS
@@ -154,14 +162,15 @@ const USE_SB  = SB_URL !== '' && SB_KEY !== '';
 const $=id=>document.getElementById(id);
 const today=()=>new Date().toISOString().split('T')[0];
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);
-const fmtD=d=>d?new Date(d+'T12:00:00').toLocaleDateString('es-EC',{day:'2-digit',month:'short',year:'numeric'}):'—';
-const fmtDS=d=>d?new Date(d+'T12:00:00').toLocaleDateString('es-EC',{day:'2-digit',month:'short'}):'—';
+const fmtD=d=>{if(!d)return'—';const p=d.includes('T')?new Date(d):new Date(d+'T12:00:00');return p.toLocaleDateString('es-EC',{day:'2-digit',month:'short',year:'numeric'});};
+const fmtDS=d=>{if(!d)return'—';const p=d.includes('T')?new Date(d):new Date(d+'T12:00:00');return p.toLocaleDateString('es-EC',{day:'2-digit',month:'short'});};
 const fmtM=n=>'$'+(Number(n)||0).toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2});
+const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
 function toast(msg,type='ts'){
   const el=document.createElement('div');
   el.className=`toast ${type}`;el.textContent=msg;
-  $('tw').appendChild(el);setTimeout(()=>el.remove(),3000);
+  $('tw').appendChild(el);setTimeout(()=>el.remove(),3200);
 }
 
 function ic(name,size=17){
@@ -171,6 +180,7 @@ function ic(name,size=17){
     proj:'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
     tasks:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
     money:'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+    quote:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
     plus:'M12 4v16m8-8H4',x:'M6 18L18 6M6 6l12 12',
     check:'M5 13l4 4L19 7',
     edit:'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
@@ -179,13 +189,15 @@ function ic(name,size=17){
     pdf:'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
     cal:'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
     clk:'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
-    pin:'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z'
+    pin:'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z',
+    bell:'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9',
+    send:'M12 19l9 2-9-18-9 18 9-2zm0 0v-8'
   };
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${p[name]||p.dash}"/></svg>`;
 }
 
 // ============================================================
-//  STORAGE: localStorage (preview) o Supabase (producción)
+//  DEMO DATA
 // ============================================================
 const DEMO={
   clients:[
@@ -204,34 +216,28 @@ const DEMO={
     {id:'ps5',project_id:'p2',label:'Entrega final',pct:50,due_date:'2025-09-15',paid:false}
   ],
   tasks:[
-    {id:'t1',project_id:'p1',title:'Revisión inicial de documentos',description:'Recopilar documentación inicial',step_order:1,due_date:'2025-02-10',due_time:'10:00',location:'Oficina Oceango',done:true},
+    {id:'t1',project_id:'p1',title:'Revisión inicial de documentos',description:'Recopilar documentación inicial del cliente',step_order:1,due_date:'2025-02-10',due_time:'10:00',location:'Oficina Oceango',done:true},
     {id:'t2',project_id:'p1',title:'Solicitud certificados ARCSA',description:'Gestionar solicitud ante ARCSA',step_order:2,due_date:'2025-02-20',due_time:'09:00',location:'ARCSA Guayaquil',done:true},
-    {id:'t3',project_id:'p1',title:'Presentación trámites fase 1',description:'Presentar documentos fase 1',step_order:3,due_date:'2025-06-15',due_time:'14:00',location:'ARCSA',done:false},
-    {id:'t4',project_id:'p2',title:'Reunión inicial cliente',description:'Kickoff con cliente',step_order:1,due_date:'2025-04-08',due_time:'11:00',location:'Oficinas Del Valle',done:true},
-    {id:'t5',project_id:'p2',title:'Análisis aranceles importación',description:'Análisis de aranceles',step_order:2,due_date:'2025-05-10',due_time:'',location:'',done:false}
+    {id:'t3',project_id:'p1',title:'Presentación trámites fase 1',description:'Presentar documentos fase 1 ante entidad reguladora',step_order:3,due_date:'2025-06-15',due_time:'14:00',location:'ARCSA',done:false},
+    {id:'t4',project_id:'p2',title:'Reunión inicial cliente',description:'Kickoff con cliente Del Valle',step_order:1,due_date:'2025-04-08',due_time:'11:00',location:'Oficinas Del Valle',done:true},
+    {id:'t5',project_id:'p2',title:'Análisis aranceles importación',description:'Análisis detallado de aranceles para vehículos',step_order:2,due_date:'2025-05-10',due_time:'',location:'',done:false}
   ],
   orders:[
-    {id:'o1',code:'ODC-0001-2025',project_id:'p1',type:'income',concept:'Anticipo 30% - Regulación Sanitaria',amount:2550,order_date:'2025-02-05',status:'paid',invoice_num:'001-001-000000001',has_iva:true,iva_amount:382.5,has_retention:false},
-    {id:'o2',code:'ODP-0001-2025',project_id:'p1',type:'expense',concept:'Tasas ARCSA fase inicial',amount:380,order_date:'2025-02-12',status:'paid',invoice_num:'',has_iva:false,has_retention:false},
-    {id:'o3',code:'ODC-0002-2025',project_id:'p2',type:'income',concept:'Anticipo 50% - Importación vehículos',amount:2600,order_date:'2025-04-05',status:'paid',invoice_num:'001-001-000000002',has_iva:true,iva_amount:390,has_retention:false},
-    {id:'o4',code:'ODP-0002-2025',project_id:'p1',type:'expense',concept:'Honorarios abogado externo',amount:600,order_date:'2025-03-20',status:'paid',invoice_num:'',has_iva:false,has_retention:false}
-  ]
+    {id:'o1',code:'ODC-0001-2025',project_id:'p1',type:'income',concept:'Anticipo 30% - Regulación Sanitaria',amount:2550,order_date:'2025-02-05',status:'paid',invoice_num:'001-001-000000001',has_iva:true,iva_amount:382.5,has_retention:false,retention_amount:0},
+    {id:'o2',code:'ODP-0001-2025',project_id:'p1',type:'expense',concept:'Tasas ARCSA fase inicial',amount:380,order_date:'2025-02-12',status:'paid',invoice_num:'',has_iva:false,iva_amount:0,has_retention:false,retention_amount:0},
+    {id:'o3',code:'ODC-0002-2025',project_id:'p2',type:'income',concept:'Anticipo 50% - Importación vehículos',amount:2600,order_date:'2025-04-05',status:'paid',invoice_num:'001-001-000000002',has_iva:true,iva_amount:390,has_retention:false,retention_amount:0},
+    {id:'o4',code:'ODP-0002-2025',project_id:'p1',type:'expense',concept:'Honorarios abogado externo',amount:600,order_date:'2025-03-20',status:'paid',invoice_num:'',has_iva:false,iva_amount:0,has_retention:false,retention_amount:0}
+  ],
+  quotes:[]
 };
 
-// Cargar desde localStorage o usar DEMO
 function loadDB(){
-  try{
-    const s=localStorage.getItem('oceango_v2');
-    return s?JSON.parse(s):JSON.parse(JSON.stringify(DEMO));
-  }catch{return JSON.parse(JSON.stringify(DEMO));}
+  try{const s=localStorage.getItem('oceango_v3');return s?JSON.parse(s):JSON.parse(JSON.stringify(DEMO));}
+  catch{return JSON.parse(JSON.stringify(DEMO));}
 }
-function saveDB(){
-  try{localStorage.setItem('oceango_v2',JSON.stringify(DB));}catch{}
-}
-
+function saveDB(){try{localStorage.setItem('oceango_v3',JSON.stringify(DB));}catch{}}
 let DB=loadDB();
 
-// Seq counters
 function nextCode(prefix){
   const key=`oceango_seq_${prefix}`;
   const n=(parseInt(localStorage.getItem(key)||'0'))+1;
@@ -240,96 +246,99 @@ function nextCode(prefix){
 }
 
 // ============================================================
-//  SUPABASE LAYER (si están configuradas las keys)
+//  LOCAL CRUD (swap to Supabase when keys set)
 // ============================================================
-let SB=null;
-if(USE_SB){
-  const script=document.createElement('script');
-  script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-  script.onload=()=>{SB=window.supabase.createClient(SB_URL,SB_KEY);boot();};
-  document.head.appendChild(script);
-}
-
-async function dbGet(table,query={}){
-  if(!USE_SB) return DB[table]||[];
-  let q=SB.from(table).select('*');
-  if(query.eq) q=q.eq(query.eq[0],query.eq[1]);
-  if(query.order) q=q.order(query.order,{ascending:query.asc!==false});
-  const {data,error}=await q;
-  if(error){toast('Error BD: '+error.message,'te');return [];}
-  return data||[];
-}
 async function dbInsert(table,row){
-  if(!USE_SB){
-    const r={...row,id:uid(),created_at:new Date().toISOString()};
-    DB[table]=[...(DB[table]||[]),r];saveDB();return r;
-  }
-  const {data,error}=await SB.from(table).insert(row).select().single();
-  if(error){toast('Error BD: '+error.message,'te');return null;}
-  return data;
+  const r={...row,id:uid(),created_at:new Date().toISOString()};
+  DB[table]=[...(DB[table]||[]),r];saveDB();return r;
 }
 async function dbUpdate(table,id,changes){
-  if(!USE_SB){
-    DB[table]=DB[table].map(r=>r.id===id?{...r,...changes}:r);saveDB();return true;
+  DB[table]=DB[table].map(r=>r.id===id?{...r,...changes,updated_at:new Date().toISOString()}:r);saveDB();return true;
+}
+async function dbDelete(table,id){DB[table]=DB[table].filter(r=>r.id!==id);saveDB();return true;}
+
+// ============================================================
+//  NOTIFICATIONS
+// ============================================================
+function requestNotifPermission(){
+  if('Notification' in window && Notification.permission==='default'){
+    Notification.requestPermission().then(p=>{
+      if(p==='granted'){toast('Notificaciones activadas','ts');scheduleNotifs();}
+    });
   }
-  const {error}=await SB.from(table).update(changes).eq('id',id);
-  if(error){toast('Error BD: '+error.message,'te');return false;}
-  return true;
 }
-async function dbDelete(table,id){
-  if(!USE_SB){DB[table]=DB[table].filter(r=>r.id!==id);saveDB();return true;}
-  const {error}=await SB.from(table).delete().eq('id',id);
-  if(error){toast('Error BD: '+error.message,'te');return false;}
-  return true;
-}
-async function fetchAll(){
-  const [c,p,ps,t,o]=await Promise.all([
-    dbGet('clients'),dbGet('projects'),dbGet('payment_schedule'),
-    dbGet('tasks'),dbGet('orders')
-  ]);
-  DB.clients=c;DB.projects=p;DB.payment_schedule=ps;DB.tasks=t;DB.orders=o;
+function scheduleNotifs(){
+  const td=today();
+  DB.tasks.filter(t=>!t.done&&t.due_date).forEach(t=>{
+    const diff=Math.round((new Date(t.due_date+'T12:00:00')-new Date())/86400000);
+    if(diff===0||diff===1){
+      const msg=diff===0?`HOY: ${t.title}${t.due_time?' a las '+t.due_time.slice(0,5):''}`:
+        `MAÑANA: ${t.title}`;
+      if(Notification.permission==='granted'){
+        new Notification('Oceango — Tarea próxima',{body:msg,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%230a3628"/><text y=".9em" font-size="80" x="10">🌊</text></svg>'});
+      }
+    }
+  });
 }
 
 // ============================================================
 //  STATE
 // ============================================================
-let S={tab:'dashboard',filterClient:null,filterProject:null,projFilter:'all',taskFilter:'',finFilter:'all'};
+let S={
+  tab:'dashboard',filterClient:null,filterProject:null,
+  projFilter:'all',taskFilter:'',finFilter:'all',
+  calYear:new Date().getFullYear(),calMonth:new Date().getMonth()
+};
 
 // ============================================================
-//  RENDER
+//  RENDER ROOT
 // ============================================================
 function render(){
   const pend=DB.tasks.filter(t=>!t.done&&t.due_date&&t.due_date>=today()).length;
+  const todayTasks=DB.tasks.filter(t=>!t.done&&t.due_date===today());
+  const notifBar=todayTasks.length?
+    `<div class="notif-bar" id="notifbar">
+       ${ic('bell',14)} <strong>${todayTasks.length} tarea${todayTasks.length>1?'s':''} para hoy:</strong>
+       ${todayTasks.map(t=>`<span style="background:rgba(255,255,255,.15);padding:2px 8px;border-radius:10px;font-size:11px">${t.title}${t.due_time?' '+t.due_time.slice(0,5):''}</span>`).join('')}
+       <button onclick="$('notifbar').classList.add('hide')" style="margin-left:auto;background:rgba(255,255,255,.2);border:none;color:#fff;cursor:pointer;padding:2px 8px;border-radius:4px;font-size:11px">×</button>
+     </div>`:''
+  ;
   const nav=[
     {id:'dashboard',icon:'dash',label:'Dashboard'},
     {id:'clients',icon:'users',label:'Clientes'},
     {id:'projects',icon:'proj',label:'Proyectos'},
     {id:'tasks',icon:'tasks',label:'Tareas',badge:pend||0},
-    {id:'finance',icon:'money',label:'Finanzas'}
+    {id:'finance',icon:'money',label:'Finanzas'},
+    {id:'quotes',icon:'quote',label:'Cotizaciones'}
   ];
-  const titles={dashboard:'Dashboard',clients:'Clientes',projects:'Proyectos',tasks:'Tareas',finance:'Finanzas & Facturación'};
+  const titles={dashboard:'Dashboard',clients:'Clientes',projects:'Proyectos',
+    tasks:'Tareas',finance:'Finanzas & Facturación',quotes:'Cotizaciones'};
 
   $('app').innerHTML=`
   <aside class="sb">
-    <div class="logo">
-      <div class="logo-name">O<span>ceango</span></div>
-      <div class="logo-sub">Gestión Documental</div>
-    </div>
+    <div class="logo"><div class="logo-name">O<span>ceango</span></div><div class="logo-sub">Gestión Documental</div></div>
     <nav class="nav">
       ${nav.map(n=>`<button class="ni ${S.tab===n.id?'on':''}" onclick="goTab('${n.id}')">
         ${ic(n.icon)} <span>${n.label}</span>
         ${n.badge?`<span class="nbadge">${n.badge}</span>`:''}
       </button>`).join('')}
     </nav>
-    <div class="sbfoot">Oceango SAS · v1.0${USE_SB?' · ☁️ Supabase':' · 💾 Local'}</div>
+    <div style="padding:10px 8px;border-top:1px solid rgba(255,255,255,.08)">
+      <button class="ni" onclick="requestNotifPermission()" style="font-size:11px">
+        ${ic('bell',14)} <span>Activar notificaciones</span>
+      </button>
+    </div>
+    <div class="sbfoot">Oceango SAS · v2.0${USE_SB?' · ☁️ Supabase':' · 💾 Local'}</div>
   </aside>
   <div class="main">
+    ${notifBar}
     <div class="topbar">
       <div class="ptitle">${titles[S.tab]||S.tab}</div>
       <div class="dchip">${new Date().toLocaleDateString('es-EC',{weekday:'short',day:'2-digit',month:'short',year:'numeric'})}</div>
     </div>
     <div class="content" id="cnt">
-      ${{dashboard:renderDash,clients:renderClients,projects:renderProjects,tasks:renderTasks,finance:renderFinance}[S.tab]()}
+      ${{dashboard:renderDash,clients:renderClients,projects:renderProjects,
+         tasks:renderTasks,finance:renderFinance,quotes:renderQuotes}[S.tab]()}
     </div>
   </div>`;
 }
@@ -337,34 +346,40 @@ function render(){
 function goTab(t){S.tab=t;if(t!=='projects')S.filterClient=null;if(t!=='tasks')S.filterProject=null;render();}
 function goProjects(cid){S.filterClient=cid;S.tab='projects';render();}
 function goTasks(pid){S.filterProject=pid;S.tab='tasks';render();}
+async function reload(){render();}
 
 // ============================================================
 //  DASHBOARD
 // ============================================================
 function renderDash(){
+  // FIX: sumar TODOS los registros sin filtrar por status para que pending también cuente en vista
+  const allIncome=DB.orders.filter(o=>o.type==='income');
+  const allExpense=DB.orders.filter(o=>o.type==='expense');
+  const ti=allIncome.reduce((s,o)=>s+Number(o.amount),0);
+  const te=allExpense.reduce((s,o)=>s+Number(o.amount),0);
+  const tiPaid=allIncome.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const tePaid=allExpense.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const bal=tiPaid-tePaid;
   const ap=DB.projects.filter(p=>p.status==='active');
-  const ti=DB.orders.filter(o=>o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const te=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const bal=ti-te;
   const td=today();
   const up=DB.tasks.filter(t=>{
     if(t.done||!t.due_date)return false;
-    const d=(new Date(t.due_date)-new Date(td))/86400000;
+    const d=(new Date(t.due_date+'T12:00:00')-new Date())/86400000;
     return d>=-1&&d<=7;
   }).sort((a,b)=>a.due_date.localeCompare(b.due_date));
-
-  const wd=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  const ws=new Date();ws.setDate(ws.getDate()-ws.getDay());
-  const wdates=Array.from({length:7},(_,i)=>{const d=new Date(ws);d.setDate(d.getDate()+i);return d;});
 
   return `
   <div class="g4" style="margin-bottom:20px">
     ${[
       {l:'Proyectos activos',v:ap.length},
-      {l:'Ingresos cobrados',v:fmtM(ti)},
-      {l:'Gastos pagados',v:fmtM(te)},
-      {l:'Balance',v:fmtM(bal),c:bal>=0?'var(--base)':'var(--re)'}
-    ].map(s=>`<div class="card csm"><div class="lbl">${s.l}</div><div class="val"${s.c?` style="color:${s.c}"`:''}>${s.v}</div></div>`).join('')}
+      {l:'Ingresos registrados',v:fmtM(ti),sub:`${fmtM(tiPaid)} cobrado`},
+      {l:'Gastos registrados',v:fmtM(te),sub:`${fmtM(tePaid)} pagado`},
+      {l:'Balance cobrado',v:fmtM(bal),c:bal>=0?'var(--base)':'var(--re)'}
+    ].map(s=>`<div class="card csm">
+      <div class="lbl">${s.l}</div>
+      <div class="val"${s.c?` style="color:${s.c}"`:''}>${s.v}</div>
+      ${s.sub?`<div style="font-size:11px;color:var(--mu);margin-top:2px">${s.sub}</div>`:''}
+    </div>`).join('')}
   </div>
   <div class="g2" style="margin-bottom:20px">
     <div class="card">
@@ -396,25 +411,28 @@ function renderDash(){
     </div>
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div class="stitle" style="margin-bottom:0">🗓 Próximas Tareas</div>
+        <div class="stitle" style="margin-bottom:0">📋 Próximas Tareas</div>
         <button class="btn bp bsm" onclick="openTaskModal()">+ Nueva</button>
       </div>
       ${up.length===0?`<div class="empty"><div class="ei">✅</div>Todo al día</div>`:
         up.map(t=>{
           const proj=DB.projects.find(p=>p.id===t.project_id);
-          const diff=Math.round((new Date(t.due_date)-new Date(td))/86400000);
+          const diff=Math.round((new Date(t.due_date+'T12:00:00')-new Date())/86400000);
           const dl=diff===0?`<span class="tag tg" style="font-size:10px">Hoy</span>`:
             diff===1?`<span class="tag ty" style="font-size:10px">Mañana</span>`:
-            diff===-1?`<span class="tag tr" style="font-size:10px">Ayer</span>`:
+            diff===-1?`<span class="tag tr" style="font-size:10px">Vencida</span>`:
             `<span style="font-size:10px;color:var(--mu)">${fmtDS(t.due_date)}</span>`;
           return `<div class="ti ${t.done?'done':''}" style="cursor:default">
             <div class="chk ${t.done?'on':''}" onclick="toggleTask('${t.id}',${!t.done})">${t.done?ic('check',10):''}</div>
             <div style="flex:1;min-width:0">
-              <div style="font-weight:500;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.title}</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-weight:500;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.title}</span>
+                <button class="btn bo bxs" style="flex-shrink:0;margin-left:6px" onclick="showTaskDetail('${t.id}')">${ic('eye',12)}</button>
+              </div>
               <div style="display:flex;gap:5px;align-items:center;margin-top:3px;flex-wrap:wrap">
                 ${dl}
                 ${t.due_time?`<span style="font-size:10px;color:var(--mu)">${ic('clk',10)} ${t.due_time.slice(0,5)}</span>`:''}
-                ${t.location?`<span style="font-size:10px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;max-width:80px">${ic('pin',10)} ${t.location}</span>`:''}
+                ${t.location?`<span style="font-size:10px;color:var(--mu);max-width:90px;overflow:hidden;text-overflow:ellipsis">${ic('pin',10)} ${t.location}</span>`:''}
                 <span class="tag ttl" style="font-size:10px">${(proj?.name||'?').slice(0,14)}</span>
               </div>
             </div>
@@ -422,22 +440,104 @@ function renderDash(){
         }).join('')}
     </div>
   </div>
-  <div class="card">
-    <div class="stitle">📅 Calendario Semanal</div>
-    <div class="cal">
-      ${wd.map(d=>`<div class="cah">${d}</div>`).join('')}
-      ${wdates.map(d=>{
-        const ds=d.toISOString().split('T')[0];
-        const isT=ds===td;
-        const ev=DB.tasks.filter(t=>!t.done&&t.due_date===ds);
-        return `<div class="cad${isT?' today':''}">
-          <div class="cdn">${d.getDate()}</div>
-          ${ev.map(e=>`<div class="cev" title="${e.title}">${e.due_time?e.due_time.slice(0,5)+' ':''}${e.title}</div>`).join('')}
-        </div>`;
-      }).join('')}
-    </div>
-  </div>
+  ${renderCalendar()}
   <div id="modals"></div>`;
+}
+
+// ============================================================
+//  FULL CALENDAR
+// ============================================================
+function renderCalendar(){
+  const yr=S.calYear,mo=S.calMonth;
+  const firstDay=new Date(yr,mo,1).getDay();
+  const daysInMonth=new Date(yr,mo+1,0).getDate();
+  const td=today();
+  const days=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+  // Build calendar cells
+  let cells='';
+  // Empty cells before first day
+  for(let i=0;i<firstDay;i++){
+    const prevDays=new Date(yr,mo,0).getDate();
+    cells+=`<div class="cal-day other-month"><div class="cal-dn">${prevDays-firstDay+i+1}</div></div>`;
+  }
+  // Days of month
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isT=ds===td;
+    const evts=DB.tasks.filter(t=>t.due_date===ds);
+    const evHTML=evts.map(e=>{
+      const cl=e.done?'done-ev':
+        e.due_date<td?'urgent':'';
+      return `<div class="cal-ev ${cl}" onclick="event.stopPropagation();showTaskDetail('${e.id}')" title="${e.title}">${e.due_time?e.due_time.slice(0,5)+' ':''}${e.title}</div>`;
+    }).join('');
+    cells+=`<div class="cal-day${isT?' today':''}"><div class="cal-dn">${d}</div>${evHTML}</div>`;
+  }
+  // Fill remaining cells
+  const totalCells=firstDay+daysInMonth;
+  const remaining=(7-totalCells%7)%7;
+  for(let i=1;i<=remaining;i++){
+    cells+=`<div class="cal-day other-month"><div class="cal-dn">${i}</div></div>`;
+  }
+
+  return `<div class="cal-wrap" style="margin-bottom:0">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="calNav(-1)">&#8249;</button>
+      <div class="cal-title">${MONTHS[mo]} ${yr}</div>
+      <button class="cal-nav" onclick="calNav(1)">&#8250;</button>
+    </div>
+    <div class="cal-grid">
+      ${days.map(d=>`<div class="cal-dh">${d}</div>`).join('')}
+      ${cells}
+    </div>
+  </div>`;
+}
+
+function calNav(dir){
+  S.calMonth+=dir;
+  if(S.calMonth>11){S.calMonth=0;S.calYear++;}
+  if(S.calMonth<0){S.calMonth=11;S.calYear--;}
+  render();
+}
+
+// ============================================================
+//  TASK DETAIL MODAL
+// ============================================================
+function showTaskDetail(tid){
+  const t=DB.tasks.find(x=>x.id===tid);if(!t)return;
+  const proj=DB.projects.find(p=>p.id===t.project_id);
+  const cl=DB.clients.find(c=>c.id===proj?.client_id);
+  const diff=t.due_date?Math.round((new Date(t.due_date+'T12:00:00')-new Date())/86400000):null;
+  const dlTag=diff===null?'':diff===0?`<span class="tag tg">Hoy</span>`:
+    diff===1?`<span class="tag ty">Mañana</span>`:
+    diff<0?`<span class="tag tr">Vencida hace ${Math.abs(diff)} días</span>`:
+    `<span class="tag ttl">En ${diff} días</span>`;
+
+  const wrap=document.createElement('div');wrap.className='ov';
+  wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
+  wrap.innerHTML=`<div class="modal">
+    <div class="mh">
+      <div class="mt">${ic('tasks',16)} Detalle de Tarea</div>
+      <button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',14)}</button>
+    </div>
+    <div class="task-detail">
+      <div style="font-family:Sora;font-weight:600;font-size:16px;color:var(--dk);margin-bottom:12px">${t.step_order||'·'}. ${t.title}</div>
+      <div class="td-row"><span class="td-label">Estado</span> <span class="tag ${t.done?'tg':'ty'}">${t.done?'Completada':'Pendiente'}</span> ${dlTag}</div>
+      ${t.description?`<div class="td-row"><span class="td-label">Descripción</span><span style="color:var(--mu)">${t.description}</span></div>`:''}
+      <div class="td-row"><span class="td-label">Proyecto</span><span class="tag ttl">${proj?.name||'—'}</span></div>
+      <div class="td-row"><span class="td-label">Cliente</span><span>${cl?.name||'—'}</span></div>
+      ${t.due_date?`<div class="td-row"><span class="td-label">Fecha</span><span>${fmtD(t.due_date)}${t.due_time?' a las '+t.due_time.slice(0,5):''}</span></div>`:''}
+      ${t.location?`<div class="td-row"><span class="td-label">Ubicación</span><span>${ic('pin',13)} ${t.location}</span></div>`:''}
+    </div>
+    <div class="mf">
+      <button class="btn bo" onclick="this.closest('.ov').remove()">Cerrar</button>
+      <button class="btn bp" onclick="this.closest('.ov').remove();openTaskModal('${t.id}')">${ic('edit',14)} Editar</button>
+      <button class="btn ${t.done?'bo':'bp'}" onclick="toggleTask('${t.id}',${!t.done});this.closest('.ov').remove()">
+        ${t.done?'Marcar pendiente':'Marcar completada'}
+      </button>
+    </div>
+  </div>`;
+  document.body.appendChild(wrap);
 }
 
 // ============================================================
@@ -462,9 +562,9 @@ function renderClients(){
             <td style="font-family:monospace;font-size:12px">${c.cedula||'—'}</td>
             <td><span class="tag ttl">${act} activo${act!==1?'s':''}</span> <span style="font-size:11px;color:var(--mu)">${tot} total</span></td>
             <td><div style="display:flex;gap:5px">
-              <button class="btn bo bxs" onclick="goProjects('${c.id}')" title="Ver proyectos">${ic('eye',13)}</button>
-              <button class="btn bo bxs" onclick="openClientModal('${c.id}')" title="Editar">${ic('edit',13)}</button>
-              <button class="btn bd bxs" onclick="deleteClient('${c.id}')" title="Eliminar">${ic('trash',13)}</button>
+              <button class="btn bo bxs" onclick="goProjects('${c.id}')">${ic('eye',13)}</button>
+              <button class="btn bo bxs" onclick="openClientModal('${c.id}')">${ic('edit',13)}</button>
+              <button class="btn bd bxs" onclick="deleteClient('${c.id}')">${ic('trash',13)}</button>
             </div></td>
           </tr>`;
         }).join('')}
@@ -552,7 +652,7 @@ function renderTasks(){
   const fp=S.taskFilter||S.filterProject||'';
   let tasks=[...DB.tasks];
   if(fp)tasks=tasks.filter(t=>t.project_id===fp);
-  tasks.sort((a,b)=>(a.project_id+String(a.step_order||0)).localeCompare(b.project_id+String(b.step_order||0)));
+  tasks.sort((a,b)=>(a.project_id+String(a.step_order||0).padStart(3,'0')).localeCompare(b.project_id+String(b.step_order||0).padStart(3,'0')));
   let lp=null;
   return `
   <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;align-items:center">
@@ -580,7 +680,11 @@ function renderTasks(){
         <div style="flex:1">
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <span style="font-weight:500;font-size:13px;text-decoration:${t.done?'line-through':'none'}">${t.step_order||'·'} · ${t.title}</span>
-            ${!ina?`<button class="btn bd bxs" style="margin-left:8px;flex-shrink:0" onclick="deleteTask('${t.id}')">${ic('trash',12)}</button>`:''}
+            <div style="display:flex;gap:4px;margin-left:8px;flex-shrink:0">
+              <button class="btn bo bxs" onclick="showTaskDetail('${t.id}')">${ic('eye',12)}</button>
+              ${!ina?`<button class="btn bo bxs" onclick="openTaskModal('${t.id}')">${ic('edit',12)}</button>`:''}
+              ${!ina?`<button class="btn bd bxs" onclick="deleteTask('${t.id}')">${ic('trash',12)}</button>`:''}
+            </div>
           </div>
           ${t.description?`<div style="font-size:11px;color:var(--mu);margin-top:2px">${t.description}</div>`:''}
           <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
@@ -599,21 +703,24 @@ function renderTasks(){
 // ============================================================
 function renderFinance(){
   const ff=S.finFilter||'all';
-  const ti=DB.orders.filter(o=>o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const te=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const bal=ti-te;
-  const iva=DB.orders.filter(o=>o.type==='income'&&o.has_iva&&o.status==='paid').reduce((s,o)=>s+Number(o.iva_amount||0),0);
+  // FIX: mostrar todos los montos, no solo paid
+  const tiAll=DB.orders.filter(o=>o.type==='income').reduce((s,o)=>s+Number(o.amount),0);
+  const teAll=DB.orders.filter(o=>o.type==='expense').reduce((s,o)=>s+Number(o.amount),0);
+  const tiPaid=DB.orders.filter(o=>o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const tePaid=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const bal=tiPaid-tePaid;
+  const iva=DB.orders.filter(o=>o.type==='income'&&o.has_iva).reduce((s,o)=>s+Number(o.iva_amount||o.amount*.15),0);
+
   let ords=[...DB.orders];
   if(ff!=='all')ords=ords.filter(o=>o.type===ff);
-  ords.sort((a,b)=>b.order_date?.localeCompare(a.order_date));
+  ords.sort((a,b)=>(b.order_date||'').localeCompare(a.order_date||''));
+
   return `
   <div class="g4" style="margin-bottom:20px">
-    ${[
-      {l:'Ingresos cobrados',v:fmtM(ti),c:'var(--base)'},
-      {l:'Gastos pagados',v:fmtM(te),c:'var(--re)'},
-      {l:'Balance',v:fmtM(bal),c:bal>=0?'var(--dk)':'var(--re)'},
-      {l:'IVA acumulado 15%',v:fmtM(iva),c:'var(--mu)'}
-    ].map(s=>`<div class="card csm"><div class="lbl">${s.l}</div><div class="val" style="color:${s.c}">${s.v}</div></div>`).join('')}
+    <div class="card csm"><div class="lbl">Total ingresos</div><div class="val" style="color:var(--base)">${fmtM(tiAll)}</div><div style="font-size:11px;color:var(--mu)">${fmtM(tiPaid)} cobrado</div></div>
+    <div class="card csm"><div class="lbl">Total gastos</div><div class="val" style="color:var(--re)">${fmtM(teAll)}</div><div style="font-size:11px;color:var(--mu)">${fmtM(tePaid)} pagado</div></div>
+    <div class="card csm"><div class="lbl">Balance (cobrado-pagado)</div><div class="val" style="color:${bal>=0?'var(--dk)':'var(--re)'}">${fmtM(bal)}</div></div>
+    <div class="card csm"><div class="lbl">IVA acumulado 15%</div><div class="val" style="color:var(--mu)">${fmtM(iva)}</div></div>
   </div>
   <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap">
     <div style="display:flex;gap:5px;flex-wrap:wrap">
@@ -636,11 +743,7 @@ function renderFinance(){
             <td style="font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.concept}</td>
             <td><span class="tag ${o.type==='income'?'tg':'tr'}">${o.type==='income'?'Cobro':'Gasto'}</span></td>
             <td><span style="font-weight:600;font-size:13px;color:${o.type==='income'?'var(--base)':'var(--re)'}">${o.type==='income'?'+':'-'}${fmtM(o.amount)}</span></td>
-            <td>
-              ${o.has_iva?`<span class="tag tb" style="font-size:10px;margin-right:2px">IVA</span>`:''}
-              ${o.has_retention?`<span class="tag ty" style="font-size:10px">Ret.</span>`:''}
-              ${!o.has_iva&&!o.has_retention?`<span style="color:var(--so)">—</span>`:''}
-            </td>
+            <td>${o.has_iva?`<span class="tag tb" style="font-size:10px;margin-right:2px">IVA</span>`:''}${o.has_retention?`<span class="tag ty" style="font-size:10px">Ret.</span>`:''}${!o.has_iva&&!o.has_retention?`<span style="color:var(--so)">—</span>`:''}</td>
             <td style="font-family:monospace;font-size:11px;color:var(--mu)">${o.invoice_num||'—'}</td>
             <td><span class="tag ${o.status==='paid'?'tg':'ty'}" style="cursor:pointer" onclick="toggleOrder('${o.id}','${o.status}')">${o.status==='paid'?'Pagado':'Pendiente'}</span></td>
             <td><button class="btn bd bxs" onclick="deleteOrder('${o.id}')">${ic('trash',12)}</button></td>
@@ -653,36 +756,72 @@ function renderFinance(){
 }
 
 // ============================================================
+//  QUOTES
+// ============================================================
+function renderQuotes(){
+  const quotes=DB.quotes||[];
+  return `
+  <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+    <button class="btn bp" onclick="openQuoteModal()">+ Nueva Cotización</button>
+  </div>
+  ${quotes.length===0?`<div class="card"><div class="empty"><div class="ei">📄</div><div>Sin cotizaciones aún</div><div style="margin-top:8px;font-size:13px">Crea tu primera cotización con hoja membretada Oceango</div></div></div>`:
+    `<div class="card" style="padding:0;overflow:hidden"><div class="tw"><table class="tbl">
+      <thead><tr><th>Código</th><th>Fecha</th><th>Cliente / Destinatario</th><th>Asunto</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody>${quotes.map(q=>`<tr>
+        <td><span style="font-family:monospace;font-size:11px;color:var(--base);font-weight:600">${q.code}</span></td>
+        <td style="font-size:12px">${fmtD(q.date)}</td>
+        <td style="font-size:13px">${q.recipient||'—'}</td>
+        <td style="font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${q.subject||'—'}</td>
+        <td><span class="tag ${q.status==='sent'?'tg':q.status==='draft'?'ty':'tb'}">${q.status==='sent'?'Enviada':q.status==='draft'?'Borrador':'Aceptada'}</span></td>
+        <td><div style="display:flex;gap:5px">
+          <button class="btn bo bxs" onclick="openQuoteModal('${q.id}')">${ic('edit',13)}</button>
+          <button class="btn bp bxs" onclick="printQuote('${q.id}')">${ic('pdf',13)}</button>
+          <button class="btn bd bxs" onclick="deleteQuote('${q.id}')">${ic('trash',13)}</button>
+        </div></td>
+      </tr>`).join('')}
+      </tbody>
+    </table></div></div>`}
+  <div id="modals"></div>`;
+}
+
+// ============================================================
 //  MODALS
 // ============================================================
-function modal(id,title,body){
-  const wrap=document.createElement('div');wrap.id=id+'_wrap';wrap.className='ov';
+function modal(id,title,body,large=false){
+  document.getElementById(id+'_wrap')?.remove();
+  const wrap=document.createElement('div');
+  wrap.id=id+'_wrap';wrap.className='ov';
   wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
-  wrap.innerHTML=`<div class="modal">
-    <div class="mh"><div class="mt">${title}</div><button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',14)}</button></div>
+  wrap.innerHTML=`<div class="modal${large?' modal-lg':''}">
+    <div class="mh"><div class="mt">${title}</div>
+      <button class="btn bo bxs" onclick="document.getElementById('${id}_wrap').remove()">${ic('x',14)}</button></div>
     ${body}
   </div>`;
   document.body.appendChild(wrap);
 }
 
-function openTaskModal(){
+function openTaskModal(tid=null){
+  const t=tid?DB.tasks.find(x=>x.id===tid):null;
   const ap=DB.projects.filter(p=>p.status==='active'||p.status==='paused');
-  modal('task','Nueva Tarea',`
+  modal('task',t?'Editar Tarea':'Nueva Tarea',`
     <div class="fg"><label class="fl">Proyecto *</label>
-      <select class="fi" id="t_proj"><option value="">Seleccionar...</option>${ap.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+      <select class="fi" id="t_proj">
+        <option value="">Seleccionar...</option>
+        ${ap.map(p=>`<option value="${p.id}"${t?.project_id===p.id?' selected':''}>${p.name}</option>`).join('')}
+      </select></div>
     <div class="fr">
-      <div class="fg"><label class="fl">Paso / Orden</label><input class="fi" type="number" id="t_ord" value="1" min="1"></div>
-      <div class="fg"><label class="fl">Título *</label><input class="fi" id="t_ttl" placeholder="Nombre de la tarea"></div>
+      <div class="fg"><label class="fl">Paso / Orden</label><input class="fi" type="number" id="t_ord" value="${t?.step_order||1}" min="1"></div>
+      <div class="fg"><label class="fl">Título *</label><input class="fi" id="t_ttl" value="${t?.title||''}" placeholder="Nombre de la tarea"></div>
     </div>
-    <div class="fg"><label class="fl">Descripción</label><textarea class="fi" id="t_dsc" rows="2"></textarea></div>
+    <div class="fg"><label class="fl">Descripción</label><textarea class="fi" id="t_dsc" rows="2">${t?.description||''}</textarea></div>
     <div class="fr">
-      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="t_dt"></div>
-      <div class="fg"><label class="fl">Hora</label><input class="fi" type="time" id="t_tm"></div>
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="t_dt" value="${t?.due_date||''}"></div>
+      <div class="fg"><label class="fl">Hora</label><input class="fi" type="time" id="t_tm" value="${t?.due_time||''}"></div>
     </div>
-    <div class="fg"><label class="fl">Ubicación</label><input class="fi" id="t_loc" placeholder="Dirección o plataforma"></div>
+    <div class="fg"><label class="fl">Ubicación</label><input class="fi" id="t_loc" value="${t?.location||''}" placeholder="Dirección o plataforma"></div>
     <div class="mf">
-      <button class="btn bo" onclick="this.closest('.ov').remove()">Cancelar</button>
-      <button class="btn bp" onclick="saveTask()">Guardar Tarea</button>
+      <button class="btn bo" onclick="document.getElementById('task_wrap').remove()">Cancelar</button>
+      <button class="btn bp" onclick="saveTask('${tid||''}')">${t?'Actualizar':'Guardar'} Tarea</button>
     </div>`);
 }
 
@@ -694,7 +833,7 @@ function openClientModal(cid=null){
     <div class="fg"><label class="fl">Representante Legal</label><input class="fi" id="cl_rp" value="${c?.rep||''}" placeholder="Nombre completo"></div>
     <div class="fg"><label class="fl">Cédula Representante</label><input class="fi" id="cl_cd" value="${c?.cedula||''}" placeholder="0900000000" maxlength="10"></div>
     <div class="mf">
-      <button class="btn bo" onclick="this.closest('.ov').remove()">Cancelar</button>
+      <button class="btn bo" onclick="document.getElementById('client_wrap').remove()">Cancelar</button>
       <button class="btn bp" onclick="saveClient('${cid||''}')">Guardar</button>
     </div>`);
 }
@@ -706,7 +845,9 @@ function openProjectModal(pid=null){
   modal('project',p?'Editar Proyecto':'Nuevo Proyecto',`
     <div class="fr">
       <div class="fg"><label class="fl">Cliente *</label>
-        <select class="fi" id="pr_cl">${DB.clients.map(c=>`<option value="${c.id}"${p?.client_id===c.id?' selected':''}>${c.name}</option>`).join('')}</select></div>
+        <select class="fi" id="pr_cl">
+          ${DB.clients.map(c=>`<option value="${c.id}"${p?.client_id===c.id?' selected':''}>${c.name}</option>`).join('')}
+        </select></div>
       <div class="fg"><label class="fl">Valor Contrato ($)</label><input class="fi" type="number" id="pr_vl" value="${p?.contract_value||''}"></div>
     </div>
     <div class="fg"><label class="fl">Nombre del Proyecto *</label><input class="fi" id="pr_nm" value="${p?.name||''}" placeholder="Descripción del proyecto"></div>
@@ -730,7 +871,7 @@ function openProjectModal(pid=null){
       </div>`).join('')}
     </div>
     <div class="mf">
-      <button class="btn bo" onclick="this.closest('.ov').remove()">Cancelar</button>
+      <button class="btn bo" onclick="document.getElementById('project_wrap').remove()">Cancelar</button>
       <button class="btn bp" onclick="saveProject('${pid||''}')">Guardar Proyecto</button>
     </div>`);
 }
@@ -745,7 +886,9 @@ function openOrderModal(){
           <option value="expense">Orden de Pago (gasto)</option>
         </select></div>
       <div class="fg"><label class="fl">Proyecto *</label>
-        <select class="fi" id="or_pj"><option value="">Seleccionar...</option>${ap.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+        <select class="fi" id="or_pj"><option value="">Seleccionar...</option>
+          ${ap.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}
+        </select></div>
     </div>
     <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="or_cn" placeholder="Descripción del cobro o gasto"></div>
     <div class="fr">
@@ -766,11 +909,170 @@ function openOrderModal(){
         <option value="tasa_regulatoria">Tasa regulatoria</option><option value="honorarios">Honorarios</option><option value="otro">Otro</option>
       </select></div>
     <div class="mf">
-      <button class="btn bo" onclick="this.closest('.ov').remove()">Cancelar</button>
+      <button class="btn bo" onclick="document.getElementById('order_wrap').remove()">Cancelar</button>
       <button class="btn bp" onclick="saveOrder()">Registrar Orden</button>
     </div>`);
 }
 
+// QUOTE MODAL
+function openQuoteModal(qid=null){
+  const q=qid?DB.quotes.find(x=>x.id===qid):null;
+  modal('quote_edit','Nueva Cotización',`
+    <div class="fr">
+      <div class="fg"><label class="fl">Destinatario / Empresa</label><input class="fi" id="q_rec" value="${q?.recipient||''}" placeholder="Nombre del cliente o empresa"></div>
+      <div class="fg"><label class="fl">Asunto / Servicio</label><input class="fi" id="q_sub" value="${q?.subject||''}" placeholder="Ej: Asesoría regulatoria"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="q_dt" value="${q?.date||today()}"></div>
+      <div class="fg"><label class="fl">Válida hasta</label><input class="fi" type="date" id="q_vld" value="${q?.valid_until||''}"></div>
+    </div>
+    <div class="fg"><label class="fl">Cuerpo de la cotización</label>
+      <div class="editor-toolbar">
+        <button class="tb-btn" onclick="fmt('bold')" title="Negrita"><b>B</b></button>
+        <button class="tb-btn" onclick="fmt('italic')" title="Cursiva"><i>I</i></button>
+        <button class="tb-btn" onclick="fmt('underline')" title="Subrayado"><u>U</u></button>
+        <button class="tb-btn" onclick="fmt('insertOrderedList')" title="Lista numerada">1.</button>
+        <button class="tb-btn" onclick="fmt('insertUnorderedList')" title="Lista">•</button>
+        <button class="tb-btn" onclick="insertTable()" title="Tabla">⊞</button>
+        <button class="tb-btn" onclick="fmt('justifyLeft')" title="Izquierda">≡</button>
+        <button class="tb-btn" onclick="fmt('justifyRight')" title="Derecha">≡</button>
+        <select class="tb-btn" onchange="fmt('fontSize',this.value);this.value=''" style="width:80px">
+          <option value="">Tamaño</option>
+          <option value="2">Pequeño</option><option value="3">Normal</option>
+          <option value="4">Mediano</option><option value="5">Grande</option>
+        </select>
+      </div>
+      <div class="quote-editor" id="q_body" contenteditable="true">${q?.body||getQuoteTemplate()}</div>
+    </div>
+    <div class="fg"><label class="fl">Notas internas (no aparecen en PDF)</label><textarea class="fi" id="q_notes" rows="2">${q?.notes||''}</textarea></div>
+    <div class="mf">
+      <button class="btn bo" onclick="document.getElementById('quote_edit_wrap').remove()">Cancelar</button>
+      <button class="btn bo" onclick="saveQuote('${qid||''}','draft')">Guardar borrador</button>
+      <button class="btn bp" onclick="saveQuote('${qid||''}','sent')">${ic('send',14)} Guardar y emitir PDF</button>
+    </div>`,true);
+}
+
+function fmt(cmd,val){document.execCommand(cmd,false,val||null);}
+function insertTable(){
+  const tbl=`<br><table border="1" style="border-collapse:collapse;width:100%;font-size:13px;margin:8px 0">
+    <tr style="background:#f0faf8"><th style="padding:6px 10px;text-align:left">Descripción del Servicio</th><th style="padding:6px 10px;width:100px">Cantidad</th><th style="padding:6px 10px;width:120px">Precio Unit.</th><th style="padding:6px 10px;width:120px">Total</th></tr>
+    <tr><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td></tr>
+    <tr><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td><td style="padding:6px 10px"> </td></tr>
+    <tr style="background:#e0f7f6;font-weight:bold"><td colspan="3" style="padding:6px 10px;text-align:right">TOTAL</td><td style="padding:6px 10px"> </td></tr>
+  </table><br>`;
+  document.execCommand('insertHTML',false,tbl);
+}
+function getQuoteTemplate(){
+  return `<p>Estimados señores,</p><p><br></p><p>Por medio de la presente, tenemos el agrado de presentarles nuestra propuesta de servicios de asesoría comercial y gestión de trámites regulatorios.</p><p><br></p><p><strong>Servicios incluidos:</strong></p><ul><li>Asesoría y gestión de trámites regulatorios</li><li>Seguimiento de procesos ante entidades competentes</li><li>Elaboración de informes de avance</li></ul><p><br></p><p>Quedamos a su disposición para cualquier consulta adicional.</p><p><br></p><p>Atentamente,</p><p><strong>Equipo Oceango</strong></p>`;
+}
+
+// ============================================================
+//  QUOTE PRINT (con hoja membretada)
+// ============================================================
+function printQuote(qid){
+  const q=DB.quotes.find(x=>x.id===qid);if(!q)return;
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Cotización ${q.code} - Oceango</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',Arial,sans-serif;color:#0a3628;font-size:13px;background:#fff;position:relative}
+    /* HOJA MEMBRETADA */
+    .page{min-height:297mm;width:210mm;margin:0 auto;position:relative;padding:28mm 20mm 32mm 20mm}
+    /* HEADER */
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px}
+    .logo-area{display:flex;align-items:center;gap:10px}
+    .logo-icon{width:44px;height:52px}
+    .logo-text .brand{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:#0a3628;line-height:1}
+    .logo-text .tagline{font-size:10px;color:#4a7c6b;margin-top:2px}
+    .header-right{text-align:right;font-size:11px;color:#4a7c6b;line-height:1.6}
+    /* WATERMARK */
+    .watermark{position:absolute;top:40mm;right:10mm;opacity:.04;z-index:0;pointer-events:none}
+    .watermark2{position:absolute;bottom:40mm;left:5mm;opacity:.04;z-index:0;pointer-events:none}
+    /* CONTENT */
+    .content{position:relative;z-index:1}
+    .quote-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:#0a3628;margin-bottom:4px}
+    .quote-code{font-size:11px;color:#4a7c6b;font-family:monospace;margin-bottom:20px}
+    .meta-row{display:flex;gap:40px;margin-bottom:20px;padding:14px 18px;background:#f0faf8;border-radius:8px;border-left:4px solid #2d8c6e}
+    .meta-item label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:#8ab8ac;display:block;margin-bottom:2px}
+    .meta-item span{font-size:13px;font-weight:500;color:#0a3628}
+    .divider{height:1px;background:#c8ede6;margin:18px 0}
+    .body-content{line-height:1.7;color:#1a3a2a}
+    .body-content table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+    .body-content th{background:#f0faf8;padding:6px 10px;text-align:left;font-weight:600;border:1px solid #c8ede6}
+    .body-content td{padding:6px 10px;border:1px solid #e0f0ec}
+    .body-content p{margin-bottom:8px}
+    .body-content ul,.body-content ol{padding-left:18px;margin-bottom:8px}
+    .body-content li{margin-bottom:3px}
+    /* FOOTER */
+    .footer{position:absolute;bottom:0;left:0;right:0;padding:12px 20mm;display:flex;justify-content:space-between;align-items:center;background:#1a5c45}
+    .footer-left{font-size:10px;color:rgba(255,255,255,.7);line-height:1.6}
+    .footer-right{font-size:10px;color:rgba(255,255,255,.7);text-align:right}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{margin:0;width:100%}}
+  </style>
+  </head><body>
+  <div class="page">
+    <!-- Marca de agua fondo -->
+    <svg class="watermark" width="320" height="380" viewBox="0 0 100 100"><text x="5" y="80" font-size="90" fill="#0a3628" font-family="Sora,sans-serif" font-weight="700">G</text></svg>
+    <svg class="watermark2" width="240" height="280" viewBox="0 0 100 100"><text x="5" y="80" font-size="90" fill="#0a3628" font-family="Sora,sans-serif" font-weight="700">O</text></svg>
+
+    <!-- HEADER membretado -->
+    <div class="header">
+      <div class="logo-area">
+        <!-- Logo SVG replicado de la hoja membretada -->
+        <svg class="logo-icon" viewBox="0 0 44 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 2 C10 2 4 10 4 22 C4 34 10 42 22 42 C34 42 40 34 40 22" stroke="#0a3628" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M22 2 L22 42" stroke="#0a3628" stroke-width="2" stroke-linecap="round"/>
+          <path d="M4 22 L22 22" stroke="#0a3628" stroke-width="2" stroke-linecap="round"/>
+          <path d="M22 42 L36 50" stroke="#0a3628" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="logo-text">
+          <div class="brand">OCEAN<br>GO</div>
+          <div class="tagline">Commercial assesor · Proyects develop</div>
+        </div>
+      </div>
+      <div class="header-right">
+        oceango.ec@gmail.com<br>
+        +593 969245676<br>
+        Guayaquil - Ecuador
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="quote-title">COTIZACIÓN DE SERVICIOS</div>
+      <div class="quote-code">${q.code} · Emitida: ${fmtD(q.date)}${q.valid_until?` · Válida hasta: ${fmtD(q.valid_until)}`:''}</div>
+
+      <div class="meta-row">
+        <div class="meta-item"><label>Dirigido a</label><span>${q.recipient||'—'}</span></div>
+        <div class="meta-item"><label>Asunto</label><span>${q.subject||'—'}</span></div>
+        <div class="meta-item"><label>Fecha de emisión</label><span>${fmtD(q.date)}</span></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="body-content">${q.body||''}</div>
+      <div class="divider"></div>
+
+      <div style="font-size:11px;color:#4a7c6b;text-align:center;margin-top:24px">
+        Esta cotización es válida conforme a los términos y condiciones de Oceango SAS.<br>
+        Para consultas: oceango.ec@gmail.com · +593 969245676
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-left">Commercial assesor · Proyects develop<br>oceango.ec@gmail.com</div>
+      <div class="footer-right">Guayaquil - Ecuador<br>+593 969245676</div>
+    </div>
+  </div>
+  <script>window.onload=()=>window.print();<\/script>
+  </body></html>`;
+
+  const w=window.open('','_blank','width=900,height=750');
+  w.document.write(html);w.document.close();
+}
+
+// ============================================================
+//  MODAL HELPERS
+// ============================================================
 function togInv(){const t=$('or_tp')?.value;const g=$('or_inv_g');if(g)g.style.display=t==='income'?'block':'none';}
 function calcTax(){
   const a=parseFloat($('or_am')?.value||0);
@@ -783,7 +1085,6 @@ function calcTax(){
   if(ret&&rp)t+=` · Ret. ${rp}%: -${fmtM(a*rp/100)}`;
   p.textContent=t;p.style.display='block';
 }
-
 function addPR(){
   const n=window._prc||0;
   const d=document.createElement('div');d.id=`pr_${n}`;
@@ -803,24 +1104,25 @@ function calcPT(){
 // ============================================================
 //  ACTIONS
 // ============================================================
-async function saveTask(){
+async function saveTask(tid){
   const pid=$('t_proj')?.value;const ttl=$('t_ttl')?.value?.trim();
   if(!pid||!ttl){toast('Completa los campos obligatorios','te');return;}
   const proj=DB.projects.find(p=>p.id===pid);
-  if(proj?.status==='finished'||proj?.status==='inactive'){toast('Proyecto finalizado o inactivo','te');return;}
-  await dbInsert('tasks',{project_id:pid,title:ttl,description:$('t_dsc')?.value||null,
+  if(proj?.status==='finished'||proj?.status==='inactive'){toast('Proyecto cerrado','te');return;}
+  const d={project_id:pid,title:ttl,description:$('t_dsc')?.value||null,
     step_order:parseInt($('t_ord')?.value)||1,due_date:$('t_dt')?.value||null,
-    due_time:$('t_tm')?.value||null,location:$('t_loc')?.value||null,done:false});
-  toast('Tarea registrada');document.querySelector('#task_wrap')?.remove();await reload();
+    due_time:$('t_tm')?.value||null,location:$('t_loc')?.value||null};
+  if(tid){await dbUpdate('tasks',tid,d);}
+  else{await dbInsert('tasks',{...d,done:false});}
+  toast(tid?'Tarea actualizada':'Tarea registrada');
+  document.getElementById('task_wrap')?.remove();render();
 }
-
 async function toggleTask(id,done){
-  await dbUpdate('tasks',id,{done,done_at:done?new Date().toISOString():null});
-  await reload();
+  await dbUpdate('tasks',id,{done,done_at:done?new Date().toISOString():null});render();
 }
 async function deleteTask(id){
   if(!confirm('¿Eliminar tarea?'))return;
-  await dbDelete('tasks',id);toast('Tarea eliminada');await reload();
+  await dbDelete('tasks',id);toast('Tarea eliminada');render();
 }
 
 async function saveClient(cid){
@@ -828,12 +1130,13 @@ async function saveClient(cid){
   if(!nm||!ru){toast('Nombre y RUC son obligatorios','te');return;}
   const d={name:nm,ruc:ru,rep:$('cl_rp')?.value||null,cedula:$('cl_cd')?.value||null};
   if(cid){await dbUpdate('clients',cid,d);}else{await dbInsert('clients',d);}
-  toast(cid?'Cliente actualizado':'Cliente registrado');document.querySelector('#client_wrap')?.remove();await reload();
+  toast(cid?'Cliente actualizado':'Cliente registrado');
+  document.getElementById('client_wrap')?.remove();render();
 }
 async function deleteClient(id){
   if(DB.projects.some(p=>p.client_id===id)){toast('Cliente tiene proyectos asociados','te');return;}
   if(!confirm('¿Eliminar cliente?'))return;
-  await dbDelete('clients',id);toast('Cliente eliminado');await reload();
+  await dbDelete('clients',id);toast('Cliente eliminado');render();
 }
 
 async function saveProject(pid){
@@ -846,35 +1149,37 @@ async function saveProject(pid){
     const pct=parseFloat(ins[0]?.value||0);const lbl=ins[1]?.value?.trim();const dt=ins[2]?.value;
     if(pct>0&&lbl){sched.push({pct,label:lbl,due_date:dt||null,paid:false});tot+=pct;}
   });
-  if(sched.length&&Math.abs(tot-100)>.5){toast('Los porcentajes deben sumar 100%','te');return;}
+  if(sched.length&&Math.abs(tot-100)>.5){toast('Porcentajes deben sumar 100%','te');return;}
   const pd={client_id:cl,name:nm,start_date:s,end_date:$('pr_e')?.value||null,
     contract_value:parseFloat($('pr_vl')?.value)||0,notes:$('pr_nt')?.value||null};
   if(pid){
     await dbUpdate('projects',pid,pd);
-    DB.payment_schedule=DB.payment_schedule.filter(x=>x.project_id!==pid);
-    if(!USE_SB)saveDB();
+    DB.payment_schedule=DB.payment_schedule.filter(x=>x.project_id!==pid);saveDB();
     for(const x of sched)await dbInsert('payment_schedule',{...x,project_id:pid});
   }else{
     const np=await dbInsert('projects',{...pd,code:nextCode('PROJ'),status:'active'});
     if(np)for(const x of sched)await dbInsert('payment_schedule',{...x,project_id:np.id});
   }
-  toast(pid?'Proyecto actualizado':'Proyecto creado');document.querySelector('#project_wrap')?.remove();await reload();
+  toast(pid?'Proyecto actualizado':'Proyecto creado');
+  document.getElementById('project_wrap')?.remove();render();
 }
-async function chgProjStatus(id,status){await dbUpdate('projects',id,{status});toast('Estado actualizado');await reload();}
+async function chgProjStatus(id,status){await dbUpdate('projects',id,{status});toast('Estado actualizado');render();}
 async function deleteProject(id){
   if(!confirm('¿Eliminar proyecto, tareas y órdenes?'))return;
-  if(!USE_SB){DB.tasks=DB.tasks.filter(t=>t.project_id!==id);DB.orders=DB.orders.filter(o=>o.project_id!==id);DB.payment_schedule=DB.payment_schedule.filter(x=>x.project_id!==id);saveDB();}
-  await dbDelete('projects',id);toast('Proyecto eliminado');await reload();
+  DB.tasks=DB.tasks.filter(t=>t.project_id!==id);
+  DB.orders=DB.orders.filter(o=>o.project_id!==id);
+  DB.payment_schedule=DB.payment_schedule.filter(x=>x.project_id!==id);
+  saveDB();await dbDelete('projects',id);toast('Proyecto eliminado');render();
 }
 async function togglePS(id,paid){
-  await dbUpdate('payment_schedule',id,{paid,paid_at:paid?new Date().toISOString():null});await reload();
+  await dbUpdate('payment_schedule',id,{paid,paid_at:paid?new Date().toISOString():null});render();
 }
 
 async function saveOrder(){
   const pid=$('or_pj')?.value;const cn=$('or_cn')?.value?.trim();const am=parseFloat($('or_am')?.value||0);
   if(!pid||!cn||!am){toast('Completa los campos obligatorios','te');return;}
   const proj=DB.projects.find(p=>p.id===pid);
-  if(proj?.status==='finished'||proj?.status==='inactive'){toast('Proyecto finalizado o inactivo','te');return;}
+  if(proj?.status==='finished'||proj?.status==='inactive'){toast('Proyecto cerrado','te');return;}
   const tp=$('or_tp')?.value;
   const hasIva=$('or_iva')?.checked||false;
   const hasRet=$('or_ret')?.checked||false;
@@ -882,24 +1187,44 @@ async function saveOrder(){
   await dbInsert('orders',{
     project_id:pid,type:tp,concept:cn,amount:am,order_date:$('or_dt')?.value||today(),
     status:'pending',invoice_num:tp==='income'?($('or_iv')?.value||null):null,
-    has_iva:hasIva,iva_amount:hasIva?am*.15:0,has_retention:hasRet,retention_pct:retPct,
-    retention_amount:hasRet?am*retPct/100:0,
+    has_iva:hasIva,iva_amount:hasIva?am*.15:0,
+    has_retention:hasRet,retention_pct:retPct,retention_amount:hasRet?am*retPct/100:0,
     expense_category:$('or_cat')?.value||null,
     code:nextCode(tp==='income'?'ODC':'ODP')
   });
-  toast('Orden registrada');document.querySelector('#order_wrap')?.remove();await reload();
+  toast('Orden registrada');document.getElementById('order_wrap')?.remove();render();
 }
 async function toggleOrder(id,cur){
   const ns=cur==='paid'?'pending':'paid';
-  await dbUpdate('orders',id,{status:ns,paid_at:ns==='paid'?new Date().toISOString():null});await reload();
+  await dbUpdate('orders',id,{status:ns,paid_at:ns==='paid'?new Date().toISOString():null});render();
 }
 async function deleteOrder(id){
   if(!confirm('¿Eliminar orden?'))return;
-  await dbDelete('orders',id);toast('Orden eliminada');await reload();
+  await dbDelete('orders',id);toast('Orden eliminada');render();
+}
+
+async function saveQuote(qid,status){
+  const rec=$('q_rec')?.value?.trim();
+  const sub=$('q_sub')?.value?.trim();
+  const body=$('q_body')?.innerHTML||'';
+  if(!rec){toast('Ingresa el destinatario','te');return;}
+  const d={recipient:rec,subject:sub,body,date:$('q_dt')?.value||today(),
+    valid_until:$('q_vld')?.value||null,notes:$('q_notes')?.value||null,status};
+  let saved;
+  if(qid){await dbUpdate('quotes',qid,d);saved=DB.quotes.find(x=>x.id===qid);}
+  else{d.code=nextCode('COT');saved=await dbInsert('quotes',d);}
+  toast(status==='sent'?'Cotización emitida':'Borrador guardado');
+  document.getElementById('quote_edit_wrap')?.remove();
+  render();
+  if(status==='sent'&&saved)setTimeout(()=>printQuote(saved.id||qid),300);
+}
+async function deleteQuote(id){
+  if(!confirm('¿Eliminar cotización?'))return;
+  await dbDelete('quotes',id);toast('Cotización eliminada');render();
 }
 
 // ============================================================
-//  PDF REPORT (sin librería externa — genera texto plano)
+//  REPORT PDF
 // ============================================================
 function genPDF(cid){
   const cl=DB.clients.find(c=>c.id===cid);
@@ -907,113 +1232,105 @@ function genPDF(cid){
   const pids=projs.map(p=>p.id);
   const cobros=DB.orders.filter(o=>pids.includes(o.project_id)&&o.type==='income');
   const tasks=DB.tasks.filter(t=>pids.includes(t.project_id));
-  const done=tasks.filter(t=>t.done).length;
+  const doneT=tasks.filter(t=>t.done).length;
   const total=cobros.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
 
   let html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-  <title>Informe Oceango</title>
+  <title>Informe ${cl?.name}</title>
   <style>
-    body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;color:#0a3628;font-size:13px}
-    .hdr{background:#0a3628;color:white;padding:20px 24px;border-radius:8px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center}
-    .hdr h1{font-size:24px;margin:0}
-    .hdr small{opacity:.7;font-size:11px}
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',Arial,sans-serif;color:#0a3628;font-size:13px;background:#fff}
+    .page{min-height:297mm;width:210mm;margin:0 auto;padding:28mm 20mm 32mm 20mm;position:relative}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
+    .logo-text .brand{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:#0a3628}
+    .logo-text .tagline{font-size:10px;color:#4a7c6b;margin-top:2px}
+    .header-right{text-align:right;font-size:11px;color:#4a7c6b;line-height:1.6}
+    .doc-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px}
+    .subtitle{font-size:11px;color:#4a7c6b;margin-bottom:20px}
     .section{margin-bottom:20px}
-    .section h2{font-size:14px;font-weight:700;color:#0a3628;border-bottom:2px solid #2d8c6e;padding-bottom:4px;margin-bottom:12px}
-    .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e0f7f6}
-    .proj-card{border:1px solid #c8ede6;border-radius:8px;padding:12px 16px;margin-bottom:12px}
-    .proj-name{font-weight:700;font-size:14px;margin-bottom:4px}
-    .pbar-bg{height:8px;background:#e2e8f0;border-radius:4px;margin:6px 0}
-    .pbar-fill{height:100%;background:#2d8c6e;border-radius:4px}
-    .pay-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-    .pay-badge{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600}
-    .paid{background:#d1fae5;color:#065f46}.pend{background:#f1f5f9;color:#475569}
+    .section h2{font-size:13px;font-weight:700;color:#0a3628;border-bottom:2px solid #2d8c6e;padding-bottom:4px;margin-bottom:10px}
+    .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #e0f7f6;font-size:12px}
+    .proj-card{border:1px solid #c8ede6;border-radius:8px;padding:12px 16px;margin-bottom:10px}
+    .proj-name{font-weight:700;font-size:13px;margin-bottom:3px}
+    .pb{height:7px;background:#e2e8f0;border-radius:4px;margin:6px 0}
+    .pf{height:100%;background:#2d8c6e;border-radius:4px}
     table{width:100%;border-collapse:collapse;font-size:12px}
-    th{text-align:left;background:#f0faf8;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
-    td{padding:8px 10px;border-bottom:1px solid #f1f5f9}
-    .total-row{font-weight:700;background:#e0f7f6}
-    .footer{margin-top:32px;text-align:center;font-size:11px;color:#8ab8ac;padding-top:16px;border-top:1px solid #c8ede6}
-    @media print{body{margin:0;max-width:100%}}
-  </style>
-  </head><body>
-  <div class="hdr">
-    <div><h1>Oceango</h1><div style="font-size:11px;opacity:.7">Sistema de Gestión Documental</div></div>
-    <div style="text-align:right"><div style="font-size:13px;font-weight:600">Informe de Estado</div><small>${new Date().toLocaleDateString('es-EC',{day:'2-digit',month:'long',year:'numeric'})}</small></div>
+    th{text-align:left;background:#f0faf8;padding:7px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+    td{padding:7px 10px;border-bottom:1px solid #f1f5f9}
+    .totrow{font-weight:700;background:#e0f7f6}
+    .footer{position:fixed;bottom:0;left:0;right:0;padding:10px 20mm;display:flex;justify-content:space-between;background:#1a5c45;color:rgba(255,255,255,.8);font-size:10px}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{margin:0;width:100%}}
+  </style></head><body>
+  <div class="page">
+  <div class="header">
+    <div class="logo-text"><div class="brand">OCEANGO</div><div class="tagline">Commercial assesor · Proyects develop</div></div>
+    <div class="header-right">oceango.ec@gmail.com<br>+593 969245676<br>Guayaquil - Ecuador</div>
   </div>
-  <div class="section">
-    <h2>Datos del Cliente</h2>
+  <div class="doc-title">INFORME DE ESTADO DE PROYECTO</div>
+  <div class="subtitle">Cliente: ${cl?.name||'—'} · Emitido: ${fmtD(today())}</div>
+  <div class="section"><h2>Datos del Cliente</h2>
     <div class="row"><span>Empresa</span><strong>${cl?.name||'—'}</strong></div>
     <div class="row"><span>RUC</span><span>${cl?.ruc||'—'}</span></div>
-    <div class="row"><span>Representante Legal</span><span>${cl?.rep||'—'}</span></div>
-    <div class="row"><span>C.I. Representante</span><span>${cl?.cedula||'—'}</span></div>
+    <div class="row"><span>Representante</span><span>${cl?.rep||'—'}</span></div>
+    <div class="row"><span>C.I.</span><span>${cl?.cedula||'—'}</span></div>
   </div>
-  <div class="section">
-    <h2>Proyectos</h2>
+  <div class="section"><h2>Proyectos</h2>
     ${projs.map(p=>{
       const pt=DB.tasks.filter(t=>t.project_id===p.id);
       const dn=pt.filter(t=>t.done).length;
       const pc=pt.length?Math.round(dn/pt.length*100):0;
       const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
-      const cobrado=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+      const cob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
       return `<div class="proj-card">
         <div class="proj-name">${p.name}</div>
-        <div style="font-size:11px;color:#4a7c6b;font-family:monospace">${p.code}</div>
+        <div style="font-size:11px;color:#4a7c6b;font-family:monospace;margin-bottom:6px">${p.code}</div>
         <div class="row"><span>Estado</span><span>${{active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'}[p.status]||p.status}</span></div>
         <div class="row"><span>Período</span><span>${fmtD(p.start_date)} → ${fmtD(p.end_date)}</span></div>
         <div class="row"><span>Valor Contrato</span><strong>${fmtM(p.contract_value)}</strong></div>
-        <div class="row"><span>Total Cobrado</span><strong style="color:#2d8c6e">${fmtM(cobrado)}</strong></div>
-        <div style="margin-top:8px;font-size:12px;color:#4a7c6b">Avance: ${dn}/${pt.length} tareas completadas (${pc}%)</div>
-        <div class="pbar-bg"><div class="pbar-fill" style="width:${pc}%"></div></div>
-        <div class="pay-badges">
-          ${ps.map(x=>`<span class="pay-badge ${x.paid?'paid':'pend'}">${x.label} ${x.pct}% ${x.paid?'✓':''}</span>`).join('')}
+        <div class="row"><span>Total Cobrado</span><strong style="color:#2d8c6e">${fmtM(cob)}</strong></div>
+        <div style="font-size:11px;color:#4a7c6b;margin-top:6px">Avance: ${dn}/${pt.length} tareas (${pc}%)</div>
+        <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+          ${ps.map(x=>`<span style="padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;background:${x.paid?'#d1fae5':'#f1f5f9'};color:${x.paid?'#065f46':'#475569'}">${x.label} ${x.pct}% ${x.paid?'✓':''}</span>`).join('')}
         </div>
       </div>`;
     }).join('')}
   </div>
-  <div class="section">
-    <h2>Pagos Recibidos</h2>
-    <table>
-      <thead><tr><th>Código</th><th>Fecha</th><th>Concepto</th><th>Factura</th><th>Monto</th><th>Estado</th></tr></thead>
-      <tbody>
-        ${cobros.map(o=>`<tr>
-          <td style="font-family:monospace;font-size:11px">${o.code}</td>
-          <td>${fmtD(o.order_date)}</td>
-          <td>${o.concept}</td>
-          <td style="font-family:monospace;font-size:11px">${o.invoice_num||'—'}</td>
-          <td><strong>${fmtM(o.amount)}</strong></td>
-          <td><span style="color:${o.status==='paid'?'#065f46':'#92400e'};font-weight:600">${o.status==='paid'?'Pagado':'Pendiente'}</span></td>
-        </tr>`).join('')}
-        <tr class="total-row"><td colspan="4">TOTAL COBRADO</td><td colspan="2">${fmtM(total)}</td></tr>
-      </tbody>
-    </table>
+  <div class="section"><h2>Pagos Recibidos</h2>
+    <table><thead><tr><th>Código</th><th>Fecha</th><th>Concepto</th><th>Factura</th><th>Monto</th><th>Estado</th></tr></thead>
+    <tbody>
+      ${cobros.map(o=>`<tr><td style="font-family:monospace;font-size:11px">${o.code}</td><td>${fmtD(o.order_date)}</td><td>${o.concept}</td><td style="font-family:monospace;font-size:11px">${o.invoice_num||'—'}</td><td><strong>${fmtM(o.amount)}</strong></td><td style="color:${o.status==='paid'?'#065f46':'#92400e'};font-weight:600">${o.status==='paid'?'Pagado':'Pendiente'}</td></tr>`).join('')}
+      <tr class="totrow"><td colspan="4">TOTAL COBRADO</td><td colspan="2">${fmtM(total)}</td></tr>
+    </tbody></table>
   </div>
-  <div class="section">
-    <h2>Resumen de Avance</h2>
-    <div class="row"><span>Tareas completadas</span><strong>${done} / ${tasks.length}</strong></div>
+  <div class="section"><h2>Resumen</h2>
+    <div class="row"><span>Tareas completadas</span><strong>${doneT} / ${tasks.length}</strong></div>
     <div class="row"><span>Proyectos activos</span><strong>${projs.filter(p=>p.status==='active').length}</strong></div>
-    <div class="row"><span>Total cobrado (pagos recibidos)</span><strong style="color:#2d8c6e">${fmtM(total)}</strong></div>
+    <div class="row"><span>Total cobrado</span><strong style="color:#2d8c6e">${fmtM(total)}</strong></div>
   </div>
-  <div class="footer">Oceango SAS · Sistema de Gestión Documental · Documento confidencial — uso interno</div>
+  <div class="footer"><span>Commercial assesor · Proyects develop · oceango.ec@gmail.com</span><span>Guayaquil - Ecuador · +593 969245676</span></div>
+  </div>
+  <script>window.onload=()=>window.print();<\/script>
   </body></html>`;
-
-  const w=window.open('','_blank','width=850,height=700');
+  const w=window.open('','_blank','width=900,height=750');
   w.document.write(html);w.document.close();
-  setTimeout(()=>w.print(),500);
 }
 
 // ============================================================
-//  FILTER HELPERS
+//  FILTER SETTERS
 // ============================================================
 function setPF(v){S.projFilter=v;render();}
 function setTF(v){S.taskFilter=v;render();}
 function setFF(v){S.finFilter=v;render();}
 
 // ============================================================
-//  RELOAD & BOOT
+//  BOOT
 // ============================================================
-async function reload(){if(USE_SB)await fetchAll();render();}
-
-function boot(){render();}
-boot();
+if(!DB.quotes)DB.quotes=[];saveDB();
+render();
+// Notificaciones al cargar
+if('Notification' in window && Notification.permission==='granted') scheduleNotifs();
 </script>
 </body>
 </html>
