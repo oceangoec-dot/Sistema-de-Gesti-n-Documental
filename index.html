@@ -137,6 +137,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .tax-row:last-child{margin-bottom:0}
 .tax-label{display:flex;align-items:center;gap:6px;cursor:pointer;min-width:160px}
 .tax-amount{font-weight:600;color:var(--base);margin-left:auto;font-size:12px}
+/* PDF TEMPLATE */
+.tpl-zone{border:2px dashed var(--br);border-radius:var(--r);padding:32px 20px;text-align:center;
+  transition:all .2s;cursor:pointer;background:#fafffe;position:relative}
+.tpl-zone:hover,.tpl-zone.drag{border-color:var(--base);background:var(--tp)}
+.tpl-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.tpl-preview{border:1px solid var(--br);border-radius:8px;overflow:hidden;max-height:200px;display:flex;align-items:center;justify-content:center;background:#f1f5f9}
+.tpl-preview img{width:100%;height:200px;object-fit:contain}
 @media(max-width:900px){.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){
   .sb{width:54px}.logo-name,.logo-sub,.sbfoot,.ni span:not(.nbadge){display:none}
@@ -156,8 +163,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 <div class="app" id="app"></div>
 
 <script>
-const SB_URL='';const SB_KEY='';const USE_SB=false;
-
 const $=id=>document.getElementById(id);
 const today=()=>new Date().toISOString().split('T')[0];
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);
@@ -189,7 +194,9 @@ function ic(name,size=17){
     clk:'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
     pin:'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z',
     bell:'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9',
-    send:'M12 19l9 2-9-18-9 18 9-2zm0 0v-8'
+    send:'M12 19l9 2-9-18-9 18 9-2zm0 0v-8',
+    upload:'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12',
+    img:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
   };
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${p[name]||p.dash}"/></svg>`;
 }
@@ -232,6 +239,70 @@ function loadDB(){
 }
 function saveDB(){try{localStorage.setItem('oceango_v4',JSON.stringify(DB));}catch{}}
 let DB=loadDB();
+
+// ============================================================
+//  PDF TEMPLATE STORE — guarda las páginas como imágenes base64
+// ============================================================
+const TPL_KEY='oceango_quote_template_v1';
+
+function getTemplate(){
+  try{const s=localStorage.getItem(TPL_KEY);return s?JSON.parse(s):null;}
+  catch{return null;}
+}
+
+function saveTemplate(pages){
+  // pages = array of base64 data URLs (one per PDF page, rendered as images)
+  try{
+    localStorage.setItem(TPL_KEY,JSON.stringify({pages,updatedAt:new Date().toISOString()}));
+    toast('Plantilla guardada correctamente');
+    render();
+  }catch(e){
+    toast('Error: la plantilla es demasiado grande para localStorage. Intenta con un PDF más liviano.','te');
+  }
+}
+
+function clearTemplate(){
+  localStorage.removeItem(TPL_KEY);
+  toast('Plantilla eliminada');
+  render();
+}
+
+// Convierte PDF a imágenes usando pdf.js (CDN)
+async function processPDFTemplate(file){
+  toast('Procesando PDF…','ti2');
+  try{
+    // Load pdf.js
+    if(!window.pdfjsLib){
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        s.onload=res;s.onerror=rej;document.head.appendChild(s);
+      });
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    const arrayBuffer=await file.arrayBuffer();
+    const pdfDoc=await pdfjsLib.getDocument({data:arrayBuffer}).promise;
+    const pages=[];
+
+    for(let i=1;i<=pdfDoc.numPages;i++){
+      const page=await pdfDoc.getPage(i);
+      // Render at 2x scale for print quality (A4 @ 150dpi roughly)
+      const scale=2.0;
+      const vp=page.getViewport({scale});
+      const canvas=document.createElement('canvas');
+      canvas.width=vp.width;canvas.height=vp.height;
+      const ctx=canvas.getContext('2d');
+      await page.render({canvasContext:ctx,viewport:vp}).promise;
+      pages.push(canvas.toDataURL('image/jpeg',0.92));
+    }
+
+    saveTemplate(pages);
+  }catch(e){
+    console.error(e);
+    toast('Error al procesar PDF. Intenta con otro archivo.','te');
+  }
+}
 
 function nextCode(prefix){
   const key=`oceango_seq_${prefix}`;
@@ -305,7 +376,7 @@ function render(){
         ${ic('bell',14)} <span>Activar notificaciones</span>
       </button>
     </div>
-    <div class="sbfoot">Oceango SAS · v4.0 · 💾 Local</div>
+    <div class="sbfoot">Oceango SAS · v5.0 · 💾 Local</div>
   </aside>
   <div class="main">
     ${notifBar}
@@ -639,7 +710,7 @@ function renderTasks(){
 }
 
 // ============================================================
-//  FINANCE — con IVA, Retención %, Retención IVA 100%, editar
+//  FINANCE
 // ============================================================
 function renderFinance(){
   const ff=S.finFilter||'all';
@@ -702,15 +773,55 @@ function renderFinance(){
 }
 
 // ============================================================
-//  QUOTES
+//  QUOTES — con sección de plantilla PDF
 // ============================================================
 function renderQuotes(){
   const quotes=DB.quotes||[];
+  const tpl=getTemplate();
+  const tplDate=tpl?.updatedAt?fmtD(tpl.updatedAt):'';
+  const tplPages=tpl?.pages?.length||0;
+
   return `
+  <!-- PLANTILLA PDF -->
+  <div class="card" style="margin-bottom:20px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div class="stitle" style="margin-bottom:4px">${ic('img',16)} Plantilla de Hoja Membretada</div>
+        <div style="font-size:12px;color:var(--mu);margin-bottom:12px">
+          Sube tu PDF membretado y se usará como fondo en todas las cotizaciones.<br>
+          En el futuro, sube un nuevo PDF para actualizarlo automáticamente.
+        </div>
+        ${tpl?`
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+            <span class="tag tg">${ic('check',12)} Plantilla activa</span>
+            <span style="font-size:12px;color:var(--mu)">${tplPages} página${tplPages!==1?'s':''} · Actualizada ${tplDate}</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn bp bsm" onclick="document.getElementById('tpl_input').click()">${ic('upload',14)} Reemplazar plantilla</button>
+            <button class="btn bd bsm" onclick="clearTemplate()">${ic('trash',13)} Eliminar</button>
+          </div>
+        `:`
+          <div class="tpl-zone" id="tpl_drop" onclick="document.getElementById('tpl_input').click()">
+            <div style="font-size:32px;margin-bottom:8px">📄</div>
+            <div style="font-weight:600;color:var(--dk);margin-bottom:4px">Arrastra tu PDF aquí</div>
+            <div style="font-size:12px;color:var(--mu)">o haz clic para seleccionar · Solo PDF · Recomendado: A4</div>
+          </div>
+        `}
+        <input type="file" id="tpl_input" accept=".pdf" style="display:none" onchange="handleTplFile(this.files[0])">
+      </div>
+      ${tpl&&tpl.pages[0]?`
+        <div class="tpl-preview" style="width:120px;flex-shrink:0">
+          <img src="${tpl.pages[0]}" alt="Vista previa plantilla">
+        </div>
+      `:''}
+    </div>
+  </div>
+
+  <!-- LISTA DE COTIZACIONES -->
   <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
     <button class="btn bp" onclick="openQuoteModal()">+ Nueva Cotización</button>
   </div>
-  ${quotes.length===0?`<div class="card"><div class="empty"><div class="ei">📄</div><div>Sin cotizaciones aún</div><div style="margin-top:8px;font-size:13px">Crea tu primera cotización con hoja membretada Oceango</div></div></div>`:
+  ${quotes.length===0?`<div class="card"><div class="empty"><div class="ei">📄</div><div>Sin cotizaciones aún</div><div style="margin-top:8px;font-size:13px">Las cotizaciones se imprimirán sobre tu plantilla membretada</div></div></div>`:
     `<div class="card" style="padding:0;overflow:hidden"><div class="tw"><table class="tbl">
       <thead><tr><th>Código</th><th>Fecha</th><th>Cliente / Destinatario</th><th>Asunto</th><th>Estado</th><th>Acciones</th></tr></thead>
       <tbody>${quotes.map(q=>`<tr>
@@ -729,6 +840,32 @@ function renderQuotes(){
     </table></div></div>`}
   <div id="modals"></div>`;
 }
+
+// ============================================================
+//  TEMPLATE FILE HANDLER
+// ============================================================
+function handleTplFile(file){
+  if(!file)return;
+  if(file.type!=='application/pdf'){toast('Solo se aceptan archivos PDF','te');return;}
+  processPDFTemplate(file);
+}
+
+// Drag & Drop para la zona de plantilla
+document.addEventListener('dragover',e=>{
+  const zone=document.getElementById('tpl_drop');
+  if(zone){e.preventDefault();zone.classList.add('drag');}
+});
+document.addEventListener('dragleave',()=>{
+  const zone=document.getElementById('tpl_drop');
+  if(zone)zone.classList.remove('drag');
+});
+document.addEventListener('drop',e=>{
+  const zone=document.getElementById('tpl_drop');
+  if(!zone)return;
+  e.preventDefault();zone.classList.remove('drag');
+  const file=e.dataTransfer?.files?.[0];
+  if(file)handleTplFile(file);
+});
 
 // ============================================================
 //  MODALS
@@ -823,7 +960,7 @@ function openProjectModal(pid=null){
 }
 
 // ============================================================
-//  ORDER MODAL — nueva y edición, con Ret. IVA 100%
+//  ORDER MODAL
 // ============================================================
 function openOrderModal(oid=null){
   const o=oid?DB.orders.find(x=>x.id===oid):null;
@@ -852,47 +989,31 @@ function openOrderModal(oid=null){
       <label class="fl">N° Factura (trazabilidad SRI)</label>
       <input class="fi" id="or_iv" value="${o?.invoice_num||''}" placeholder="001-001-000000000">
     </div>
-
     <div class="tax-section">
       <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:10px;text-transform:uppercase;letter-spacing:.6px">Campos Fiscales</div>
-      
       <div class="tax-row">
-        <label class="tax-label">
-          <input type="checkbox" id="or_iva" ${o?.has_iva?'checked':''} onchange="calcTax()">
-          <span>IVA 15%</span>
-        </label>
+        <label class="tax-label"><input type="checkbox" id="or_iva" ${o?.has_iva?'checked':''} onchange="calcTax()"><span>IVA 15%</span></label>
         <span id="iva_show" class="tax-amount" style="display:${o?.has_iva?'inline':'none'}">${o?.has_iva?fmtM(o.iva_amount||0):''}</span>
       </div>
-
       <div class="tax-row">
-        <label class="tax-label">
-          <input type="checkbox" id="or_ret" ${o?.has_retention?'checked':''} onchange="calcTax()">
-          <span>Retención %</span>
-        </label>
+        <label class="tax-label"><input type="checkbox" id="or_ret" ${o?.has_retention?'checked':''} onchange="calcTax()"><span>Retención %</span></label>
         <input class="fi" type="number" id="or_rp" style="width:70px;padding:4px 8px;font-size:12px;margin-left:8px" placeholder="%" value="${o?.retention_pct||2}" min="0" max="100" oninput="calcTax()">
         <span id="ret_show" class="tax-amount" style="display:${o?.has_retention?'inline':'none'}">${o?.has_retention?fmtM(o.retention_amount||0):''}</span>
       </div>
-
       <div class="tax-row">
-        <label class="tax-label">
-          <input type="checkbox" id="or_ivaret" ${o?.has_iva_retention?'checked':''} onchange="calcTax()">
-          <span>Retención del IVA 100%</span>
-        </label>
+        <label class="tax-label"><input type="checkbox" id="or_ivaret" ${o?.has_iva_retention?'checked':''} onchange="calcTax()"><span>Retención del IVA 100%</span></label>
         <span id="ivaret_show" class="tax-amount" style="display:${o?.has_iva_retention?'inline':'none'}">${o?.has_iva_retention?fmtM(o.iva_retention_amount||0):''}</span>
       </div>
-
       <div id="tax_summary" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--br);display:none">
         <div id="tax_lines" style="font-size:12px;color:var(--mu);line-height:1.8"></div>
         <div id="tax_total" style="font-size:13px;font-weight:700;color:var(--base);margin-top:4px"></div>
       </div>
     </div>
-
     <div class="fg"><label class="fl">Estado</label>
       <select class="fi" id="or_st">
         <option value="pending"${o?.status==='pending'?' selected':''}>Pendiente</option>
         <option value="paid"${o?.status==='paid'?' selected':''}>Pagado</option>
       </select></div>
-
     <div class="fg"><label class="fl">Categoría</label>
       <select class="fi" id="or_cat">
         <option value="">— sin categoría —</option>
@@ -902,20 +1023,24 @@ function openOrderModal(oid=null){
         <option value="honorarios"${o?.expense_category==='honorarios'?' selected':''}>Honorarios</option>
         <option value="otro"${o?.expense_category==='otro'?' selected':''}>Otro</option>
       </select></div>
-
     <div class="mf">
       <button class="btn bo" onclick="document.getElementById('order_wrap').remove()">Cancelar</button>
       <button class="btn bp" onclick="saveOrder('${oid||''}')">${o?'Actualizar':'Registrar'} Orden</button>
     </div>`);
 
-  // Recalculate on open if editing
   if(o)setTimeout(calcTax,50);
 }
 
-// QUOTE MODAL
+// ============================================================
+//  QUOTE MODAL
+// ============================================================
 function openQuoteModal(qid=null){
   const q=qid?DB.quotes.find(x=>x.id===qid):null;
+  const tpl=getTemplate();
   modal('quote_edit',q?'Editar Cotización':'Nueva Cotización',`
+    ${!tpl?`<div style="background:var(--yb);border:1px solid #fcd34d;border-radius:6px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--yt)">
+      ${ic('upload',13)} Sin plantilla activa. La cotización se imprimirá sin membrete. <button class="btn bo bxs" style="margin-left:6px" onclick="document.getElementById('quote_edit_wrap').remove();goTab('quotes')">Cargar plantilla</button>
+    </div>`:''}
     <div class="fr">
       <div class="fg"><label class="fl">Destinatario / Empresa</label><input class="fi" id="q_rec" value="${q?.recipient||''}" placeholder="Nombre del cliente o empresa"></div>
       <div class="fg"><label class="fl">Asunto / Servicio</label><input class="fi" id="q_sub" value="${q?.subject||''}" placeholder="Ej: Asesoría regulatoria"></div>
@@ -965,25 +1090,17 @@ function getQuoteTemplate(){
 }
 
 // ============================================================
-//  QUOTE PRINT — hoja membretada fiel al PDF original
+//  QUOTE PRINT — usa la plantilla PDF como fondo (imagen)
+//  Si no hay plantilla, imprime en blanco
 // ============================================================
 function printQuote(qid){
   const q=DB.quotes.find(x=>x.id===qid);if(!q)return;
+  const tpl=getTemplate();
 
-  // Logo SVG extraído fielmente del diseño Oceango
-  const logoSVG=`<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
-    <!-- Forma principal del logo: cuadrado redondeado con abertura -->
-    <rect x="8" y="4" width="50" height="62" rx="6" ry="6" fill="none" stroke="#1a5c45" stroke-width="6"/>
-    <rect x="8" y="4" width="26" height="62" rx="6" ry="0" fill="#1a5c45"/>
-    <!-- Corte derecho arriba -->
-    <rect x="34" y="4" width="24" height="20" rx="4" ry="4" fill="#fff"/>
-    <!-- Línea diagonal decorativa inferior -->
-    <line x1="34" y1="46" x2="58" y2="66" stroke="#1a5c45" stroke-width="6" stroke-linecap="round"/>
-  </svg>`;
-
-  // Watermarks del PDF original
-  const wm1=`<svg style="position:absolute;top:30mm;right:8mm;opacity:0.04;pointer-events:none;z-index:0" width="280" height="300" viewBox="0 0 80 80"><rect x="8" y="4" width="50" height="62" rx="6" fill="none" stroke="#1a5c45" stroke-width="6"/><rect x="8" y="4" width="26" height="62" rx="0" fill="#1a5c45"/><rect x="34" y="4" width="24" height="20" rx="4" fill="#fff"/><line x1="34" y1="46" x2="58" y2="66" stroke="#1a5c45" stroke-width="6" stroke-linecap="round"/></svg>`;
-  const wm2=`<svg style="position:absolute;bottom:40mm;left:5mm;opacity:0.04;pointer-events:none;z-index:0" width="200" height="220" viewBox="0 0 80 80"><rect x="8" y="4" width="50" height="62" rx="6" fill="none" stroke="#1a5c45" stroke-width="6"/><rect x="8" y="4" width="26" height="62" rx="0" fill="#1a5c45"/><rect x="34" y="4" width="24" height="20" rx="4" fill="#fff"/><line x1="34" y1="46" x2="58" y2="66" stroke="#1a5c45" stroke-width="6" stroke-linecap="round"/></svg>`;
+  // Construir páginas de fondo: si hay plantilla, usar sus imágenes
+  // El contenido flotará SOBRE la imagen de fondo
+  const hasTpl=tpl&&tpl.pages&&tpl.pages.length>0;
+  const bgPage=hasTpl?tpl.pages[0]:''; // usamos solo la primera página como fondo
 
   const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
   <title>Cotización ${q.code} - Oceango</title>
@@ -991,67 +1108,103 @@ function printQuote(qid){
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'DM Sans',Arial,sans-serif;color:#0a3628;font-size:13px;background:#fff}
-    .page{min-height:297mm;width:210mm;margin:0 auto;position:relative;padding:22mm 18mm 30mm 18mm}
-    /* HEADER — fiel al membrete */
-    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0f7f6}
-    .logo-area{display:flex;align-items:center;gap:12px}
-    .logo-text .brand{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:#0a3628;line-height:1.1;letter-spacing:-0.5px}
-    .logo-text .tagline{font-size:9px;color:#4a7c6b;margin-top:3px;letter-spacing:1px;text-transform:uppercase}
-    .header-right{text-align:right;font-size:11px;color:#4a7c6b;line-height:1.7}
-    /* Línea vertical izquierda del diseño original */
-    .left-line{position:absolute;left:12mm;top:24mm;bottom:30mm;width:2px;background:#e0f7f6}
-    /* BODY */
-    .content{position:relative;z-index:1}
-    .doc-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:#0a3628;margin-bottom:2px;letter-spacing:0.5px;text-transform:uppercase}
-    .doc-code{font-size:11px;color:#4a7c6b;font-family:monospace;margin-bottom:16px}
-    .meta-box{display:flex;gap:0;margin-bottom:18px;background:#f0faf8;border-radius:6px;border:1px solid #c8ede6;overflow:hidden}
-    .meta-item{flex:1;padding:10px 14px;border-right:1px solid #c8ede6}
+    
+    .page{
+      position:relative;
+      width:210mm;
+      min-height:297mm;
+      margin:0 auto;
+    }
+
+    /* La imagen de plantilla como fondo absoluto, cubre toda la página */
+    .bg-template{
+      position:absolute;
+      top:0;left:0;right:0;bottom:0;
+      width:100%;height:100%;
+      object-fit:fill;
+      z-index:0;
+      display:block;
+    }
+
+    /* El contenido de la cotización va encima */
+    .content-layer{
+      position:relative;
+      z-index:1;
+      /* Ajusta estos márgenes según donde quede el área de escritura en tu plantilla */
+      padding:48mm 18mm 30mm 18mm;
+    }
+
+    .doc-header{
+      margin-bottom:14px;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(10,54,40,.15);
+    }
+    .doc-title{
+      font-family:'Sora',sans-serif;
+      font-size:15px;font-weight:700;
+      color:#0a3628;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+    .doc-code{
+      font-size:11px;color:#4a7c6b;
+      font-family:monospace;margin-top:2px;
+    }
+
+    .meta-box{
+      display:flex;gap:0;
+      margin:12px 0 16px;
+      background:rgba(240,250,248,.85);
+      border:1px solid #c8ede6;
+      border-radius:6px;overflow:hidden;
+    }
+    .meta-item{flex:1;padding:8px 12px;border-right:1px solid #c8ede6}
     .meta-item:last-child{border-right:none}
-    .meta-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#8ab8ac;display:block;margin-bottom:3px}
+    .meta-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#8ab8ac;display:block;margin-bottom:2px}
     .meta-value{font-size:12px;font-weight:600;color:#0a3628}
-    .divider{height:1px;background:#c8ede6;margin:14px 0}
-    .body-content{line-height:1.55;color:#1a3a2a;font-size:12.5px}
-    .body-content p{margin:0 0 6px}
-    .body-content ul,.body-content ol{padding-left:16px;margin:0 0 6px}
+
+    .divider{height:1px;background:#c8ede6;margin:12px 0}
+
+    .body-content{
+      line-height:1.55;color:#1a3a2a;
+      font-size:12.5px;
+      background:rgba(255,255,255,.0);
+    }
+    .body-content p{margin:0 0 5px}
+    .body-content ul,.body-content ol{padding-left:16px;margin:0 0 5px}
     .body-content li{margin-bottom:3px}
     .body-content table{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
-    .body-content th{background:#f0faf8;padding:5px 8px;text-align:left;font-weight:600;border:1px solid #c8ede6;font-size:10px}
+    .body-content th{background:rgba(240,250,248,.9);padding:5px 8px;text-align:left;font-weight:600;border:1px solid #c8ede6}
     .body-content td{padding:5px 8px;border:1px solid #e0f0ec}
-    /* FOOTER — barra verde inferior como en el PDF */
-    .footer{position:fixed;bottom:0;left:0;right:0;background:#1a5c45;padding:8px 18mm;display:flex;justify-content:space-between;align-items:center}
-    .footer-col{font-size:10px;color:rgba(255,255,255,.75);line-height:1.6}
+
     @page{margin:0;size:A4}
     @media print{
       body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-      .page{margin:0;width:100%;padding-bottom:20mm}
+      .page{margin:0;width:100%}
     }
   </style>
   </head><body>
   <div class="page">
-    <!-- Línea vertical izquierda -->
-    <div class="left-line"></div>
-    <!-- Watermarks de fondo -->
-    ${wm1}${wm2}
+    ${hasTpl?`<img class="bg-template" src="${bgPage}" alt="">`:
+    `<!-- Sin plantilla: fondo en blanco -->
+     <div style="position:absolute;inset:0;background:#fff;z-index:0"></div>`}
 
-    <!-- HEADER MEMBRETADO -->
-    <div class="header">
-      <div class="logo-area">
-        ${logoSVG}
-        <div class="logo-text">
-          <div class="brand">OCEAN<br>GO</div>
-          <div class="tagline">Commercial assesor · Proyects develop</div>
+    <div class="content-layer">
+      <!-- Si NO hay plantilla, mostrar un membrete básico de emergencia -->
+      ${!hasTpl?`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #e0f7f6">
+        <div>
+          <div style="font-family:Sora,sans-serif;font-size:20px;font-weight:700;color:#0a3628">OCEAN<span style="color:#a8ede9">GO</span></div>
+          <div style="font-size:9px;color:#4a7c6b;letter-spacing:1px;text-transform:uppercase">Commercial assesor · Proyects develop</div>
         </div>
-      </div>
-      <div class="header-right">
-        oceango.ec@gmail.com<br>
-        +593 969245676<br>
-        Guayaquil - Ecuador
-      </div>
-    </div>
+        <div style="text-align:right;font-size:11px;color:#4a7c6b;line-height:1.7">
+          oceango.ec@gmail.com<br>+593 969245676<br>Guayaquil - Ecuador
+        </div>
+      </div>`:''}
 
-    <div class="content">
-      <div class="doc-title">Cotización de Servicios</div>
-      <div class="doc-code">${q.code} · Emitida: ${fmtD(q.date)}${q.valid_until?' · Válida hasta: '+fmtD(q.valid_until):''}</div>
+      <div class="doc-header">
+        <div class="doc-title">Cotización de Servicios</div>
+        <div class="doc-code">${q.code} · Emitida: ${fmtD(q.date)}${q.valid_until?' · Válida hasta: '+fmtD(q.valid_until):''}</div>
+      </div>
 
       <div class="meta-box">
         <div class="meta-item"><span class="meta-label">Dirigido a</span><span class="meta-value">${q.recipient||'—'}</span></div>
@@ -1063,16 +1216,10 @@ function printQuote(qid){
       <div class="body-content">${q.body||''}</div>
       <div class="divider"></div>
 
-      <div style="font-size:10px;color:#4a7c6b;text-align:center;margin-top:16px;line-height:1.6">
+      <div style="font-size:10px;color:#4a7c6b;text-align:center;margin-top:14px;line-height:1.6">
         Esta cotización es válida conforme a los términos y condiciones de Oceango SAS.<br>
         Para consultas: oceango.ec@gmail.com · +593 969245676
       </div>
-    </div>
-
-    <!-- FOOTER VERDE -->
-    <div class="footer">
-      <div class="footer-col">Commercial assesor · Proyects develop<br>oceango.ec@gmail.com</div>
-      <div class="footer-col" style="text-align:right">Guayaquil - Ecuador<br>+593 969245676</div>
     </div>
   </div>
   <script>window.onload=()=>{window.print();}<\/script>
@@ -1094,38 +1241,26 @@ function togInv(){
 function calcTax(){
   const a=parseFloat($('or_am')?.value||0);
   if(!a)return;
-
   const hasIva=$('or_iva')?.checked;
   const hasRet=$('or_ret')?.checked;
   const hasIvaRet=$('or_ivaret')?.checked;
   const rp=parseFloat($('or_rp')?.value||0);
-
   const ivaAmt=hasIva?a*0.15:0;
   const retAmt=hasRet&&rp?a*rp/100:0;
-  const ivaRetAmt=hasIvaRet?ivaAmt:0; // Retención 100% del IVA
-
-  // Show individual amounts
+  const ivaRetAmt=hasIvaRet?ivaAmt:0;
   const ivaShow=$('iva_show');
   if(ivaShow){ivaShow.style.display=hasIva?'inline':'none';ivaShow.textContent=fmtM(ivaAmt);}
-
   const retShow=$('ret_show');
   if(retShow){retShow.style.display=hasRet?'inline':'none';retShow.textContent='-'+fmtM(retAmt);}
-
   const ivaRetShow=$('ivaret_show');
   if(ivaRetShow){ivaRetShow.style.display=hasIvaRet?'inline':'none';ivaRetShow.textContent='-'+fmtM(ivaRetAmt);}
-
-  const summary=$('tax_summary');
-  const lines=$('tax_lines');
-  const totalEl=$('tax_total');
+  const summary=$('tax_summary');const lines=$('tax_lines');const totalEl=$('tax_total');
   if(!summary)return;
-
   if(!hasIva&&!hasRet&&!hasIvaRet){summary.style.display='none';return;}
-
   let linesHTML=`<span>Base: ${fmtM(a)}</span>`;
   if(hasIva)linesHTML+=` &nbsp;+&nbsp; <span>IVA 15%: +${fmtM(ivaAmt)}</span>`;
   if(hasRet&&rp)linesHTML+=` &nbsp;-&nbsp; <span>Ret. ${rp}%: -${fmtM(retAmt)}</span>`;
   if(hasIvaRet)linesHTML+=` &nbsp;-&nbsp; <span>Ret. IVA 100%: -${fmtM(ivaRetAmt)}</span>`;
-
   const net=a+ivaAmt-retAmt-ivaRetAmt;
   if(lines)lines.innerHTML=linesHTML;
   if(totalEl)totalEl.textContent=`Neto a ${$('or_tp')?.value==='income'?'cobrar':'pagar'}: ${fmtM(net)}`;
@@ -1212,9 +1347,6 @@ async function deleteProject(id){
 }
 async function togglePS(id,paid){await dbUpdate('payment_schedule',id,{paid,paid_at:paid?new Date().toISOString():null});render();}
 
-// ============================================================
-//  SAVE ORDER — crea o actualiza
-// ============================================================
 async function saveOrder(oid=''){
   const pid=$('or_pj')?.value;const cn=$('or_cn')?.value?.trim();const am=parseFloat($('or_am')?.value||0);
   if(!pid||!cn||!am){toast('Completa los campos obligatorios','te');return;}
@@ -1226,7 +1358,6 @@ async function saveOrder(oid=''){
   const ivaAmt=hasIva?am*0.15:0;
   const retAmt=hasRet?am*retPct/100:0;
   const ivaRetAmt=hasIvaRet?ivaAmt:0;
-
   const d={
     project_id:pid,type:tp,concept:cn,amount:am,order_date:$('or_dt')?.value||today(),
     status:$('or_st')?.value||'pending',
@@ -1236,18 +1367,10 @@ async function saveOrder(oid=''){
     has_iva_retention:hasIvaRet,iva_retention_amount:ivaRetAmt,
     expense_category:$('or_cat')?.value||null
   };
-
-  if(oid){
-    await dbUpdate('orders',oid,d);
-    toast('Orden actualizada');
-  }else{
-    d.code=nextCode(tp==='income'?'ODC':'ODP');
-    await dbInsert('orders',d);
-    toast('Orden registrada');
-  }
+  if(oid){await dbUpdate('orders',oid,d);toast('Orden actualizada');}
+  else{d.code=nextCode(tp==='income'?'ODC':'ODP');await dbInsert('orders',d);toast('Orden registrada');}
   document.getElementById('order_wrap')?.remove();render();
 }
-
 async function toggleOrder(id,cur){
   const ns=cur==='paid'?'pending':'paid';
   await dbUpdate('orders',id,{status:ns,paid_at:ns==='paid'?new Date().toISOString():null});render();
@@ -1389,7 +1512,6 @@ function setFF(v){S.finFilter=v;render();}
 //  BOOT
 // ============================================================
 if(!DB.quotes)DB.quotes=[];
-// Migrar órdenes antiguas para añadir campos nuevos
 DB.orders=DB.orders.map(o=>({
   has_iva_retention:false,iva_retention_amount:0,
   retention_pct:0,has_retention:false,retention_amount:0,
