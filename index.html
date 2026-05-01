@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oceango · Sistema de Gestión</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dk:#0a3628;--mid:#1a5c45;--base:#2d8c6e;--light:#4fbf99;
+  --teal:#3ec8c0;--tl:#a8ede9;--tp:#e0f7f6;
+  --bg:#f0faf8;--wh:#ffffff;--br:#c8ede6;
+  --tx:#0a3628;--mu:#4a7c6b;--so:#8ab8ac;
+  --re:#dc2626;--rb:#fee2e2;--rt:#991b1b;
+  --yb:#fef3c7;--yt:#92400e;
+  --bb:#dbeafe;--bt:#1e40af;
+  --gb:#d1fae5;--gt:#065f46;
+  --r:10px;--rs:6px
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow:hidden}
+.app{display:flex;height:100vh}
+
+/* SIDEBAR */
+.sb{width:224px;background:var(--dk);display:flex;flex-direction:column;flex-shrink:0}
+.logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.logo-name{font-family:'Sora',sans-serif;font-size:24px;font-weight:700;color:#fff;letter-spacing:-.5px;line-height:1}
+.logo-name span{color:var(--tl)}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.nav{padding:10px 8px;flex:1;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--rs);cursor:pointer;
+  color:rgba(255,255,255,.55);font-size:13px;font-weight:500;transition:all .15s;
+  margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
+.ni:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.9)}
+.ni.on{background:var(--base);color:#fff}
+.ni svg{width:17px;height:17px;flex-shrink:0}
+.nbadge{background:var(--teal);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:auto}
+.sbfoot{padding:12px 14px;border-top:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(255,255,255,.2)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:#fff;border-bottom:1px solid var(--br);padding:0 24px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ptitle{font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--dk)}
+.dchip{font-size:12px;color:var(--mu);background:var(--bg);padding:4px 12px;border-radius:20px;border:1px solid var(--br)}
+.content{flex:1;overflow-y:auto;padding:24px}
+
+/* BUTTONS */
+.btn{padding:7px 14px;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;
+  border:none;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px;line-height:1}
+.bp{background:var(--base);color:#fff}.bp:hover{background:var(--mid)}
+.bo{background:transparent;border:1px solid var(--br);color:var(--mid)}.bo:hover{background:var(--tp)}
+.bd{background:var(--rb);color:var(--rt)}.bd:hover{background:#fecaca}
+.bsm{padding:5px 10px;font-size:12px}.bxs{padding:3px 7px;font-size:11px}
+
+/* CARDS */
+.card{background:#fff;border:1px solid var(--br);border-radius:var(--r);padding:20px}
+.csm{padding:14px 16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.tg{background:var(--gb);color:var(--gt)}.ty{background:var(--yb);color:var(--yt)}
+.tb{background:var(--bb);color:var(--bt)}.tr{background:var(--rb);color:var(--rt)}
+.tgr{background:#f1f5f9;color:#475569}.ttl{background:var(--tp);color:var(--mid)}
+
+/* LABEL/VAL */
+.lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--so);margin-bottom:6px}
+.val{font-family:'Sora',sans-serif;font-size:24px;font-weight:700;color:var(--dk)}
+
+/* PROGRESS */
+.pb{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--base),var(--teal));border-radius:4px;transition:width .5s}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--so);border-bottom:1px solid var(--br)}
+.tbl td{padding:11px 12px;border-bottom:1px solid #f1f5f9;color:var(--tx);vertical-align:middle}
+.tbl tr:hover td{background:var(--bg)}
+.tbl tr:last-child td{border-bottom:none}
+.tw{overflow-x:auto}
+
+/* FORM */
+.fg{margin-bottom:13px}
+.fl{font-size:12px;font-weight:600;color:var(--mu);margin-bottom:5px;display:block}
+.fi{width:100%;padding:8px 10px;border:1px solid var(--br);border-radius:var(--rs);
+  font-size:13px;font-family:inherit;color:var(--tx);background:#fff;outline:none;transition:border-color .15s}
+.fi:focus{border-color:var(--base);box-shadow:0 0 0 3px rgba(45,140,110,.1)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* MODAL */
+.ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:var(--r);padding:24px;width:560px;max-width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.mt{font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--dk)}
+.mf{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--br)}
+.div{height:1px;background:var(--br);margin:16px 0}
+.stitle{font-family:'Sora',sans-serif;font-size:14px;font-weight:600;color:var(--dk);margin-bottom:12px}
+
+/* TASK */
+.ti{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--rs);
+  border:1px solid var(--br);margin-bottom:8px;background:#fff;transition:all .15s}
+.ti:hover{border-color:var(--base);background:var(--tp)}
+.ti.done{opacity:.5}
+.chk{width:18px;height:18px;border-radius:4px;border:2px solid var(--br);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;margin-top:1px}
+.chk.on{background:var(--base);border-color:var(--base)}
+
+/* CALENDAR */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cah{text-align:center;font-size:11px;font-weight:600;color:var(--so);padding:4px;text-transform:uppercase}
+.cad{min-height:64px;border-radius:var(--rs);border:1px solid var(--br);padding:5px;font-size:11px}
+.cad.today{border-color:var(--base);background:var(--tp)}
+.cdn{font-weight:600;font-size:11px;color:var(--mu);margin-bottom:2px}
+.cev{background:var(--base);color:#fff;border-radius:3px;padding:1px 5px;font-size:10px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* TOAST */
+.twrap{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:10px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;color:#fff;animation:sin .25s ease;max-width:300px}
+.ts{background:var(--base)}.te{background:var(--re)}.ti2{background:#3b82f6}
+@keyframes sin{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(--mu)}
+.ei{font-size:36px;margin-bottom:10px;opacity:.4}
+
+/* RESPONSIVE */
+@media(max-width:900px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){
+  .sb{width:54px}.logo-name,.logo-sub,.sbfoot,.ni span:not(.nbadge){display:none}
+  .ni{justify-content:center}.g2,.g3,.g4{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
+  .modal{padding:16px}.content{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="twrap" id="tw"></div>
+<div class="app" id="app"></div>
+
+<script>
+// ============================================================
+//  CONFIGURACIÓN SUPABASE
+//  Cuando tengas las keys, reemplaza estos dos valores:
+// ============================================================
+const SB_URL  = '';   // ej: 'https://abcxyz.supabase.co'
+const SB_KEY  = '';   // ej: 'eyJhbGci...'
+const USE_SB  = SB_URL !== '' && SB_KEY !== '';
+
+// ============================================================
+//  HELPERS
+// ============================================================
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().split('T')[0];
+const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+const fmtD=d=>d?new Date(d+'T12:00:00').toLocaleDateString('es-EC',{day:'2-digit',month:'short',year:'numeric'}):'—';
+const fmtDS=d=>d?new Date(d+'T12:00:00').toLocaleDateString('es-EC',{day:'2-digit',month:'short'}):'—';
+const fmtM=n=>'$'+(Number(n)||0).toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+function toast(msg,type='ts'){
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;el.textContent=msg;
+  $('tw').appendChild(el);setTimeout(()=>el.remove(),3000);
+}
+
+function ic(name,size=17){
+  const p={
+    dash:'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+    users:'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z',
+    proj:'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+    tasks:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+    money:'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+    plus:'M12 4v16m8-8H4',x:'M6 18L18 6M6 6l12 12',
+    check:'M5 13l4 4L19 7',
+    edit:'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
+    trash:'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16',
+    eye:'M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z',
+    pdf:'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    cal:'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+    clk:'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+    pin:'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z'
+  };
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${p[name]||p.dash}"/></svg>`;
+}
+
+// ============================================================
+//  STORAGE: localStorage (preview) o Supabase (producción)
+// ============================================================
+const DEMO={
+  clients:[
+    {id:'c1',name:'Agroexport Cía. Ltda.',ruc:'0990123456001',rep:'Carlos Andrade',cedula:'0923456789',created_at:'2025-01-15'},
+    {id:'c2',name:'Importadora Del Valle S.A.',ruc:'0991234567001',rep:'María Torres',cedula:'0934567890',created_at:'2025-03-10'}
+  ],
+  projects:[
+    {id:'p1',code:'PROJ-0001-2025',client_id:'c1',name:'Regulación Sanitaria Línea Cárnicos',status:'active',start_date:'2025-02-01',end_date:'2025-12-31',contract_value:8500,notes:'Regulación ARCSA para exportación'},
+    {id:'p2',code:'PROJ-0002-2025',client_id:'c2',name:'Trámites de Importación Vehículos',status:'active',start_date:'2025-04-01',end_date:'2025-09-30',contract_value:5200,notes:''}
+  ],
+  payment_schedule:[
+    {id:'ps1',project_id:'p1',label:'Anticipo',pct:30,due_date:'2025-02-05',paid:true},
+    {id:'ps2',project_id:'p1',label:'Etapa media',pct:40,due_date:'2025-07-01',paid:false},
+    {id:'ps3',project_id:'p1',label:'Cierre',pct:30,due_date:'2025-12-01',paid:false},
+    {id:'ps4',project_id:'p2',label:'Anticipo 50%',pct:50,due_date:'2025-04-05',paid:true},
+    {id:'ps5',project_id:'p2',label:'Entrega final',pct:50,due_date:'2025-09-15',paid:false}
+  ],
+  tasks:[
+    {id:'t1',project_id:'p1',title:'Revisión inicial de documentos',description:'Recopilar documentación inicial',step_order:1,due_date:'2025-02-10',due_time:'10:00',location:'Oficina Oceango',done:true},
+    {id:'t2',project_id:'p1',title:'Solicitud certificados ARCSA',description:'Gestionar solicitud ante ARCSA',step_order:2,due_date:'2025-02-20',due_time:'09:00',location:'ARCSA Guayaquil',done:true},
+    {id:'t3',project_id:'p1',title:'Presentación trámites fase 1',description:'Presentar documentos fase 1',step_order:3,due_date:'2025-06-15',due_time:'14:00',location:'ARCSA',done:false},
+    {id:'t4',project_id:'p2',title:'Reunión inicial cliente',description:'Kickoff con cliente',step_order:1,due_date:'2025-04-08',due_time:'11:00',location:'Oficinas Del Valle',done:true},
+    {id:'t5',project_id:'p2',title:'Análisis aranceles importación',description:'Análisis de aranceles',step_order:2,due_date:'2025-05-10',due_time:'',location:'',done:false}
+  ],
+  orders:[
+    {id:'o1',code:'ODC-0001-2025',project_id:'p1',type:'income',concept:'Anticipo 30% - Regulación Sanitaria',amount:2550,order_date:'2025-02-05',status:'paid',invoice_num:'001-001-000000001',has_iva:true,iva_amount:382.5,has_retention:false},
+    {id:'o2',code:'ODP-0001-2025',project_id:'p1',type:'expense',concept:'Tasas ARCSA fase inicial',amount:380,order_date:'2025-02-12',status:'paid',invoice_num:'',has_iva:false,has_retention:false},
+    {id:'o3',code:'ODC-0002-2025',project_id:'p2',type:'income',concept:'Anticipo 50% - Importación vehículos',amount:2600,order_date:'2025-04-05',status:'paid',invoice_num:'001-001-000000002',has_iva:true,iva_amount:390,has_retention:false},
+    {id:'o4',code:'ODP-0002-2025',project_id:'p1',type:'expense',concept:'Honorarios abogado externo',amount:600,order_date:'2025-03-20',status:'paid',invoice_num:'',has_iva:false,has_retention:false}
+  ]
+};
+
+// Cargar desde localStorage o usar DEMO
+function loadDB(){
+  try{
+    const s=localStorage.getItem('oceango_v2');
+    return s?JSON.parse(s):JSON.parse(JSON.stringify(DEMO));
+  }catch{return JSON.parse(JSON.stringify(DEMO));}
+}
+function saveDB(){
+  try{localStorage.setItem('oceango_v2',JSON.stringify(DB));}catch{}
+}
+
+let DB=loadDB();
+
+// Seq counters
+function nextCode(prefix){
+  const key=`oceango_seq_${prefix}`;
+  const n=(parseInt(localStorage.getItem(key)||'0'))+1;
+  localStorage.setItem(key,n);
+  return `${prefix}-${String(n).padStart(4,'0')}-${new Date().getFullYear()}`;
+}
+
+// ============================================================
+//  SUPABASE LAYER (si están configuradas las keys)
+// ============================================================
+let SB=null;
+if(USE_SB){
+  const script=document.createElement('script');
+  script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  script.onload=()=>{SB=window.supabase.createClient(SB_URL,SB_KEY);boot();};
+  document.head.appendChild(script);
+}
+
+async function dbGet(table,query={}){
+  if(!USE_SB) return DB[table]||[];
+  let q=SB.from(table).select('*');
+  if(query.eq) q=q.eq(query.eq[0],query.eq[1]);
+  if(query.order) q=q.order(query.order,{ascending:query.asc!==false});
+  const {data,error}=await q;
+  if(error){toast('Error BD: '+error.message,'te');return [];}
+  return data||[];
+}
+async function dbInsert(table,row){
+  if(!USE_SB){
+    const r={...row,id:uid(),created_at:new Date().toISOString()};
+    DB[table]=[...(DB[table]||[]),r];saveDB();return r;
+  }
+  const {data,error}=await SB.from(table).insert(row).select().single();
+  if(error){toast('Error BD: '+error.message,'te');return null;}
+  return data;
+}
+async function dbUpdate(table,id,changes){
+  if(!USE_SB){
+    DB[table]=DB[table].map(r=>r.id===id?{...r,...changes}:r);saveDB();return true;
+  }
+  const {error}=await SB.from(table).update(changes).eq('id',id);
+  if(error){toast('Error BD: '+error.message,'te');return false;}
+  return true;
+}
+async function dbDelete(table,id){
+  if(!USE_SB){DB[table]=DB[table].filter(r=>r.id!==id);saveDB();return true;}
+  const {error}=await SB.from(table).delete().eq('id',id);
+  if(error){toast('Error BD: '+error.message,'te');return false;}
+  return true;
+}
+async function fetchAll(){
+  const [c,p,ps,t,o]=await Promise.all([
+    dbGet('clients'),dbGet('projects'),dbGet('payment_schedule'),
+    dbGet('tasks'),dbGet('orders')
+  ]);
+  DB.clients=c;DB.projects=p;DB.payment_schedule=ps;DB.tasks=t;DB.orders=o;
+}
+
+// ============================================================
+//  STATE
+// ============================================================
+let S={tab:'dashboard',filterClient:null,filterProject:null,projFilter:'all',taskFilter:'',finFilter:'all'};
+
+// ============================================================
+//  RENDER
+// ============================================================
+function render(){
+  const pend=DB.tasks.filter(t=>!t.done&&t.due_date&&t.due_date>=today()).length;
+  const nav=[
+    {id:'dashboard',icon:'dash',label:'Dashboard'},
+    {id:'clients',icon:'users',label:'Clientes'},
+    {id:'projects',icon:'proj',label:'Proyectos'},
+    {id:'tasks',icon:'tasks',label:'Tareas',badge:pend||0},
+    {id:'finance',icon:'money',label:'Finanzas'}
+  ];
+  const titles={dashboard:'Dashboard',clients:'Clientes',projects:'Proyectos',tasks:'Tareas',finance:'Finanzas & Facturación'};
+
+  $('app').innerHTML=`
+  <aside class="sb">
+    <div class="logo">
+      <div class="logo-name">O<span>ceango</span></div>
+      <div class="logo-sub">Gestión Documental</div>
+    </div>
+    <nav class="nav">
+      ${nav.map(n=>`<button class="ni ${S.tab===n.id?'on':''}" onclick="goTab('${n.id}')">
+        ${ic(n.icon)} <span>${n.label}</span>
+        ${n.badge?`<span class="nbadge">${n.badge}</span>`:''}
+      </button>`).join('')}
+    </nav>
+    <div class="sbfoot">Oceango SAS · v1.0${USE_SB?' · ☁️ Supabase':' · 💾 Local'}</div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="ptitle">${titles[S.tab]||S.tab}</div>
+      <div class="dchip">${new Date().toLocaleDateString('es-EC',{weekday:'short',day:'2-digit',month:'short',year:'numeric'})}</div>
+    </div>
+    <div class="content" id="cnt">
+      ${{dashboard:renderDash,clients:renderClients,projects:renderProjects,tasks:renderTasks,finance:renderFinance}[S.tab]()}
+    </div>
+  </div>`;
+}
+
+function goTab(t){S.tab=t;if(t!=='projects')S.filterClient=null;if(t!=='tasks')S.filterProject=null;render();}
+function goProjects(cid){S.filterClient=cid;S.tab='projects';render();}
+function goTasks(pid){S.filterProject=pid;S.tab='tasks';render();}
+
+// ============================================================
+//  DASHBOARD
+// ============================================================
+function renderDash(){
+  const ap=DB.projects.filter(p=>p.status==='active');
+  const ti=DB.orders.filter(o=>o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const te=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const bal=ti-te;
+  const td=today();
+  const up=DB.tasks.filter(t=>{
+    if(t.done||!t.due_date)return false;
+    const d=(new Date(t.due_date)-new Date(td))/86400000;
+    return d>=-1&&d<=7;
+  }).sort((a,b)=>a.due_date.localeCompare(b.due_date));
+
+  const wd=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const ws=new Date();ws.setDate(ws.getDate()-ws.getDay());
+  const wdates=Array.from({length:7},(_,i)=>{const d=new Date(ws);d.setDate(d.getDate()+i);return d;});
+
+  return `
+  <div class="g4" style="margin-bottom:20px">
+    ${[
+      {l:'Proyectos activos',v:ap.length},
+      {l:'Ingresos cobrados',v:fmtM(ti)},
+      {l:'Gastos pagados',v:fmtM(te)},
+      {l:'Balance',v:fmtM(bal),c:bal>=0?'var(--base)':'var(--re)'}
+    ].map(s=>`<div class="card csm"><div class="lbl">${s.l}</div><div class="val"${s.c?` style="color:${s.c}"`:''}>${s.v}</div></div>`).join('')}
+  </div>
+  <div class="g2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="stitle">📊 Avance de Proyectos</div>
+      ${ap.length===0?`<div class="empty"><div class="ei">📋</div>Sin proyectos activos</div>`:
+        ap.map(p=>{
+          const cl=DB.clients.find(c=>c.id===p.client_id);
+          const pt=DB.tasks.filter(t=>t.project_id===p.id);
+          const dn=pt.filter(t=>t.done).length;
+          const pc=pt.length?Math.round(dn/pt.length*100):0;
+          const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
+          return `<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #f1f5f9">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+              <div>
+                <div style="font-weight:600;font-size:13px">${p.name}</div>
+                <div style="font-size:11px;color:var(--mu)">${cl?.name||'—'} · <span style="font-family:monospace">${p.code}</span></div>
+              </div>
+              <span style="font-family:Sora;font-weight:700;font-size:15px;color:var(--base)">${pc}%</span>
+            </div>
+            <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--mu)">
+              <span>${fmtD(p.start_date)}</span><span>${fmtD(p.end_date)}</span>
+            </div>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">
+              ${ps.map(x=>`<span class="tag ${x.paid?'tg':'tgr'}" style="cursor:pointer;font-size:10px" onclick="togglePS('${x.id}',${!x.paid})">${x.label} ${x.pct}%${x.paid?' ✓':''}</span>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="stitle" style="margin-bottom:0">🗓 Próximas Tareas</div>
+        <button class="btn bp bsm" onclick="openTaskModal()">+ Nueva</button>
+      </div>
+      ${up.length===0?`<div class="empty"><div class="ei">✅</div>Todo al día</div>`:
+        up.map(t=>{
+          const proj=DB.projects.find(p=>p.id===t.project_id);
+          const diff=Math.round((new Date(t.due_date)-new Date(td))/86400000);
+          const dl=diff===0?`<span class="tag tg" style="font-size:10px">Hoy</span>`:
+            diff===1?`<span class="tag ty" style="font-size:10px">Mañana</span>`:
+            diff===-1?`<span class="tag tr" style="font-size:10px">Ayer</span>`:
+            `<span style="font-size:10px;color:var(--mu)">${fmtDS(t.due_date)}</span>`;
+          return `<div class="ti ${t.done?'done':''}" style="cursor:default">
+            <div class="chk ${t.done?'on':''}" onclick="toggleTask('${t.id}',${!t.done})">${t.done?ic('check',10):''}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:500;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.title}</div>
+              <div style="display:flex;gap:5px;align-items:center;margin-top:3px;flex-wrap:wrap">
+                ${dl}
+                ${t.due_time?`<span style="font-size:10px;color:var(--mu)">${ic('clk',10)} ${t.due_time.slice(0,5)}</span>`:''}
+                ${t.location?`<span style="font-size:10px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;max-width:80px">${ic('pin',10)} ${t.location}</span>`:''}
+                <span class="tag ttl" style="font-size:10px">${(proj?.name||'?').slice(0,14)}</span>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="stitle">📅 Calendario Semanal</div>
+    <div class="cal">
+      ${wd.map(d=>`<div class="cah">${d}</div>`).join('')}
+      ${wdates.map(d=>{
+        const ds=d.toISOString().split('T')[0];
+        const isT=ds===td;
+        const ev=DB.tasks.filter(t=>!t.done&&t.due_date===ds);
+        return `<div class="cad${isT?' today':''}">
+          <div class="cdn">${d.getDate()}</div>
+          ${ev.map(e=>`<div class="cev" title="${e.title}">${e.due_time?e.due_time.slice(0,5)+' ':''}${e.title}</div>`).join('')}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+  <div id="modals"></div>`;
+}
+
+// ============================================================
+//  CLIENTS
+// ============================================================
+function renderClients(){
+  return `
+  <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+    <button class="btn bp" onclick="openClientModal()">+ Nuevo Cliente</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="tw"><table class="tbl">
+      <thead><tr><th>Empresa</th><th>RUC</th><th>Representante Legal</th><th>C.I.</th><th>Proyectos</th><th>Acciones</th></tr></thead>
+      <tbody>${DB.clients.length===0?`<tr><td colspan="6"><div class="empty"><div class="ei">👥</div>Sin clientes</div></td></tr>`:
+        DB.clients.map(c=>{
+          const act=DB.projects.filter(p=>p.client_id===c.id&&p.status==='active').length;
+          const tot=DB.projects.filter(p=>p.client_id===c.id).length;
+          return `<tr>
+            <td><div style="font-weight:600;font-size:13px">${c.name}</div><div style="font-size:11px;color:var(--mu)">${fmtD(c.created_at)}</div></td>
+            <td style="font-family:monospace;font-size:12px">${c.ruc}</td>
+            <td>${c.rep||'—'}</td>
+            <td style="font-family:monospace;font-size:12px">${c.cedula||'—'}</td>
+            <td><span class="tag ttl">${act} activo${act!==1?'s':''}</span> <span style="font-size:11px;color:var(--mu)">${tot} total</span></td>
+            <td><div style="display:flex;gap:5px">
+              <button class="btn bo bxs" onclick="goProjects('${c.id}')" title="Ver proyectos">${ic('eye',13)}</button>
+              <button class="btn bo bxs" onclick="openClientModal('${c.id}')" title="Editar">${ic('edit',13)}</button>
+              <button class="btn bd bxs" onclick="deleteClient('${c.id}')" title="Eliminar">${ic('trash',13)}</button>
+            </div></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>
+  </div>
+  <div id="modals"></div>`;
+}
+
+// ============================================================
+//  PROJECTS
+// ============================================================
+function renderProjects(){
+  let projs=DB.projects;
+  if(S.filterClient)projs=projs.filter(p=>p.client_id===S.filterClient);
+  if(S.projFilter!=='all')projs=projs.filter(p=>p.status===S.projFilter);
+  const sl={active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'};
+  const st={active:'tg',paused:'ty',finished:'tb',inactive:'tgr'};
+  return `
+  <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      ${['all','active','paused','finished','inactive'].map(s=>`<button class="btn bsm ${S.projFilter===s?'bp':'bo'}" onclick="setPF('${s}')">${s==='all'?'Todos':sl[s]}</button>`).join('')}
+    </div>
+    <button class="btn bp" onclick="openProjectModal()">+ Nuevo Proyecto</button>
+  </div>
+  ${projs.length===0?`<div class="card"><div class="empty"><div class="ei">📁</div>Sin proyectos</div></div>`:
+    projs.map(p=>{
+      const cl=DB.clients.find(c=>c.id===p.client_id);
+      const pt=DB.tasks.filter(t=>t.project_id===p.id);
+      const dn=pt.filter(t=>t.done).length;
+      const pc=pt.length?Math.round(dn/pt.length*100):0;
+      const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
+      const ina=p.status==='finished'||p.status==='inactive';
+      return `<div class="card" style="margin-bottom:12px${ina?';opacity:.75':''}">
+        <div style="display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap">
+          <div style="flex:1;min-width:180px">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">
+              <span class="tag ${st[p.status]||'tgr'}">${sl[p.status]||p.status}</span>
+              <span style="font-family:monospace;font-size:11px;color:var(--mu)">${p.code}</span>
+            </div>
+            <div style="font-family:Sora;font-weight:600;font-size:15px;margin-bottom:2px">${p.name}</div>
+            <div style="font-size:12px;color:var(--mu)">${cl?.name||'—'} · ${fmtD(p.start_date)} → ${fmtD(p.end_date)}</div>
+            <div style="margin-top:8px">
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+                <span style="color:var(--mu)">${dn}/${pt.length} tareas completadas</span>
+                <span style="font-weight:600;color:var(--base)">${pc}%</span>
+              </div>
+              <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-family:Sora;font-weight:700;font-size:20px">${fmtM(p.contract_value)}</div>
+            <div style="font-size:11px;color:var(--mu)">valor contrato</div>
+            <div style="margin-top:8px;display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap">
+              ${!ina?`<button class="btn bo bxs" onclick="goTasks('${p.id}')">Tareas</button>`:''}
+              ${!ina?`<button class="btn bo bxs" onclick="openProjectModal('${p.id}')">${ic('edit',12)}</button>`:''}
+              ${p.status==='active'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','paused')">Pausar</button>`:''}
+              ${p.status==='paused'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','active')">Reactivar</button>`:''}
+              ${p.status==='active'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','finished')">Finalizar</button>`:''}
+              <button class="btn bd bxs" onclick="deleteProject('${p.id}')">${ic('trash',12)}</button>
+            </div>
+          </div>
+        </div>
+        <div class="div"></div>
+        <div>
+          <div class="lbl" style="margin-bottom:8px">CRONOGRAMA DE PAGOS</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            ${ps.map(x=>`<div style="display:flex;align-items:center;gap:6px;background:${x.paid?'#d1fae5':'#f1f5f9'};border:1px solid ${x.paid?'#6ee7b7':'var(--br)'};border-radius:6px;padding:5px 10px;cursor:${ina?'default':'pointer'}" onclick="${ina?'':` togglePS('${x.id}',${!x.paid})`}">
+              <div style="width:14px;height:14px;border-radius:3px;background:${x.paid?'var(--base)':'white'};border:2px solid ${x.paid?'var(--base)':'var(--so)'};display:flex;align-items:center;justify-content:center">${x.paid?ic('check',9):''}</div>
+              <span style="font-size:12px;font-weight:500;color:${x.paid?'#065f46':'var(--mu)'}">${x.label}</span>
+              <span style="font-size:12px;font-weight:700;color:${x.paid?'var(--base)':'var(--tx)'}">${x.pct}% · ${fmtM(p.contract_value*x.pct/100)}</span>
+              ${x.due_date?`<span style="font-size:10px;color:var(--mu)">${fmtD(x.due_date)}</span>`:''}
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+  <div id="modals"></div>`;
+}
+
+// ============================================================
+//  TASKS
+// ============================================================
+function renderTasks(){
+  const fp=S.taskFilter||S.filterProject||'';
+  let tasks=[...DB.tasks];
+  if(fp)tasks=tasks.filter(t=>t.project_id===fp);
+  tasks.sort((a,b)=>(a.project_id+String(a.step_order||0)).localeCompare(b.project_id+String(b.step_order||0)));
+  let lp=null;
+  return `
+  <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <div style="display:flex;gap:6px;align-items:center">
+      <span style="font-size:12px;color:var(--mu)">Proyecto:</span>
+      <select class="fi" style="width:auto;padding:5px 8px;font-size:12px" onchange="setTF(this.value)">
+        <option value="">Todos</option>
+        ${DB.projects.map(p=>`<option value="${p.id}"${fp===p.id?' selected':''}>${p.name}</option>`).join('')}
+      </select>
+    </div>
+    <button class="btn bp" onclick="openTaskModal()">+ Nueva Tarea</button>
+  </div>
+  ${tasks.length===0?`<div class="card"><div class="empty"><div class="ei">📋</div>Sin tareas</div></div>`:
+    tasks.map(t=>{
+      const proj=DB.projects.find(p=>p.id===t.project_id);
+      const cl=DB.clients.find(c=>c.id===proj?.client_id);
+      const newP=lp!==t.project_id;if(newP)lp=t.project_id;
+      const ina=proj&&(proj.status==='finished'||proj.status==='inactive');
+      return `${newP?`<div style="font-family:Sora;font-weight:600;font-size:13px;margin:16px 0 8px;display:flex;align-items:center;gap:8px">
+        <span class="tag ${proj?.status==='active'?'tg':'tgr'}">${proj?.name||'Sin proyecto'}</span>
+        <span style="font-size:11px;color:var(--mu);font-family:DM Sans;font-weight:400">${cl?.name||''}</span>
+      </div>`:''}
+      <div class="ti ${t.done?'done':''}" style="cursor:default">
+        <div class="chk ${t.done?'on':''}" style="cursor:${ina?'default':'pointer'}" ${!ina?`onclick="toggleTask('${t.id}',${!t.done})"`:''}>${t.done?ic('check',10):''}</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span style="font-weight:500;font-size:13px;text-decoration:${t.done?'line-through':'none'}">${t.step_order||'·'} · ${t.title}</span>
+            ${!ina?`<button class="btn bd bxs" style="margin-left:8px;flex-shrink:0" onclick="deleteTask('${t.id}')">${ic('trash',12)}</button>`:''}
+          </div>
+          ${t.description?`<div style="font-size:11px;color:var(--mu);margin-top:2px">${t.description}</div>`:''}
+          <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+            ${t.due_date?`<span style="font-size:11px;color:var(--mu);display:flex;align-items:center;gap:3px">${ic('cal',11)} ${fmtD(t.due_date)}</span>`:''}
+            ${t.due_time?`<span style="font-size:11px;color:var(--mu);display:flex;align-items:center;gap:3px">${ic('clk',11)} ${t.due_time.slice(0,5)}</span>`:''}
+            ${t.location?`<span style="font-size:11px;color:var(--mu);display:flex;align-items:center;gap:3px">${ic('pin',11)} ${t.location}</span>`:''}
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+  <div id="modals"></div>`;
+}
+
+// ============================================================
+//  FINANCE
+// ============================================================
+function renderFinance(){
+  const ff=S.finFilter||'all';
+  const ti=DB.orders.filter(o=>o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const te=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const bal=ti-te;
+  const iva=DB.orders.filter(o=>o.type==='income'&&o.has_iva&&o.status==='paid').reduce((s,o)=>s+Number(o.iva_amount||0),0);
+  let ords=[...DB.orders];
+  if(ff!=='all')ords=ords.filter(o=>o.type===ff);
+  ords.sort((a,b)=>b.order_date?.localeCompare(a.order_date));
+  return `
+  <div class="g4" style="margin-bottom:20px">
+    ${[
+      {l:'Ingresos cobrados',v:fmtM(ti),c:'var(--base)'},
+      {l:'Gastos pagados',v:fmtM(te),c:'var(--re)'},
+      {l:'Balance',v:fmtM(bal),c:bal>=0?'var(--dk)':'var(--re)'},
+      {l:'IVA acumulado 15%',v:fmtM(iva),c:'var(--mu)'}
+    ].map(s=>`<div class="card csm"><div class="lbl">${s.l}</div><div class="val" style="color:${s.c}">${s.v}</div></div>`).join('')}
+  </div>
+  <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap">
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      ${[['all','Todos'],['income','Cobros'],['expense','Gastos']].map(([v,l])=>`<button class="btn bsm ${ff===v?'bp':'bo'}" onclick="setFF('${v}')">${l}</button>`).join('')}
+      <div style="width:1px;background:var(--br);margin:0 4px"></div>
+      ${DB.clients.map(c=>`<button class="btn bo bsm" onclick="genPDF('${c.id}')" title="Informe ${c.name}">${ic('pdf',12)} ${c.name.split(' ')[0]}</button>`).join('')}
+    </div>
+    <button class="btn bp" onclick="openOrderModal()">+ Nueva Orden</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="tw"><table class="tbl">
+      <thead><tr><th>Código</th><th>Fecha</th><th>Proyecto</th><th>Concepto</th><th>Tipo</th><th>Monto</th><th>Fiscal</th><th>Factura</th><th>Estado</th><th></th></tr></thead>
+      <tbody>${ords.length===0?`<tr><td colspan="10"><div class="empty"><div class="ei">💳</div>Sin órdenes</div></td></tr>`:
+        ords.map(o=>{
+          const proj=DB.projects.find(p=>p.id===o.project_id);
+          return `<tr>
+            <td><span style="font-family:monospace;font-size:11px;color:var(--base);font-weight:600">${o.code}</span></td>
+            <td style="font-size:12px">${fmtD(o.order_date)}</td>
+            <td style="font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${proj?.name||'—'}</td>
+            <td style="font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.concept}</td>
+            <td><span class="tag ${o.type==='income'?'tg':'tr'}">${o.type==='income'?'Cobro':'Gasto'}</span></td>
+            <td><span style="font-weight:600;font-size:13px;color:${o.type==='income'?'var(--base)':'var(--re)'}">${o.type==='income'?'+':'-'}${fmtM(o.amount)}</span></td>
+            <td>
+              ${o.has_iva?`<span class="tag tb" style="font-size:10px;margin-right:2px">IVA</span>`:''}
+              ${o.has_retention?`<span class="tag ty" style="font-size:10px">Ret.</span>`:''}
+              ${!o.has_iva&&!o.has_retention?`<span style="color:var(--so)">—</span>`:''}
+            </td>
+            <td style="font-family:monospace;font-size:11px;color:var(--mu)">${o.invoice_num||'—'}</td>
+            <td><span class="tag ${o.status==='paid'?'tg':'ty'}" style="cursor:pointer" onclick="toggleOrder('${o.id}','${o.status}')">${o.status==='paid'?'Pagado':'Pendiente'}</span></td>
+            <td><button class="btn bd bxs" onclick="deleteOrder('${o.id}')">${ic('trash',12)}</button></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>
+  </div>
+  <div id="modals"></div>`;
+}
+
+// ============================================================
+//  MODALS
+// ============================================================
+function modal(id,title,body){
+  const wrap=document.createElement('div');wrap.id=id+'_wrap';wrap.className='ov';
+  wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
+  wrap.innerHTML=`<div class="modal">
+    <div class="mh"><div class="mt">${title}</div><button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',14)}</button></div>
+    ${body}
+  </div>`;
+  document.body.appendChild(wrap);
+}
+
+function openTaskModal(){
+  const ap=DB.projects.filter(p=>p.status==='active'||p.status==='paused');
+  modal('task','Nueva Tarea',`
+    <div class="fg"><label class="fl">Proyecto *</label>
+      <select class="fi" id="t_proj"><option value="">Seleccionar...</option>${ap.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Paso / Orden</label><input class="fi" type="number" id="t_ord" value="1" min="1"></div>
+      <div class="fg"><label class="fl">Título *</label><input class="fi" id="t_ttl" placeholder="Nombre de la tarea"></div>
+    </div>
+    <div class="fg"><label class="fl">Descripción</label><textarea class="fi" id="t_dsc" rows="2"></textarea></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="t_dt"></div>
+      <div class="fg"><label class="fl">Hora</label><input class="fi" type="time" id="t_tm"></div>
+    </div>
+    <div class="fg"><label class="fl">Ubicación</label><input class="fi" id="t_loc" placeholder="Dirección o plataforma"></div>
+    <div class="mf">
+      <button class="btn bo" onclick="this.closest('.ov').remove()">Cancelar</button>
+      <button class="btn bp" onclick="saveTask()">Guardar Tarea</button>
+    </div>`);
+}
+
+function openClientModal(cid=null){
+  const c=cid?DB.clients.find(x=>x.id===cid):null;
+  modal('client',c?'Editar Cliente':'Nuevo Cliente',`
+    <div class="fg"><label class="fl">Nombre de la Empresa *</label><input class="fi" id="cl_nm" value="${c?.name||''}" placeholder="Razón social completa"></div>
+    <div class="fg"><label class="fl">RUC *</label><input class="fi" id="cl_ru" value="${c?.ruc||''}" placeholder="0990000000001" maxlength="13"></div>
+    <div class="fg"><label class="fl">Representante Legal</label><input class="fi" id="cl_rp" value="${c?.rep||''}" placeholder="Nombre completo"></div>
+    <div class="fg"><label class="fl">Cédula Representante</label><input class="fi" id="cl_cd" value="${c?.cedula||''}" placeholder="0900000000" maxlength="10"></div>
+    <div class="mf">
+      <button class="btn bo" onclick="this.closest('.ov').remove()">Cancelar</button>
+      <button class="btn bp" onclick="saveClient('${cid||''}')">Guardar</button>
+    </div>`);
+}
+
+function openProjectModal(pid=null){
+  const p=pid?DB.projects.find(x=>x.id===pid):null;
+  const ps=pid?DB.payment_schedule.filter(x=>x.project_id===pid):[];
+  window._prc=ps.length||1;
+  modal('project',p?'Editar Proyecto':'Nuevo Proyecto',`
+    <div class="fr">
+      <div class="fg"><label class="fl">Cliente *</label>
+        <select class="fi" id="pr_cl">${DB.clients.map(c=>`<option value="${c.id}"${p?.client_id===c.id?' selected':''}>${c.name}</option>`).join('')}</select></div>
+      <div class="fg"><label class="fl">Valor Contrato ($)</label><input class="fi" type="number" id="pr_vl" value="${p?.contract_value||''}"></div>
+    </div>
+    <div class="fg"><label class="fl">Nombre del Proyecto *</label><input class="fi" id="pr_nm" value="${p?.name||''}" placeholder="Descripción del proyecto"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Fecha Inicio *</label><input class="fi" type="date" id="pr_s" value="${p?.start_date||''}"></div>
+      <div class="fg"><label class="fl">Fecha Fin</label><input class="fi" type="date" id="pr_e" value="${p?.end_date||''}"></div>
+    </div>
+    <div class="fg"><label class="fl">Notas</label><textarea class="fi" id="pr_nt" rows="2">${p?.notes||''}</textarea></div>
+    <div class="div"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div class="stitle" style="margin-bottom:0">Cronograma de Pagos</div>
+      <button class="btn bo bsm" onclick="addPR()">+ Cuota</button>
+    </div>
+    <div style="font-size:11px;color:var(--mu);margin-bottom:8px" id="ptmsg">Los porcentajes deben sumar 100%</div>
+    <div id="prows">
+      ${(ps.length?ps:[{pct:'',label:'',due_date:''}]).map((x,i)=>`<div id="pr_${i}" style="display:grid;grid-template-columns:70px 1fr 1fr auto;gap:6px;margin-bottom:6px;align-items:center">
+        <input class="fi" type="number" value="${x.pct||''}" placeholder="%" min="0" max="100" oninput="calcPT()">
+        <input class="fi" value="${x.label||''}" placeholder="Etapa...">
+        <input class="fi" type="date" value="${x.due_date||''}">
+        <button class="btn bd bxs" onclick="rmPR('pr_${i}')">${ic('x',12)}</button>
+      </div>`).join('')}
+    </div>
+    <div class="mf">
+      <button class="btn bo" onclick="this.closest('.ov').remove()">Cancelar</button>
+      <button class="btn bp" onclick="saveProject('${pid||''}')">Guardar Proyecto</button>
+    </div>`);
+}
+
+function openOrderModal(){
+  const ap=DB.projects.filter(p=>p.status==='active'||p.status==='paused');
+  modal('order','Nueva Orden',`
+    <div class="fr">
+      <div class="fg"><label class="fl">Tipo *</label>
+        <select class="fi" id="or_tp" onchange="togInv()">
+          <option value="income">Orden de Cobro (ingreso)</option>
+          <option value="expense">Orden de Pago (gasto)</option>
+        </select></div>
+      <div class="fg"><label class="fl">Proyecto *</label>
+        <select class="fi" id="or_pj"><option value="">Seleccionar...</option>${ap.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+    </div>
+    <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="or_cn" placeholder="Descripción del cobro o gasto"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Monto ($) *</label><input class="fi" type="number" id="or_am" placeholder="0.00" oninput="calcTax()"></div>
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="or_dt" value="${today()}"></div>
+    </div>
+    <div class="fg" id="or_inv_g"><label class="fl">N° Factura (trazabilidad SRI)</label><input class="fi" id="or_iv" placeholder="001-001-000000000"></div>
+    <div style="display:flex;gap:16px;margin-bottom:10px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="or_iva" onchange="calcTax()"> IVA 15%</label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="or_ret" onchange="calcTax()"> Retención
+        <input class="fi" type="number" id="or_rp" style="width:54px;padding:4px 6px;font-size:12px" placeholder="%" value="2" onchange="calcTax()">%
+      </label>
+    </div>
+    <div id="tax_prev" style="display:none;background:var(--tp);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--mid);margin-bottom:10px"></div>
+    <div class="fg"><label class="fl">Categoría</label>
+      <select class="fi" id="or_cat"><option value="">— sin categoría —</option>
+        <option value="proveedor">Proveedor</option><option value="operativo">Operativo</option>
+        <option value="tasa_regulatoria">Tasa regulatoria</option><option value="honorarios">Honorarios</option><option value="otro">Otro</option>
+      </select></div>
+    <div class="mf">
+      <button class="btn bo" onclick="this.closest('.ov').remove()">Cancelar</button>
+      <button class="btn bp" onclick="saveOrder()">Registrar Orden</button>
+    </div>`);
+}
+
+function togInv(){const t=$('or_tp')?.value;const g=$('or_inv_g');if(g)g.style.display=t==='income'?'block':'none';}
+function calcTax(){
+  const a=parseFloat($('or_am')?.value||0);
+  const iva=$('or_iva')?.checked;const ret=$('or_ret')?.checked;
+  const rp=parseFloat($('or_rp')?.value||0);
+  const p=$('tax_prev');if(!p)return;
+  if(!a||(!iva&&!ret)){p.style.display='none';return;}
+  let t=`Base: ${fmtM(a)}`;
+  if(iva)t+=` · IVA 15%: ${fmtM(a*.15)} → Total: ${fmtM(a*1.15)}`;
+  if(ret&&rp)t+=` · Ret. ${rp}%: -${fmtM(a*rp/100)}`;
+  p.textContent=t;p.style.display='block';
+}
+
+function addPR(){
+  const n=window._prc||0;
+  const d=document.createElement('div');d.id=`pr_${n}`;
+  d.style.cssText='display:grid;grid-template-columns:70px 1fr 1fr auto;gap:6px;margin-bottom:6px;align-items:center';
+  d.innerHTML=`<input class="fi" type="number" placeholder="%" min="0" max="100" oninput="calcPT()">
+    <input class="fi" placeholder="Etapa..."><input class="fi" type="date">
+    <button class="btn bd bxs" onclick="rmPR('pr_${n}')">${ic('x',12)}</button>`;
+  $('prows')?.appendChild(d);window._prc=n+1;
+}
+function rmPR(id){$(id)?.remove();calcPT();}
+function calcPT(){
+  const rows=document.querySelectorAll('#prows>div');let tot=0;
+  rows.forEach(r=>tot+=parseFloat(r.querySelector('input')?.value||0));
+  const m=$('ptmsg');if(m){const ok=Math.abs(tot-100)<.5;m.textContent=`Total: ${tot}% ${ok?'✓':'(debe sumar 100%)'}`;m.style.color=ok?'var(--base)':'var(--re)';}
+}
+
+// ============================================================
+//  ACTIONS
+// ============================================================
+async function saveTask(){
+  const pid=$('t_proj')?.value;const ttl=$('t_ttl')?.value?.trim();
+  if(!pid||!ttl){toast('Completa los campos obligatorios','te');return;}
+  const proj=DB.projects.find(p=>p.id===pid);
+  if(proj?.status==='finished'||proj?.status==='inactive'){toast('Proyecto finalizado o inactivo','te');return;}
+  await dbInsert('tasks',{project_id:pid,title:ttl,description:$('t_dsc')?.value||null,
+    step_order:parseInt($('t_ord')?.value)||1,due_date:$('t_dt')?.value||null,
+    due_time:$('t_tm')?.value||null,location:$('t_loc')?.value||null,done:false});
+  toast('Tarea registrada');document.querySelector('#task_wrap')?.remove();await reload();
+}
+
+async function toggleTask(id,done){
+  await dbUpdate('tasks',id,{done,done_at:done?new Date().toISOString():null});
+  await reload();
+}
+async function deleteTask(id){
+  if(!confirm('¿Eliminar tarea?'))return;
+  await dbDelete('tasks',id);toast('Tarea eliminada');await reload();
+}
+
+async function saveClient(cid){
+  const nm=$('cl_nm')?.value?.trim();const ru=$('cl_ru')?.value?.trim();
+  if(!nm||!ru){toast('Nombre y RUC son obligatorios','te');return;}
+  const d={name:nm,ruc:ru,rep:$('cl_rp')?.value||null,cedula:$('cl_cd')?.value||null};
+  if(cid){await dbUpdate('clients',cid,d);}else{await dbInsert('clients',d);}
+  toast(cid?'Cliente actualizado':'Cliente registrado');document.querySelector('#client_wrap')?.remove();await reload();
+}
+async function deleteClient(id){
+  if(DB.projects.some(p=>p.client_id===id)){toast('Cliente tiene proyectos asociados','te');return;}
+  if(!confirm('¿Eliminar cliente?'))return;
+  await dbDelete('clients',id);toast('Cliente eliminado');await reload();
+}
+
+async function saveProject(pid){
+  const cl=$('pr_cl')?.value;const nm=$('pr_nm')?.value?.trim();const s=$('pr_s')?.value;
+  if(!cl||!nm||!s){toast('Completa los campos obligatorios','te');return;}
+  const rows=document.querySelectorAll('#prows>div');
+  const sched=[];let tot=0;
+  rows.forEach(r=>{
+    const ins=r.querySelectorAll('input');
+    const pct=parseFloat(ins[0]?.value||0);const lbl=ins[1]?.value?.trim();const dt=ins[2]?.value;
+    if(pct>0&&lbl){sched.push({pct,label:lbl,due_date:dt||null,paid:false});tot+=pct;}
+  });
+  if(sched.length&&Math.abs(tot-100)>.5){toast('Los porcentajes deben sumar 100%','te');return;}
+  const pd={client_id:cl,name:nm,start_date:s,end_date:$('pr_e')?.value||null,
+    contract_value:parseFloat($('pr_vl')?.value)||0,notes:$('pr_nt')?.value||null};
+  if(pid){
+    await dbUpdate('projects',pid,pd);
+    DB.payment_schedule=DB.payment_schedule.filter(x=>x.project_id!==pid);
+    if(!USE_SB)saveDB();
+    for(const x of sched)await dbInsert('payment_schedule',{...x,project_id:pid});
+  }else{
+    const np=await dbInsert('projects',{...pd,code:nextCode('PROJ'),status:'active'});
+    if(np)for(const x of sched)await dbInsert('payment_schedule',{...x,project_id:np.id});
+  }
+  toast(pid?'Proyecto actualizado':'Proyecto creado');document.querySelector('#project_wrap')?.remove();await reload();
+}
+async function chgProjStatus(id,status){await dbUpdate('projects',id,{status});toast('Estado actualizado');await reload();}
+async function deleteProject(id){
+  if(!confirm('¿Eliminar proyecto, tareas y órdenes?'))return;
+  if(!USE_SB){DB.tasks=DB.tasks.filter(t=>t.project_id!==id);DB.orders=DB.orders.filter(o=>o.project_id!==id);DB.payment_schedule=DB.payment_schedule.filter(x=>x.project_id!==id);saveDB();}
+  await dbDelete('projects',id);toast('Proyecto eliminado');await reload();
+}
+async function togglePS(id,paid){
+  await dbUpdate('payment_schedule',id,{paid,paid_at:paid?new Date().toISOString():null});await reload();
+}
+
+async function saveOrder(){
+  const pid=$('or_pj')?.value;const cn=$('or_cn')?.value?.trim();const am=parseFloat($('or_am')?.value||0);
+  if(!pid||!cn||!am){toast('Completa los campos obligatorios','te');return;}
+  const proj=DB.projects.find(p=>p.id===pid);
+  if(proj?.status==='finished'||proj?.status==='inactive'){toast('Proyecto finalizado o inactivo','te');return;}
+  const tp=$('or_tp')?.value;
+  const hasIva=$('or_iva')?.checked||false;
+  const hasRet=$('or_ret')?.checked||false;
+  const retPct=hasRet?parseFloat($('or_rp')?.value||0):0;
+  await dbInsert('orders',{
+    project_id:pid,type:tp,concept:cn,amount:am,order_date:$('or_dt')?.value||today(),
+    status:'pending',invoice_num:tp==='income'?($('or_iv')?.value||null):null,
+    has_iva:hasIva,iva_amount:hasIva?am*.15:0,has_retention:hasRet,retention_pct:retPct,
+    retention_amount:hasRet?am*retPct/100:0,
+    expense_category:$('or_cat')?.value||null,
+    code:nextCode(tp==='income'?'ODC':'ODP')
+  });
+  toast('Orden registrada');document.querySelector('#order_wrap')?.remove();await reload();
+}
+async function toggleOrder(id,cur){
+  const ns=cur==='paid'?'pending':'paid';
+  await dbUpdate('orders',id,{status:ns,paid_at:ns==='paid'?new Date().toISOString():null});await reload();
+}
+async function deleteOrder(id){
+  if(!confirm('¿Eliminar orden?'))return;
+  await dbDelete('orders',id);toast('Orden eliminada');await reload();
+}
+
+// ============================================================
+//  PDF REPORT (sin librería externa — genera texto plano)
+// ============================================================
+function genPDF(cid){
+  const cl=DB.clients.find(c=>c.id===cid);
+  const projs=DB.projects.filter(p=>p.client_id===cid);
+  const pids=projs.map(p=>p.id);
+  const cobros=DB.orders.filter(o=>pids.includes(o.project_id)&&o.type==='income');
+  const tasks=DB.tasks.filter(t=>pids.includes(t.project_id));
+  const done=tasks.filter(t=>t.done).length;
+  const total=cobros.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+
+  let html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Informe Oceango</title>
+  <style>
+    body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;color:#0a3628;font-size:13px}
+    .hdr{background:#0a3628;color:white;padding:20px 24px;border-radius:8px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center}
+    .hdr h1{font-size:24px;margin:0}
+    .hdr small{opacity:.7;font-size:11px}
+    .section{margin-bottom:20px}
+    .section h2{font-size:14px;font-weight:700;color:#0a3628;border-bottom:2px solid #2d8c6e;padding-bottom:4px;margin-bottom:12px}
+    .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e0f7f6}
+    .proj-card{border:1px solid #c8ede6;border-radius:8px;padding:12px 16px;margin-bottom:12px}
+    .proj-name{font-weight:700;font-size:14px;margin-bottom:4px}
+    .pbar-bg{height:8px;background:#e2e8f0;border-radius:4px;margin:6px 0}
+    .pbar-fill{height:100%;background:#2d8c6e;border-radius:4px}
+    .pay-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+    .pay-badge{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600}
+    .paid{background:#d1fae5;color:#065f46}.pend{background:#f1f5f9;color:#475569}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th{text-align:left;background:#f0faf8;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+    td{padding:8px 10px;border-bottom:1px solid #f1f5f9}
+    .total-row{font-weight:700;background:#e0f7f6}
+    .footer{margin-top:32px;text-align:center;font-size:11px;color:#8ab8ac;padding-top:16px;border-top:1px solid #c8ede6}
+    @media print{body{margin:0;max-width:100%}}
+  </style>
+  </head><body>
+  <div class="hdr">
+    <div><h1>Oceango</h1><div style="font-size:11px;opacity:.7">Sistema de Gestión Documental</div></div>
+    <div style="text-align:right"><div style="font-size:13px;font-weight:600">Informe de Estado</div><small>${new Date().toLocaleDateString('es-EC',{day:'2-digit',month:'long',year:'numeric'})}</small></div>
+  </div>
+  <div class="section">
+    <h2>Datos del Cliente</h2>
+    <div class="row"><span>Empresa</span><strong>${cl?.name||'—'}</strong></div>
+    <div class="row"><span>RUC</span><span>${cl?.ruc||'—'}</span></div>
+    <div class="row"><span>Representante Legal</span><span>${cl?.rep||'—'}</span></div>
+    <div class="row"><span>C.I. Representante</span><span>${cl?.cedula||'—'}</span></div>
+  </div>
+  <div class="section">
+    <h2>Proyectos</h2>
+    ${projs.map(p=>{
+      const pt=DB.tasks.filter(t=>t.project_id===p.id);
+      const dn=pt.filter(t=>t.done).length;
+      const pc=pt.length?Math.round(dn/pt.length*100):0;
+      const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
+      const cobrado=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+      return `<div class="proj-card">
+        <div class="proj-name">${p.name}</div>
+        <div style="font-size:11px;color:#4a7c6b;font-family:monospace">${p.code}</div>
+        <div class="row"><span>Estado</span><span>${{active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'}[p.status]||p.status}</span></div>
+        <div class="row"><span>Período</span><span>${fmtD(p.start_date)} → ${fmtD(p.end_date)}</span></div>
+        <div class="row"><span>Valor Contrato</span><strong>${fmtM(p.contract_value)}</strong></div>
+        <div class="row"><span>Total Cobrado</span><strong style="color:#2d8c6e">${fmtM(cobrado)}</strong></div>
+        <div style="margin-top:8px;font-size:12px;color:#4a7c6b">Avance: ${dn}/${pt.length} tareas completadas (${pc}%)</div>
+        <div class="pbar-bg"><div class="pbar-fill" style="width:${pc}%"></div></div>
+        <div class="pay-badges">
+          ${ps.map(x=>`<span class="pay-badge ${x.paid?'paid':'pend'}">${x.label} ${x.pct}% ${x.paid?'✓':''}</span>`).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="section">
+    <h2>Pagos Recibidos</h2>
+    <table>
+      <thead><tr><th>Código</th><th>Fecha</th><th>Concepto</th><th>Factura</th><th>Monto</th><th>Estado</th></tr></thead>
+      <tbody>
+        ${cobros.map(o=>`<tr>
+          <td style="font-family:monospace;font-size:11px">${o.code}</td>
+          <td>${fmtD(o.order_date)}</td>
+          <td>${o.concept}</td>
+          <td style="font-family:monospace;font-size:11px">${o.invoice_num||'—'}</td>
+          <td><strong>${fmtM(o.amount)}</strong></td>
+          <td><span style="color:${o.status==='paid'?'#065f46':'#92400e'};font-weight:600">${o.status==='paid'?'Pagado':'Pendiente'}</span></td>
+        </tr>`).join('')}
+        <tr class="total-row"><td colspan="4">TOTAL COBRADO</td><td colspan="2">${fmtM(total)}</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section">
+    <h2>Resumen de Avance</h2>
+    <div class="row"><span>Tareas completadas</span><strong>${done} / ${tasks.length}</strong></div>
+    <div class="row"><span>Proyectos activos</span><strong>${projs.filter(p=>p.status==='active').length}</strong></div>
+    <div class="row"><span>Total cobrado (pagos recibidos)</span><strong style="color:#2d8c6e">${fmtM(total)}</strong></div>
+  </div>
+  <div class="footer">Oceango SAS · Sistema de Gestión Documental · Documento confidencial — uso interno</div>
+  </body></html>`;
+
+  const w=window.open('','_blank','width=850,height=700');
+  w.document.write(html);w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+// ============================================================
+//  FILTER HELPERS
+// ============================================================
+function setPF(v){S.projFilter=v;render();}
+function setTF(v){S.taskFilter=v;render();}
+function setFF(v){S.finFilter=v;render();}
+
+// ============================================================
+//  RELOAD & BOOT
+// ============================================================
+async function reload(){if(USE_SB)await fetchAll();render();}
+
+function boot(){render();}
+boot();
+</script>
+</body>
+</html>
