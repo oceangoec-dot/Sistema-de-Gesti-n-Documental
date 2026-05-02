@@ -137,7 +137,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .tpl-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .tpl-preview{border:1px solid var(--br);border-radius:8px;overflow:hidden;max-height:200px;display:flex;align-items:center;justify-content:center;background:#f1f5f9}
 .tpl-preview img{width:100%;height:200px;object-fit:contain}
-/* Loading overlay */
 #loadingScreen{position:fixed;inset:0;background:var(--dk);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
 #loadingScreen.fade{opacity:0;pointer-events:none}
 .load-logo{font-family:'Sora',sans-serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:10px}
@@ -147,7 +146,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .load-fill{height:100%;background:var(--teal);border-radius:2px;animation:loadFill 1.2s ease forwards}
 @keyframes loadFill{from{width:0}to{width:100%}}
 .load-msg{font-size:11px;color:rgba(255,255,255,.3);margin-top:12px}
-/* Config banner */
 .cfg-banner{background:#1a5c45;color:#fff;padding:10px 24px;font-size:13px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .cfg-banner a{color:var(--tl);text-decoration:underline;cursor:pointer}
 @media(max-width:900px){.g4{grid-template-columns:1fr 1fr}}
@@ -160,11 +158,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
   .sb,.topbar,.notif-bar,.twrap,#loadingScreen,.cfg-banner{display:none!important}
   .main{overflow:visible}.content{padding:0;overflow:visible}body{overflow:visible}
 }
+/* paginación */
+.pager{display:flex;align-items:center;gap:5px;justify-content:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--br)}
+.pg{padding:3px 9px;border-radius:var(--rs);border:1px solid var(--br);background:#fff;color:var(--mu);font-size:12px;cursor:pointer;font-family:inherit}
+.pg:hover{background:var(--tp);border-color:var(--base)}
+.pg.on{background:var(--base);color:#fff;border-color:var(--base)}
+.pg:disabled{opacity:.3;cursor:default}
 </style>
 </head>
 <body>
 
-<!-- Loading screen -->
 <div id="loadingScreen">
   <div class="load-logo">O<span>ceango</span></div>
   <div class="load-sub">Gestión Documental</div>
@@ -177,24 +180,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 
 <script>
 // ============================================================
-//  ██████╗ ON/OFF — PON TUS KEYS AQUÍ (solo estas 2 líneas)
+//  PON TUS KEYS AQUÍ
 // ============================================================
-const SUPABASE_URL  = 'https://nnprymjwaxtpbiitlcyh.supabase.co';   // ← reemplaza
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ucHJ5bWp3YXh0cGJpaXRsY3loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzkwODIsImV4cCI6MjA5MzE1NTA4Mn0.K7Zo3z0rrZea-iipqARGOC4iQdS1bJXVCLksxI_Ru0w';           // ← reemplaza
+const SUPABASE_URL  = 'https://TUPROYECTO.supabase.co';
+const SUPABASE_ANON = 'eyXXXXXXXXXXXXXXXXXXXX';
 // ============================================================
 
-// Detectar si las keys son placeholder
 const KEYS_OK = !SUPABASE_URL.includes('TUPROYECTO') && !SUPABASE_ANON.startsWith('eyXXX');
-
-// Init Supabase client (solo si hay keys reales)
 let sb = null;
-if(KEYS_OK){
-  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-}
+if(KEYS_OK){ sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON); }
 
-// ============================================================
-//  HELPERS / UTIL
-// ============================================================
 const $=id=>document.getElementById(id);
 const today=()=>new Date().toISOString().split('T')[0];
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);
@@ -234,14 +229,8 @@ function ic(name,size=17){
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${p[name]||p.dash}"/></svg>`;
 }
 
-// ============================================================
-//  BASE DE DATOS — en memoria, sincronizada con Supabase
-// ============================================================
-let DB = {
-  clients:[],projects:[],payment_schedule:[],tasks:[],orders:[],quotes:[]
-};
+let DB = { clients:[],projects:[],payment_schedule:[],tasks:[],orders:[],quotes:[] };
 
-// Carga todos los datos desde Supabase
 async function loadFromSupabase(){
   if(!sb) return false;
   try{
@@ -254,7 +243,6 @@ async function loadFromSupabase(){
       sb.from('orders').select('*'),
       sb.from('quotes').select('*')
     ]);
-    // Verificar errores de cada query
     [c,p,ps,t,o,q].forEach((r,i)=>{
       if(r.error) console.warn('Supabase table error',i,r.error.message);
     });
@@ -271,9 +259,7 @@ async function loadFromSupabase(){
   }
 }
 
-// Secuencia de códigos (tabla sequences en Supabase o localStorage como fallback)
 async function nextCode(prefix){
-  // Fallback a localStorage para secuencias (tabla opcional en Supabase)
   const key=`oceango_seq_${prefix}`;
   const n=(parseInt(localStorage.getItem(key)||'0'))+1;
   localStorage.setItem(key,n);
@@ -281,8 +267,12 @@ async function nextCode(prefix){
 }
 
 // ============================================================
-//  CRUD — todas las operaciones van a Supabase
+//  FIX #1: dbUpdate para clients NO incluye updated_at
+//  porque la tabla clients no tiene esa columna.
+//  Solo projects, tasks, orders, quotes, payment_schedule la tienen.
 // ============================================================
+const TABLES_WITH_UPDATED_AT = ['projects','payment_schedule','tasks','orders','quotes'];
+
 async function dbInsert(table, row){
   const r = {...row, id: uid(), created_at: new Date().toISOString()};
   if(sb){
@@ -291,14 +281,16 @@ async function dbInsert(table, row){
     DB[table] = [...(DB[table]||[]), data];
     return data;
   } else {
-    // Modo offline: solo memoria
     DB[table] = [...(DB[table]||[]), r];
     return r;
   }
 }
 
 async function dbUpdate(table, id, changes){
-  const upd = {...changes, updated_at: new Date().toISOString()};
+  // Solo añadir updated_at si la tabla lo soporta
+  const upd = TABLES_WITH_UPDATED_AT.includes(table)
+    ? {...changes, updated_at: new Date().toISOString()}
+    : {...changes};
   if(sb){
     const {error} = await sb.from(table).update(upd).eq('id', id);
     if(error){ toast('Error al actualizar: '+error.message,'te'); console.error(error); return false; }
@@ -316,16 +308,45 @@ async function dbDelete(table, id){
   return true;
 }
 
-// ============================================================
-//  TEMPLATE — localStorage (datos grandes, no van a Supabase)
-// ============================================================
-const TPL_KEY='oceango_quote_template_v1';
-function getTemplate(){try{const s=localStorage.getItem(TPL_KEY);return s?JSON.parse(s):null;}catch{return null;}}
-function saveTemplate(pages){
-  try{localStorage.setItem(TPL_KEY,JSON.stringify({pages,updatedAt:new Date().toISOString()}));toast('Plantilla guardada correctamente');render();}
-  catch(e){toast('Error: la plantilla es demasiado grande para localStorage.','te');}
+// ── PLANTILLA: guardada en Supabase para compartir entre dispositivos ──
+let _tpl=null; // cache sesión
+
+async function loadTemplateFromCloud(){
+  if(!sb)return;
+  try{
+    const {data,error}=await sb.from('app_settings').select('value').eq('key','quote_template').single();
+    if(!error&&data?.value){ _tpl=JSON.parse(data.value); }
+  }catch(e){}
 }
-function clearTemplate(){localStorage.removeItem(TPL_KEY);toast('Plantilla eliminada');render();}
+
+function getTemplate(){ return _tpl; }
+
+async function saveTemplate(pages){
+  const obj={pages,updatedAt:new Date().toISOString()};
+  _tpl=obj;
+  if(sb){
+    const val=JSON.stringify(obj);
+    const {error}=await sb.from('app_settings').upsert({key:'quote_template',value:val,updated_at:new Date().toISOString()},{onConflict:'key'});
+    if(error){ toast('Error al guardar en nube: '+error.message,'te'); return; }
+    toast('Plantilla guardada en la nube ☁ — visible en todos los dispositivos');
+  } else {
+    try{ localStorage.setItem('oceango_quote_template_v1',JSON.stringify(obj)); toast('Plantilla guardada (sin conexión)'); }
+    catch(e){ toast('Error: la plantilla es demasiado grande','te'); return; }
+  }
+  render();
+}
+
+async function clearTemplate(){
+  _tpl=null;
+  if(sb){
+    await sb.from('app_settings').delete().eq('key','quote_template');
+    toast('Plantilla eliminada de la nube');
+  } else {
+    localStorage.removeItem('oceango_quote_template_v1');
+    toast('Plantilla eliminada');
+  }
+  render();
+}
 
 async function processPDFTemplate(file){
   toast('Procesando PDF…','ti2');
@@ -381,8 +402,10 @@ function scheduleNotifs(){
 let S={
   tab:'dashboard',filterClient:null,filterProject:null,
   projFilter:'all',taskFilter:'',finFilter:'all',
-  calYear:new Date().getFullYear(),calMonth:new Date().getMonth()
+  calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),
+  dpPg:0,dtPg:0  // dashboard paginación: proyectos y tareas
 };
+const PPP=5,TPP=6; // items por página
 
 function render(){
   const pend=DB.tasks.filter(t=>!t.done&&t.due_date&&t.due_date>=today()).length;
@@ -395,7 +418,6 @@ function render(){
      </div>`:''
   ;
 
-  // Banner si no hay keys configuradas
   const cfgBanner = !KEYS_OK ?
     `<div class="cfg-banner">${ic('db',14)} Modo offline — Abre el HTML, busca <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:3px">SUPABASE_URL</code> y <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:3px">SUPABASE_ANON</code> y pega tus keys. <a onclick="showKeysHelp()">¿Cómo obtengo las keys?</a></div>` :
     `<div class="cfg-banner" style="background:var(--base)">${ic('db',14)} Conectado a Supabase ✓ · ${SUPABASE_URL.replace('https://','').split('.')[0]}</div>`;
@@ -425,7 +447,7 @@ function render(){
         ${ic('bell',14)} <span>Notificaciones</span>
       </button>
     </div>
-    <div class="sbfoot">Oceango SAS · v5.1 · ${KEYS_OK?'☁ Supabase':'📱 Offline'}</div>
+    <div class="sbfoot">Oceango SAS · v5.2 · ${KEYS_OK?'☁ Supabase':'📱 Offline'}</div>
   </aside>
   <div class="main">
     ${cfgBanner}
@@ -453,30 +475,9 @@ function showKeysHelp(){
         <li style="margin-bottom:8px">Crea un <strong>New Project</strong> (ej: "oceango")</li>
         <li style="margin-bottom:8px">En el panel, ve a <strong>Project Settings → API</strong></li>
         <li style="margin-bottom:8px">Copia la <strong>Project URL</strong> y la <strong>anon public key</strong></li>
-        <li style="margin-bottom:8px">Abre este HTML en un editor de texto y reemplaza las 2 líneas al inicio:
-          <div style="background:#f1f5f9;padding:10px 12px;border-radius:6px;margin-top:6px;font-family:monospace;font-size:12px">
-            const SUPABASE_URL = 'https://tuproyecto.supabase.co';<br>
-            const SUPABASE_ANON = 'eyJ...tu_anon_key...';
-          </div>
-        </li>
-        <li style="margin-bottom:8px">Crea las tablas en Supabase con el SQL de abajo</li>
+        <li style="margin-bottom:8px">Abre este HTML en un editor de texto y reemplaza las 2 líneas al inicio</li>
+        <li style="margin-bottom:8px">Ejecuta el SQL del mensaje anterior en <strong>Supabase → SQL Editor</strong></li>
       </ol>
-      <div style="background:#0a3628;color:#a8ede9;padding:12px;border-radius:6px;font-family:monospace;font-size:11px;line-height:1.8;overflow-x:auto;white-space:pre">
--- Ejecuta esto en Supabase → SQL Editor
-create table clients (id text primary key, name text, ruc text, rep text, cedula text, created_at timestamptz);
-create table projects (id text primary key, code text, client_id text, name text, status text default 'active', start_date date, end_date date, contract_value numeric, notes text, created_at timestamptz, updated_at timestamptz);
-create table payment_schedule (id text primary key, project_id text, label text, pct numeric, due_date date, paid boolean default false, paid_at timestamptz, created_at timestamptz, updated_at timestamptz);
-create table tasks (id text primary key, project_id text, title text, description text, step_order int, due_date date, due_time text, location text, done boolean default false, done_at timestamptz, created_at timestamptz, updated_at timestamptz);
-create table orders (id text primary key, code text, project_id text, type text, concept text, amount numeric, order_date date, status text default 'pending', invoice_num text, has_iva boolean, iva_amount numeric, has_retention boolean, retention_pct numeric, retention_amount numeric, has_iva_retention boolean, iva_retention_amount numeric, expense_category text, paid_at timestamptz, created_at timestamptz, updated_at timestamptz);
-create table quotes (id text primary key, code text, recipient text, subject text, body text, date date, valid_until date, notes text, status text default 'draft', created_at timestamptz, updated_at timestamptz);
-
--- Habilitar acceso anon (Row Level Security deshabilitado para uso interno)
-alter table clients disable row level security;
-alter table projects disable row level security;
-alter table payment_schedule disable row level security;
-alter table tasks disable row level security;
-alter table orders disable row level security;
-alter table quotes disable row level security;</div>
     </div>
     <div class="mf"><button class="btn bp" onclick="this.closest('.ov').remove()">Entendido</button></div>
   </div>`;
@@ -505,6 +506,20 @@ function renderDash(){
     return d>=-1&&d<=7;
   }).sort((a,b)=>a.due_date.localeCompare(b.due_date));
 
+  // paginación
+  const totalPP=Math.ceil(ap.length/PPP)||1;
+  const totalTP=Math.ceil(up.length/TPP)||1;
+  if(S.dpPg>=totalPP)S.dpPg=0;
+  if(S.dtPg>=totalTP)S.dtPg=0;
+  const apSlice=ap.slice(S.dpPg*PPP,(S.dpPg+1)*PPP);
+  const upSlice=up.slice(S.dtPg*TPP,(S.dtPg+1)*TPP);
+
+  const mkPager=(cur,total,key)=>{
+    if(total<=1)return '';
+    const btns=Array.from({length:total},(_,i)=>`<button class="pg${i===cur?' on':''}" onclick="S.${key}=${i};render()">${i+1}</button>`).join('');
+    return `<div class="pager"><button class="pg" ${cur===0?'disabled':''} onclick="S.${key}--;render()">‹</button>${btns}<button class="pg" ${cur>=total-1?'disabled':''} onclick="S.${key}++;render()">›</button></div>`;
+  };
+
   return `
   <div class="g4" style="margin-bottom:20px">
     ${[
@@ -520,28 +535,38 @@ function renderDash(){
   </div>
   <div class="g2" style="margin-bottom:20px">
     <div class="card">
-      <div class="stitle">📊 Avance de Proyectos</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="stitle" style="margin-bottom:0">📊 Avance de Proyectos</div>
+        <span style="font-size:11px;color:var(--mu)">${ap.length} activo${ap.length!==1?'s':''}</span>
+      </div>
       ${ap.length===0?`<div class="empty"><div class="ei">📋</div>Sin proyectos activos</div>`:
-        ap.map(p=>{
+        apSlice.map(p=>{
           const cl=DB.clients.find(c=>c.id===p.client_id);
           const pt=DB.tasks.filter(t=>t.project_id===p.id);
           const dn=pt.filter(t=>t.done).length;
           const pc=pt.length?Math.round(dn/pt.length*100):0;
           const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
-          return `<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #f1f5f9">
+          return `<div onclick="showProjectDetail('${p.id}')"
+            style="margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid var(--br);cursor:pointer;transition:all .15s"
+            onmouseover="this.style.borderColor='var(--base)';this.style.background='var(--tp)'"
+            onmouseout="this.style.borderColor='var(--br)';this.style.background=''">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
               <div>
                 <div style="font-weight:600;font-size:13px">${p.name}</div>
                 <div style="font-size:11px;color:var(--mu)">${cl?.name||'—'} · <span style="font-family:monospace">${p.code}</span></div>
               </div>
-              <span style="font-family:Sora;font-weight:700;font-size:15px;color:var(--base)">${pc}%</span>
+              <div style="display:flex;align-items:center;gap:4px">
+                <span style="font-family:Sora;font-weight:700;font-size:15px;color:var(--base)">${pc}%</span>
+                <span style="font-size:11px;color:var(--so)">›</span>
+              </div>
             </div>
             <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
-            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">
-              ${ps.map(x=>`<span class="tag ${x.paid?'tg':'tgr'}" style="cursor:pointer;font-size:10px" onclick="togglePS('${x.id}',${!x.paid})">${x.label} ${x.pct}%${x.paid?' ✓':''}</span>`).join('')}
+            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">
+              ${ps.map(x=>`<span class="tag ${x.paid?'tg':'tgr'}" style="font-size:10px">${x.label} ${x.pct}%${x.paid?' ✓':''}</span>`).join('')}
             </div>
           </div>`;
         }).join('')}
+      ${mkPager(S.dpPg,totalPP,'dpPg')}
     </div>
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -549,7 +574,7 @@ function renderDash(){
         <button class="btn bp bsm" onclick="openTaskModal()">+ Nueva</button>
       </div>
       ${up.length===0?`<div class="empty"><div class="ei">✅</div>Todo al día</div>`:
-        up.map(t=>{
+        upSlice.map(t=>{
           const proj=DB.projects.find(p=>p.id===t.project_id);
           const diff=Math.round((new Date(t.due_date+'T12:00:00')-new Date())/86400000);
           const dl=diff===0?`<span class="tag tg" style="font-size:10px">Hoy</span>`:
@@ -572,10 +597,82 @@ function renderDash(){
             </div>
           </div>`;
         }).join('')}
+      ${mkPager(S.dtPg,totalTP,'dtPg')}
     </div>
   </div>
   ${renderCalendar()}
   <div id="modals"></div>`;
+}
+
+// Modal detalle de proyecto desde dashboard
+function showProjectDetail(pid){
+  const p=DB.projects.find(x=>x.id===pid);if(!p)return;
+  const cl=DB.clients.find(c=>c.id===p.client_id);
+  const pt=DB.tasks.filter(t=>t.project_id===p.id).sort((a,b)=>(a.step_order||0)-(b.step_order||0));
+  const dn=pt.filter(t=>t.done).length;
+  const pc=pt.length?Math.round(dn/pt.length*100):0;
+  const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
+  const cobrado=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const porCobrar=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status!=='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const sl={active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'};
+  const sc={active:'tg',paused:'ty',finished:'tb',inactive:'tgr'};
+  const wrap=document.createElement('div');wrap.className='ov';
+  wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
+  wrap.innerHTML=`<div class="modal modal-lg">
+    <div class="mh">
+      <div style="display:flex;align-items:center;gap:10px">
+        ${ic('proj',18)}
+        <div>
+          <div class="mt">${p.name}</div>
+          <div style="font-size:11px;color:var(--mu);font-family:monospace">${p.code} · ${cl?.name||'—'}</div>
+        </div>
+      </div>
+      <button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',14)}</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+      <div class="card csm" style="padding:10px 12px"><div class="lbl">Estado</div><span class="tag ${sc[p.status]||'tgr'}" style="margin-top:4px;display:inline-flex">${sl[p.status]||p.status}</span></div>
+      <div class="card csm" style="padding:10px 12px"><div class="lbl">Contrato</div><div style="font-family:Sora;font-weight:700;font-size:16px;margin-top:2px">${fmtM(p.contract_value)}</div></div>
+      <div class="card csm" style="padding:10px 12px"><div class="lbl">Cobrado</div><div style="font-family:Sora;font-weight:700;font-size:16px;color:var(--base);margin-top:2px">${fmtM(cobrado)}</div></div>
+      <div class="card csm" style="padding:10px 12px"><div class="lbl">Por cobrar</div><div style="font-family:Sora;font-weight:700;font-size:16px;color:var(--yt);margin-top:2px">${fmtM(porCobrar)}</div></div>
+    </div>
+    <div style="display:flex;gap:20px;margin-bottom:12px;font-size:13px;flex-wrap:wrap">
+      <div><span style="color:var(--mu);font-size:11px;font-weight:600;text-transform:uppercase">Período</span><br>${fmtD(p.start_date)} → ${fmtD(p.end_date)}</div>
+      <div><span style="color:var(--mu);font-size:11px;font-weight:600;text-transform:uppercase">RUC Cliente</span><br>${cl?.ruc||'—'}</div>
+      <div><span style="color:var(--mu);font-size:11px;font-weight:600;text-transform:uppercase">Representante</span><br>${cl?.rep||'—'}</div>
+    </div>
+    ${p.notes?`<div style="background:var(--bg);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--mu);margin-bottom:12px;border:1px solid var(--br)">${p.notes}</div>`:''}
+    <div class="div"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="stitle" style="margin-bottom:0">Tareas · ${dn}/${pt.length} completadas (${pc}%)</div>
+    </div>
+    <div class="pb" style="margin-bottom:10px"><div class="pf" style="width:${pc}%"></div></div>
+    <div style="max-height:170px;overflow-y:auto;margin-bottom:12px">
+      ${pt.length===0?'<div style="text-align:center;padding:14px;color:var(--mu);font-size:12px">Sin tareas</div>':
+        pt.map(t=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid #f1f5f9">
+          <div style="width:16px;height:16px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${t.done?'var(--base)':'#e2e8f0'}">${t.done?ic('check',10):''}</div>
+          <span style="font-size:12px;flex:1;${t.done?'text-decoration:line-through;color:var(--so)':''}">${t.step_order||'·'}. ${t.title}</span>
+          ${t.due_date?`<span style="font-size:10px;color:var(--mu);flex-shrink:0">${fmtDS(t.due_date)}${t.due_time?' '+t.due_time.slice(0,5):''}</span>`:''}
+          ${t.location?`<span style="font-size:10px;color:var(--mu);flex-shrink:0">${ic('pin',10)} ${t.location}</span>`:''}
+        </div>`).join('')}
+    </div>
+    <div class="div"></div>
+    <div class="stitle" style="margin-bottom:8px">Cronograma de Pagos</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+      ${ps.length===0?'<span style="font-size:12px;color:var(--mu)">Sin cuotas definidas</span>':
+        ps.map(x=>`<div onclick="togglePS('${x.id}',${!x.paid})" style="display:flex;align-items:center;gap:6px;background:${x.paid?'#d1fae5':'#f1f5f9'};border:1px solid ${x.paid?'#6ee7b7':'var(--br)'};border-radius:6px;padding:5px 10px;cursor:pointer">
+          <div style="width:14px;height:14px;border-radius:3px;background:${x.paid?'var(--base)':'white'};border:2px solid ${x.paid?'var(--base)':'var(--so)'};display:flex;align-items:center;justify-content:center">${x.paid?ic('check',9):''}</div>
+          <span style="font-size:12px;font-weight:500;color:${x.paid?'#065f46':'var(--mu)'}">${x.label}</span>
+          <span style="font-size:12px;font-weight:700;color:${x.paid?'var(--base)':'var(--tx)'}">${x.pct}% · ${fmtM(p.contract_value*x.pct/100)}</span>
+          ${x.due_date?`<span style="font-size:10px;color:var(--mu)">${fmtD(x.due_date)}</span>`:''}
+        </div>`).join('')}
+    </div>
+    <div class="mf">
+      <button class="btn bo" onclick="this.closest('.ov').remove()">Cerrar</button>
+      <button class="btn bo" onclick="this.closest('.ov').remove();goTasks('${p.id}')">${ic('tasks',14)} Ver Tareas</button>
+      <button class="btn bp" onclick="this.closest('.ov').remove();openProjectModal('${p.id}')">${ic('edit',14)} Editar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(wrap);
 }
 
 function renderCalendar(){
@@ -841,7 +938,8 @@ function renderFinance(){
           const tags=[];
           if(o.has_iva)tags.push(`<span class="tag tb" style="font-size:10px">IVA 15%</span>`);
           if(o.has_retention)tags.push(`<span class="tag ty" style="font-size:10px">Ret. ${o.retention_pct||''}%</span>`);
-          if(o.has_iva_retention)tags.push(`<span class="tag tr" style="font-size:10px">Ret.IVA 100%</span>`);
+          // FIX #2: mostrar % editable de retención IVA
+          if(o.has_iva_retention)tags.push(`<span class="tag tr" style="font-size:10px">Ret.IVA ${o.iva_retention_pct||100}%</span>`);
           return `<tr>
             <td><span style="font-family:monospace;font-size:11px;color:var(--base);font-weight:600">${o.code}</span></td>
             <td style="font-size:12px">${fmtD(o.order_date)}</td>
@@ -1014,6 +1112,9 @@ function openProjectModal(pid=null){
     </div>`);
 }
 
+// ============================================================
+//  FIX #2: openOrderModal — Retención IVA con % editable
+// ============================================================
 function openOrderModal(oid=null){
   const o=oid?DB.orders.find(x=>x.id===oid):null;
   const ap=DB.projects.filter(p=>p.status==='active'||p.status==='paused');
@@ -1047,14 +1148,17 @@ function openOrderModal(oid=null){
         <span id="iva_show" class="tax-amount" style="display:${o?.has_iva?'inline':'none'}">${o?.has_iva?fmtM(o.iva_amount||0):''}</span>
       </div>
       <div class="tax-row">
-        <label class="tax-label"><input type="checkbox" id="or_ret" ${o?.has_retention?'checked':''} onchange="calcTax()"><span>Retención %</span></label>
+        <label class="tax-label"><input type="checkbox" id="or_ret" ${o?.has_retention?'checked':''} onchange="calcTax()"><span>Retención fuente %</span></label>
         <input class="fi" type="number" id="or_rp" style="width:70px;padding:4px 8px;font-size:12px;margin-left:8px" placeholder="%" value="${o?.retention_pct||2}" min="0" max="100" oninput="calcTax()">
         <span id="ret_show" class="tax-amount" style="display:${o?.has_retention?'inline':'none'}">${o?.has_retention?fmtM(o.retention_amount||0):''}</span>
       </div>
+      <!-- FIX #2: Retención IVA con % editable (antes era fijo 100%) -->
       <div class="tax-row">
-        <label class="tax-label"><input type="checkbox" id="or_ivaret" ${o?.has_iva_retention?'checked':''} onchange="calcTax()"><span>Retención del IVA 100%</span></label>
+        <label class="tax-label"><input type="checkbox" id="or_ivaret" ${o?.has_iva_retention?'checked':''} onchange="calcTax()"><span>Retención del IVA %</span></label>
+        <input class="fi" type="number" id="or_ivaret_pct" style="width:70px;padding:4px 8px;font-size:12px;margin-left:8px" placeholder="%" value="${o?.iva_retention_pct||30}" min="0" max="100" oninput="calcTax()" title="Ej: 30% bienes, 70% servicios, 100% honorarios">
         <span id="ivaret_show" class="tax-amount" style="display:${o?.has_iva_retention?'inline':'none'}">${o?.has_iva_retention?fmtM(o.iva_retention_amount||0):''}</span>
       </div>
+      <div style="font-size:10px;color:var(--so);margin-top:4px">Ret. IVA: 30% bienes · 70% servicios · 100% honorarios profesionales</div>
       <div id="tax_summary" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--br);display:none">
         <div id="tax_lines" style="font-size:12px;color:var(--mu);line-height:1.8"></div>
         <div id="tax_total" style="font-size:13px;font-weight:700;color:var(--base);margin-top:4px"></div>
@@ -1209,26 +1313,42 @@ function togInv(){
   const t=$('or_tp')?.value;const g=$('or_inv_g');
   if(g)g.style.display=t==='income'?'block':'none';
 }
+
+// FIX #2: calcTax actualizado — retención IVA usa % editable
 function calcTax(){
   const a=parseFloat($('or_am')?.value||0);if(!a)return;
-  const hasIva=$('or_iva')?.checked;const hasRet=$('or_ret')?.checked;const hasIvaRet=$('or_ivaret')?.checked;
+  const hasIva=$('or_iva')?.checked;
+  const hasRet=$('or_ret')?.checked;
+  const hasIvaRet=$('or_ivaret')?.checked;
   const rp=parseFloat($('or_rp')?.value||0);
-  const ivaAmt=hasIva?a*0.15:0;const retAmt=hasRet&&rp?a*rp/100:0;const ivaRetAmt=hasIvaRet?ivaAmt:0;
-  const ivaShow=$('iva_show');if(ivaShow){ivaShow.style.display=hasIva?'inline':'none';ivaShow.textContent=fmtM(ivaAmt);}
-  const retShow=$('ret_show');if(retShow){retShow.style.display=hasRet?'inline':'none';retShow.textContent='-'+fmtM(retAmt);}
-  const ivaRetShow=$('ivaret_show');if(ivaRetShow){ivaRetShow.style.display=hasIvaRet?'inline':'none';ivaRetShow.textContent='-'+fmtM(ivaRetAmt);}
+  // Porcentaje de retención IVA — editable, por defecto 30%
+  const ivaRetPct=parseFloat($('or_ivaret_pct')?.value||30);
+  const ivaAmt=hasIva?a*0.15:0;
+  const retAmt=hasRet&&rp?a*rp/100:0;
+  // Retención IVA se calcula sobre el monto del IVA, no sobre la base
+  const ivaRetAmt=hasIvaRet&&hasIva?ivaAmt*ivaRetPct/100:
+                  hasIvaRet?a*0.15*ivaRetPct/100:0;
+
+  const ivaShow=$('iva_show');
+  if(ivaShow){ivaShow.style.display=hasIva?'inline':'none';ivaShow.textContent=fmtM(ivaAmt);}
+  const retShow=$('ret_show');
+  if(retShow){retShow.style.display=hasRet?'inline':'none';retShow.textContent='-'+fmtM(retAmt);}
+  const ivaRetShow=$('ivaret_show');
+  if(ivaRetShow){ivaRetShow.style.display=hasIvaRet?'inline':'none';ivaRetShow.textContent='-'+fmtM(ivaRetAmt);}
+
   const summary=$('tax_summary');const lines=$('tax_lines');const totalEl=$('tax_total');
   if(!summary)return;
   if(!hasIva&&!hasRet&&!hasIvaRet){summary.style.display='none';return;}
   let linesHTML=`<span>Base: ${fmtM(a)}</span>`;
   if(hasIva)linesHTML+=` &nbsp;+&nbsp; <span>IVA 15%: +${fmtM(ivaAmt)}</span>`;
-  if(hasRet&&rp)linesHTML+=` &nbsp;-&nbsp; <span>Ret. ${rp}%: -${fmtM(retAmt)}</span>`;
-  if(hasIvaRet)linesHTML+=` &nbsp;-&nbsp; <span>Ret. IVA 100%: -${fmtM(ivaRetAmt)}</span>`;
+  if(hasRet&&rp)linesHTML+=` &nbsp;-&nbsp; <span>Ret. fuente ${rp}%: -${fmtM(retAmt)}</span>`;
+  if(hasIvaRet)linesHTML+=` &nbsp;-&nbsp; <span>Ret. IVA ${ivaRetPct}%: -${fmtM(ivaRetAmt)}</span>`;
   const net=a+ivaAmt-retAmt-ivaRetAmt;
   if(lines)lines.innerHTML=linesHTML;
   if(totalEl)totalEl.textContent=`Neto a ${$('or_tp')?.value==='income'?'cobrar':'pagar'}: ${fmtM(net)}`;
   summary.style.display='block';
 }
+
 function addPR(){
   const n=window._prc||0;
   const d=document.createElement('div');d.id=`pr_${n}`;
@@ -1246,7 +1366,7 @@ function calcPT(){
 }
 
 // ============================================================
-//  ACCIONES — ahora van a Supabase vía dbInsert/dbUpdate/dbDelete
+//  ACCIONES CRUD
 // ============================================================
 async function saveTask(tid){
   const pid=$('t_proj')?.value;const ttl=$('t_ttl')?.value?.trim();
@@ -1290,7 +1410,6 @@ async function saveProject(pid){
     contract_value:parseFloat($('pr_vl')?.value)||0,notes:$('pr_nt')?.value||null};
   if(pid){
     await dbUpdate('projects',pid,pd);
-    // Eliminar cuotas viejas de Supabase
     const oldPS=DB.payment_schedule.filter(x=>x.project_id===pid);
     for(const x of oldPS) await dbDelete('payment_schedule',x.id);
     for(const x of sched) await dbInsert('payment_schedule',{...x,project_id:pid});
@@ -1314,20 +1433,27 @@ async function deleteProject(id){
 }
 async function togglePS(id,paid){await dbUpdate('payment_schedule',id,{paid,paid_at:paid?new Date().toISOString():null});render();}
 
+// FIX #2: saveOrder guarda iva_retention_pct
 async function saveOrder(oid=''){
   const pid=$('or_pj')?.value;const cn=$('or_cn')?.value?.trim();const am=parseFloat($('or_am')?.value||0);
   if(!pid||!cn||!am){toast('Completa los campos obligatorios','te');return;}
   const tp=$('or_tp')?.value;
-  const hasIva=$('or_iva')?.checked||false;const hasRet=$('or_ret')?.checked||false;const hasIvaRet=$('or_ivaret')?.checked||false;
+  const hasIva=$('or_iva')?.checked||false;
+  const hasRet=$('or_ret')?.checked||false;
+  const hasIvaRet=$('or_ivaret')?.checked||false;
   const retPct=hasRet?parseFloat($('or_rp')?.value||0):0;
-  const ivaAmt=hasIva?am*0.15:0;const retAmt=hasRet?am*retPct/100:0;const ivaRetAmt=hasIvaRet?ivaAmt:0;
+  const ivaRetPct=hasIvaRet?parseFloat($('or_ivaret_pct')?.value||30):0;
+  const ivaAmt=hasIva?am*0.15:0;
+  const retAmt=hasRet?am*retPct/100:0;
+  // Retención IVA sobre el monto del IVA
+  const ivaRetAmt=hasIvaRet?(hasIva?ivaAmt:am*0.15)*ivaRetPct/100:0;
   const d={
     project_id:pid,type:tp,concept:cn,amount:am,order_date:$('or_dt')?.value||today(),
     status:$('or_st')?.value||'pending',
     invoice_num:tp==='income'?($('or_iv')?.value||null):null,
     has_iva:hasIva,iva_amount:ivaAmt,
     has_retention:hasRet,retention_pct:retPct,retention_amount:retAmt,
-    has_iva_retention:hasIvaRet,iva_retention_amount:ivaRetAmt,
+    has_iva_retention:hasIvaRet,iva_retention_pct:ivaRetPct,iva_retention_amount:ivaRetAmt,
     expense_category:$('or_cat')?.value||null
   };
   if(oid){await dbUpdate('orders',oid,d);toast('Orden actualizada');}
@@ -1362,7 +1488,7 @@ async function deleteQuote(id){
 }
 
 // ============================================================
-//  REPORT PDF — igual que antes
+//  REPORT PDF
 // ============================================================
 function genPDF(cid){
   const cl=DB.clients.find(c=>c.id===cid);
@@ -1454,16 +1580,10 @@ function genPDF(cid){
   w.document.write(html);w.document.close();
 }
 
-// ============================================================
-//  FILTER SETTERS
-// ============================================================
 function setPF(v){S.projFilter=v;render();}
 function setTF(v){S.taskFilter=v;render();}
 function setFF(v){S.finFilter=v;render();}
 
-// ============================================================
-//  BOOT — carga desde Supabase antes de renderizar
-// ============================================================
 async function boot(){
   if(KEYS_OK){
     $('loadMsg').textContent = 'Conectando con Supabase…';
