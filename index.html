@@ -9,38 +9,19 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* Verdes principales — más moderados */
-  --dk:#0f3d2b;      /* sidebar oscuro */
-  --mid:#1a5c42;     /* hover sidebar */
-  --base:#2a7d5e;    /* acciones primarias */
-  --light:#3da882;   /* hovers */
-  --teal:#38b2aa;    /* acentos turquesa */
-  --tl:#93ddd8;      /* turquesa claro */
-  --tp:#eaf7f5;      /* fondos suaves */
-
-  /* Neutrales — más presencia para descanso visual */
-  --bg:#f5f7f6;      /* fondo app (casi blanco con un toque) */
-  --wh:#ffffff;
-  --br:#dde8e5;      /* bordes */
-  --brl:#edf3f1;     /* bordes muy suaves */
-
-  /* Textos */
-  --tx:#1a2e28;      /* texto principal */
-  --mu:#4d6e64;      /* texto secundario */
-  --so:#8aaca5;      /* texto terciario / labels */
-
-  /* Semánticos */
+  --dk:#0f3d2b;--mid:#1a5c42;--base:#2a7d5e;--light:#3da882;--teal:#38b2aa;--tl:#93ddd8;--tp:#eaf7f5;
+  --bg:#f5f7f6;--wh:#ffffff;--br:#dde8e5;--brl:#edf3f1;
+  --tx:#1a2e28;--mu:#4d6e64;--so:#8aaca5;
   --re:#dc2626;--rb:#fee2e2;--rt:#991b1b;
   --yb:#fef3c7;--yt:#92400e;
   --bb:#dbeafe;--bt:#1e40af;
   --gb:#dcfce7;--gt:#15803d;
-  --pu:#f3e8ff;--pt:#7c3aed;   /* morado para cotizaciones */
-
+  --pu:#f3e8ff;--pt:#7c3aed;
   --r:10px;--rs:6px;--rm:8px
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow:hidden}
 
-/* ── PIN LOCK ── */
+/* PIN */
 #pinLock{position:fixed;inset:0;background:var(--dk);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
 #pinLock.gone{display:none}
 .pin-logo{font-family:'Sora',sans-serif;font-size:36px;font-weight:700;color:#fff;letter-spacing:-1px;margin-bottom:6px}
@@ -51,16 +32,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .pin-dot.filled{background:var(--tl);border-color:var(--tl)}
 .pin-dot.error{background:var(--re);border-color:var(--re)}
 .pin-grid{display:grid;grid-template-columns:repeat(3,70px);gap:10px}
-.pin-btn{height:70px;border-radius:var(--r);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:#fff;font-size:22px;font-family:'Sora',sans-serif;font-weight:600;cursor:pointer;transition:all .15s}
+.pin-btn{height:70px;border-radius:var(--r);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:22px;font-family:'Sora',sans-serif;font-weight:600;cursor:pointer;transition:all .15s}
 .pin-btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.25)}
 .pin-btn:active{transform:scale(.94);background:rgba(255,255,255,.22)}
 .pin-btn.del{font-size:16px;color:rgba(255,255,255,.5)}
 .pin-err{color:#f87171;font-size:12px;margin-top:10px;height:16px;text-align:center}
 
-/* ── LOADING ── */
-#loadingScreen{position:fixed;inset:0;background:var(--dk);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+/* LOADING */
+#loadingScreen{position:fixed;inset:0;background:var(--dk);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
 #loadingScreen.fade{opacity:0;pointer-events:none}
 .load-logo{font-family:'Sora',sans-serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:8px}
 .load-logo span{color:var(--tl)}
@@ -70,7 +49,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 @keyframes lf{from{width:0}to{width:100%}}
 .load-msg{font-size:11px;color:rgba(255,255,255,.3);margin-top:12px}
 
-/* ── APP LAYOUT ── */
+/* APP */
 .app{display:flex;height:100vh}
 .sb{width:220px;background:var(--dk);display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid rgba(255,255,255,.05)}
 .logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
@@ -78,9 +57,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .logo-name span{color:var(--tl)}
 .logo-sub{font-size:9px;color:rgba(255,255,255,.28);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
 .nav{padding:10px 8px;flex:1;overflow-y:auto}
-.ni{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--rs);cursor:pointer;
-  color:rgba(255,255,255,.5);font-size:13px;font-weight:500;transition:all .15s;
-  margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--rs);cursor:pointer;color:rgba(255,255,255,.5);font-size:13px;font-weight:500;transition:all .15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
 .ni:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}
 .ni.on{background:rgba(255,255,255,.12);color:#fff;font-weight:600}
 .ni svg{width:16px;height:16px;flex-shrink:0;opacity:.8}
@@ -88,29 +65,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .nbadge{background:var(--re);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:auto}
 .sbfoot{padding:12px 14px;border-top:1px solid rgba(255,255,255,.07);font-size:10px;color:rgba(255,255,255,.18)}
 
-/* ── MAIN ── */
+/* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
-.topbar{background:var(--wh);border-bottom:1px solid var(--br);padding:0 24px;height:54px;
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar{background:var(--wh);border-bottom:1px solid var(--br);padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .ptitle{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--tx)}
 .dchip{font-size:12px;color:var(--mu);background:var(--bg);padding:4px 12px;border-radius:20px;border:1px solid var(--br)}
 .content{flex:1;overflow-y:auto;padding:22px 24px}
 
-/* ── BUTTONS ── */
-.btn{padding:7px 14px;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;
-  border:none;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px;line-height:1}
+/* BUTTONS */
+.btn{padding:7px 14px;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px;line-height:1}
 .bp{background:var(--base);color:#fff}.bp:hover{background:var(--mid)}
 .bo{background:transparent;border:1px solid var(--br);color:var(--mu)}.bo:hover{background:var(--tp)}
 .bd{background:var(--rb);color:var(--rt)}.bd:hover{background:#fecaca}
 .bsm{padding:5px 10px;font-size:12px}.bxs{padding:3px 7px;font-size:11px}
 
-/* ── CARDS ── */
+/* CARDS */
 .card{background:var(--wh);border:1px solid var(--br);border-radius:var(--r);padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .csm{padding:14px 16px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
 
-/* ── TAGS ── */
+/* TAGS */
 .tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
 .tg{background:var(--gb);color:var(--gt)}
 .ty{background:var(--yb);color:var(--yt)}
@@ -120,141 +95,156 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .ttl{background:var(--tp);color:var(--mid)}
 .tpu{background:var(--pu);color:var(--pt)}
 
-/* ── STATS ── */
+/* STATS */
 .lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--so);margin-bottom:5px}
 .val{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--tx)}
 
-/* ── PROGRESS ── */
+/* PROGRESS */
 .pb{height:6px;background:#e8eeec;border-radius:3px;overflow:hidden}
 .pf{height:100%;background:linear-gradient(90deg,var(--base),var(--teal));border-radius:3px;transition:width .5s}
 
-/* ── TABLE ── */
+/* TABLE */
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tbl th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.7px;color:var(--so);border-bottom:1px solid var(--br);background:#fafcfb}
+.tbl th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--so);border-bottom:1px solid var(--br);background:#fafcfb}
 .tbl td{padding:10px 12px;border-bottom:1px solid var(--brl);color:var(--tx);vertical-align:middle}
 .tbl tr:hover td{background:#fafcfb}
 .tbl tr:last-child td{border-bottom:none}
 .tw{overflow-x:auto}
 
-/* ── FORM ── */
+/* FORM */
 .fg{margin-bottom:12px}
 .fl{font-size:11px;font-weight:600;color:var(--mu);margin-bottom:4px;display:block;text-transform:uppercase;letter-spacing:.5px}
-.fi{width:100%;padding:8px 10px;border:1px solid var(--br);border-radius:var(--rs);
-  font-size:13px;font-family:inherit;color:var(--tx);background:var(--wh);outline:none;transition:border-color .15s}
+.fi{width:100%;padding:8px 10px;border:1px solid var(--br);border-radius:var(--rs);font-size:13px;font-family:inherit;color:var(--tx);background:var(--wh);outline:none;transition:border-color .15s}
 .fi:focus{border-color:var(--base);box-shadow:0 0 0 3px rgba(42,125,94,.12)}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
-/* ── MODAL ── */
-.ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:1000;
-  display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(2px)}
-.modal{background:var(--wh);border-radius:var(--r);padding:24px;width:580px;max-width:100%;
-  max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.18)}
+/* MODAL */
+.ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(2px)}
+.modal{background:var(--wh);border-radius:var(--r);padding:24px;width:580px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.18)}
 .modal-lg{width:860px}
+.modal-xl{width:1000px}
 .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .mt{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--tx)}
 .mf{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--br)}
 .div{height:1px;background:var(--br);margin:14px 0}
 .stitle{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--tx);margin-bottom:10px}
 
-/* ── TASKS ── */
-.ti{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--rm);
-  border:1px solid var(--br);margin-bottom:7px;background:var(--wh);transition:all .15s}
+/* TASKS */
+.ti{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--rm);border:1px solid var(--br);margin-bottom:7px;background:var(--wh);transition:all .15s}
 .ti:hover{border-color:var(--base);background:var(--tp)}
 .ti.done{opacity:.5}
-.chk{width:17px;height:17px;border-radius:4px;border:2px solid var(--br);flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;margin-top:1px}
+.chk{width:17px;height:17px;border-radius:4px;border:2px solid var(--br);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;margin-top:1px}
 .chk.on{background:var(--base);border-color:var(--base)}
 
-/* ── CALENDAR ── */
+/* CALENDAR */
 .cal-wrap{background:var(--wh);border:1px solid var(--br);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .cal-header{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;background:var(--dk);color:#fff}
 .cal-title{font-family:'Sora',sans-serif;font-size:15px;font-weight:600}
-.cal-nav{background:rgba(255,255,255,.12);border:none;color:#fff;cursor:pointer;
-  padding:5px 11px;border-radius:6px;font-size:15px;font-family:inherit;transition:background .15s}
+.cal-nav{background:rgba(255,255,255,.12);border:none;color:#fff;cursor:pointer;padding:5px 11px;border-radius:6px;font-size:15px;font-family:inherit;transition:background .15s}
 .cal-nav:hover{background:rgba(255,255,255,.22)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
-.cal-dh{text-align:center;font-size:10px;font-weight:700;color:var(--so);padding:7px 4px;
-  background:#fafcfb;border-bottom:1px solid var(--br);text-transform:uppercase;letter-spacing:.5px}
-.cal-day{min-height:74px;border-right:1px solid var(--brl);border-bottom:1px solid var(--brl);
-  padding:5px 6px;cursor:default;transition:background .1s}
+.cal-dh{text-align:center;font-size:10px;font-weight:700;color:var(--so);padding:7px 4px;background:#fafcfb;border-bottom:1px solid var(--br);text-transform:uppercase;letter-spacing:.5px}
+.cal-day{min-height:74px;border-right:1px solid var(--brl);border-bottom:1px solid var(--brl);padding:5px 6px;cursor:default;transition:background .1s}
 .cal-day:hover{background:var(--tp)}
 .cal-day.today{background:#eef8f5}
-.cal-day.today .cal-dn{color:var(--base);font-weight:700;background:var(--base);color:#fff;
-  width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
 .cal-day.other-month{opacity:.3}
 .cal-day:nth-child(7n){border-right:none}
 .cal-dn{font-size:11px;font-weight:500;color:var(--mu);margin-bottom:3px;line-height:1}
-.cal-ev{background:var(--base);color:#fff;border-radius:3px;padding:2px 5px;
-  font-size:9px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;line-height:1.4}
+.cal-ev{background:var(--base);color:#fff;border-radius:3px;padding:2px 5px;font-size:9px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;line-height:1.4}
 .cal-ev:hover{background:var(--mid)}
 .cal-ev.urgent{background:#dc2626}
 .cal-ev.done-ev{background:var(--so)}
 
-/* ── TOAST ── */
+/* TOAST */
 .twrap{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
-.toast{padding:10px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;color:#fff;
-  animation:sin .25s ease;max-width:320px;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.toast{padding:10px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;color:#fff;animation:sin .25s ease;max-width:320px;box-shadow:0 4px 16px rgba(0,0,0,.15)}
 .ts{background:var(--base)}.te{background:#dc2626}.ti2{background:#3b82f6}
 @keyframes sin{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 .empty{text-align:center;padding:48px 20px;color:var(--mu)}
 .ei{font-size:36px;margin-bottom:10px;opacity:.35}
 
-/* ── QUOTE EDITOR ── */
-.quote-editor{border:1px solid var(--br);border-radius:var(--rs);min-height:200px;padding:12px;
-  font-size:13px;font-family:inherit;outline:none;line-height:1.55;color:var(--tx)}
+/* QUOTE EDITOR */
+.quote-editor{border:1px solid var(--br);border-radius:var(--rs);min-height:200px;padding:12px;font-size:13px;font-family:inherit;outline:none;line-height:1.55;color:var(--tx)}
 .quote-editor:focus{border-color:var(--base);box-shadow:0 0 0 3px rgba(42,125,94,.1)}
 .quote-editor p{margin:0 0 4px}
-.editor-toolbar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;padding:8px;
-  background:#fafcfb;border:1px solid var(--br);border-radius:var(--rs)}
-.tb-btn{padding:4px 8px;border:1px solid var(--br);border-radius:4px;background:var(--wh);
-  cursor:pointer;font-size:12px;font-family:inherit;color:var(--mu);transition:all .1s}
+.editor-toolbar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;padding:8px;background:#fafcfb;border:1px solid var(--br);border-radius:var(--rs)}
+.tb-btn{padding:4px 8px;border:1px solid var(--br);border-radius:4px;background:var(--wh);cursor:pointer;font-size:12px;font-family:inherit;color:var(--mu);transition:all .1s}
 .tb-btn:hover{background:var(--tp);border-color:var(--base)}
 
-/* ── TASK DETAIL ── */
+/* TASK DETAIL */
 .task-detail .td-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px}
 .task-detail .td-label{font-weight:600;color:var(--mu);min-width:80px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
 
-/* ── NOTIF BAR ── */
-.notif-bar{background:linear-gradient(135deg,#1a4f3a,var(--base));color:#fff;padding:8px 24px;
-  font-size:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+/* NOTIF */
+.notif-bar{background:linear-gradient(135deg,#1a4f3a,var(--base));color:#fff;padding:8px 24px;font-size:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .notif-bar.hide{display:none}
-
-/* ── STATUS BANNER ── */
 .cfg-banner{padding:8px 24px;font-size:12px;display:flex;align-items:center;gap:8px;flex-shrink:0;color:#fff}
 .cfg-banner.ok{background:var(--mid)}
 .cfg-banner.warn{background:#92400e}
 
-/* ── TAX SECTION ── */
+/* TAX */
 .tax-section{background:#fafcfb;border:1px solid var(--br);border-radius:var(--rs);padding:12px;margin-bottom:12px}
 .tax-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
 .tax-row:last-child{margin-bottom:0}
 .tax-label{display:flex;align-items:center;gap:6px;cursor:pointer;min-width:160px}
 .tax-amount{font-weight:600;color:var(--base);margin-left:auto;font-size:12px}
 
-/* ── TEMPLATE DROP ── */
-.tpl-zone{border:2px dashed var(--br);border-radius:var(--r);padding:32px 20px;text-align:center;
-  transition:all .2s;cursor:pointer;background:#fafcfb;position:relative}
+/* TEMPLATE */
+.tpl-zone{border:2px dashed var(--br);border-radius:var(--r);padding:32px 20px;text-align:center;transition:all .2s;cursor:pointer;background:#fafcfb;position:relative}
 .tpl-zone:hover,.tpl-zone.drag{border-color:var(--base);background:var(--tp)}
 .tpl-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.tpl-preview{border:1px solid var(--br);border-radius:var(--rm);overflow:hidden;max-height:180px;
-  display:flex;align-items:center;justify-content:center;background:#f1f5f9}
+.tpl-preview{border:1px solid var(--br);border-radius:var(--rm);overflow:hidden;max-height:180px;display:flex;align-items:center;justify-content:center;background:#f1f5f9}
 .tpl-preview img{width:100%;height:180px;object-fit:contain}
 
-/* ── PAGER ── */
-.pager{display:flex;align-items:center;gap:5px;justify-content:center;margin-top:10px;
-  padding-top:10px;border-top:1px solid var(--brl)}
-.pg{padding:3px 9px;border-radius:var(--rs);border:1px solid var(--br);background:var(--wh);
-  color:var(--mu);font-size:12px;cursor:pointer;font-family:inherit}
+/* PAGER */
+.pager{display:flex;align-items:center;gap:5px;justify-content:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--brl)}
+.pg{padding:3px 9px;border-radius:var(--rs);border:1px solid var(--br);background:var(--wh);color:var(--mu);font-size:12px;cursor:pointer;font-family:inherit}
 .pg:hover{background:var(--tp);border-color:var(--base)}
 .pg.on{background:var(--base);color:#fff;border-color:var(--base)}
 .pg:disabled{opacity:.3;cursor:default}
 
-/* ── PROJECT ROW (dashboard) ── */
-.proj-row{padding:10px 12px;border-radius:var(--rm);border:1px solid var(--br);margin-bottom:8px;
-  background:var(--wh);cursor:pointer;transition:all .15s}
+/* DASH PROJECT ROW */
+.proj-row{padding:10px 12px;border-radius:var(--rm);border:1px solid var(--br);margin-bottom:8px;background:var(--wh);cursor:pointer;transition:all .15s}
 .proj-row:hover{border-color:var(--base);background:var(--tp)}
+
+/* ── NUEVO: PROJECT CARD (vista proyectos rediseñada) ── */
+.proj-card-new{
+  background:var(--wh);border:1px solid var(--br);border-radius:var(--r);
+  box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:12px;overflow:hidden;
+  transition:box-shadow .15s;
+}
+.proj-card-new:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.proj-card-header{
+  padding:10px 16px 10px;border-bottom:1px solid var(--brl);
+  display:flex;align-items:center;gap:10px;background:#fafcfb;
+}
+.proj-client-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--dk);color:rgba(255,255,255,.85);
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+  flex-shrink:0;
+}
+.proj-card-body{padding:14px 16px}
+.proj-card-footer{padding:10px 16px;border-top:1px solid var(--brl);background:#fafcfb;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+/* CLIENT SUMMARY MODAL */
+.cl-stat{flex:1;min-width:0;background:var(--bg);border-radius:8px;padding:10px 14px;text-align:center}
+.cl-stat-val{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--tx)}
+.cl-stat-lbl{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-top:2px}
+
+/* CLIENT CARD (lista clientes) */
+.client-card{
+  background:var(--wh);border:1px solid var(--br);border-radius:var(--r);
+  padding:16px 20px;margin-bottom:10px;cursor:pointer;
+  transition:all .15s;display:flex;align-items:center;gap:16px;
+}
+.client-card:hover{border-color:var(--base);box-shadow:0 4px 16px rgba(0,0,0,.07);background:var(--tp)}
+.client-avatar{
+  width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--base),var(--teal));
+  display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;
+  font-size:16px;font-weight:700;color:#fff;flex-shrink:0;
+}
 
 @media(max-width:900px){.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){
@@ -267,55 +257,32 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
   .main{overflow:visible}.content{padding:0;overflow:visible}body{overflow:visible}
 }
 </style>
-  <!-- ═══ PWA / HOME SCREEN ICONS ═══ -->
-  <!-- Favicon inline -->
   <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABs0lEQVR42sWXy04CMRSG/zNUF0ZMxtE30IRE3IBOQhh3GBQXPo66UIgu1PA+aowLiLhRYwKyMFHewEuAB9AF0HDrZQbpdNJkLs35/tOe/hSac2MYar+YbqP+B8swfITBQGQS3s8iAGBdvkn4gAgGojDgXAQbLAnzjVFABe2H+si7aDruf0vMp9d8LUG7UleOiXr6QijqxbUEtO5ffWe3sLWuHGOBCKoeBM5FK2JboO6OlPUxzc4kpM8DvifpFkF+tco1JVz2vlWuSeNbfrMXZir7LpsB2fo0S1VfcNG4ZqkqZDAyZEQiDkPIChgZEiDiWNOA/dy9aI+VFqG9nQwUuFeEdibBu9CIVEYYNLvhnSCKr7TixezGRFMMABSxhPHJziaVP0bfN8/Cb6nKLb9/KxyOwpm8zJRWTCA4O5tKOADEChdjTFB+aZ+InN2OiK/rJ73qnolonoh8+sBSzgUAfF49CsdEZpl+fTg5d6JD6erRGb9/Pz/2b1DOnhvmqTj4ofTfBKCjgM/CysFpZdrQj8sTr7cCPSMiEBmB8yS7zH4rpkYx75kQ0Cjmtzh3eT8V6t/zP2DiXZkcS+1/AAAAAElFTkSuQmCC">
-  <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA/UlEQVR42p2TsYrCQBCG/39IJXjcER9BIYU2gopoOgvBex8tlAQPJOAbeTZiLLVQCyH4DELuAbTQk113LZIfht2B/5udnWVZaHp46IpsIgA4IPPA/wwdCvPAzyIO7x1Y9bc5PvfFTtV+j2K3anSQrg9vi374NS0XCGHEQ1+9urbeCd0rJKFGutqbkJKnq73mdyjMPDmVEYpADVVeGKEdL+CFkdaFxnz26sYQL79btOOFcfIpHAEvryYU4jXe6bLcGV5jiCTh9hvWAm6/YXitHVCIZDbW4GQ2tvroDppXAKiMfuKsr5FEky5L3y2Uh9N13s8gFOI8D/w88Hke+DdwGzS+5MS+VAAAAABJRU5ErkJggg==">
-  <!-- Apple Touch Icon (iOS home screen) -->
-  <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAGtElEQVR42u2dzW4bVRiGzzmetAi1lWyXOwCpEoWF8yNKItgkaZIFl4NgRZFYILgfClWlkhCE1ELVpF2wgDsgbeOuEELDIiRxUtvx/JyZ7/vO80izaBX/zJzHr99zxh77N5duuBbIHaSAb/oBMwSGBsfdaxYaiWGaE16D0EgMrcodkBkEVpNWExqRoU6pK6V1QGawlNZZydcDIoPItA7IDJbSOiAzWJI6K5DqyAxtSj2TqAGZwVJSB2QGS1IHZAZLUmfNfx4KIB6ZJ53B0CQxIDNYqh6B4wKWCKQzWErpgMxgSerMscwBhmDZDsx2aOoGqK8drHKA2YQGMCM0dQNM1A4SGqgcAFJh2Q7MJTT9Gcz06MwT0bXx6udnpW97dfkmB7AG/JUP3yWhG5YXyRE6CYERHKHNS4zcCG1aZMS+SOhlhD4RefeZ2ud+dQWxEdqAyIiN0CZFRuyEhbYscupiB2Rmf40J7V0qW2qDe1bqNMbYX1m+mdsf0KdM/08qyHvGE9r4ixaZx7y4DY+36Q796idkTu24BAYNqU0JbfGdB5lnl9ra2JtL6CEyJ328AoMDlo5bYFDA0vEzsWyHzDVKrX/ZTvceDHeQuVapd56q9iHoPvj7GMhxPUPG8FWnuzo48+8X9x83clswJHTbKXJexBj326bcw519d+2j9xHausyxRJ72WG2JrVHqDJnliSxJbG1Sc207wSKLEVuRI6pWOYbb+8nK3Obzavq4JyM0Mut5fnRoISmhSZQmK8hwe99d+1h+l+bqowZSr7s6aERqDa6oqByH23vILOD5NzEOdGhkplefEVr45000pEJKHG7v8SVZUo39oXI45w5/3GPwBe5X7HGhQyMzSc2kEBDaSN1IJb1i7qfU2kFCgyky59M6U5hat4x6FlGgOyQ00KGj9+cHT0hnBfsda5xIaACEBpNCSzwlT93Qs/9cfRQgauUQ9hJ7KXCiAZN5+eAJn7YDYFJIf+Y4zEDm+E4h1DI1JKEBEBoAoSEZuLYdWKrQJDRQOQAQGgChARAaUibzCXyn8MX9x5z+dvEuuyvJIRIamakcMSFJdcksbbxIaCChSSn2G6EBEBqgqNACv/bdXYsz0eCH4WueEK4NuII/AJWDlIYZ4TuFUAGuPlqgn82T0nUcx5pPfHRXByeby3OJCQ1QgVGpBXymI9lJISkd4X7y/HRrTWjBP6LYXZ9HaiFSF759W8t2wn9IlqQWIHWZ23H10Qn0Iqd0ahSVs5TMob0uzYkVl97a9MkqRcW/kYjvrg1yDU/0+b3f1EyeirxArH3+u810JqETT2qLBNlTwtOtt77QmNSIXSmjW92CEp8bP8uK1CVU7gQ+bVdoxeP2AlIDHZoK0lA6I7T8lEZsEtqs1IgtO52dc8531+dzrQfy+Q+/inge59eSywqvdU1aktB8fFTQ5PH4fjSJLUnmo8qhadnu3NbbWOAF0qbMWeBLsrX3aaSG0RdZ7/ZCbmFHDr5/ZHKApNaPkHVY5YhJf2ORpE5cZlNCW5YamRMV2qrUUlJauswmhSapE38H0bxsN23rbyJ1raLMdVSMu+kTK/3NRXdwV8fqx63de6/93y8r63JkVoLvbdhYtpuGZKnHiTxO7LaW7zTJbLZDj0tqiRVkFpmL/F3qMicj9KjY2mQ+5sadr5F5NqGNzgonbP3NJWZ4F8qcqR1f39tYzFMduIO7D1Wk8yi/3/msAZn1kqV8eej+1lFaH3z30IFz4ZL+RS8+D43YJkROclI4i9jHciOz0oTmByle5/r/Uv9lPLE7l+y9Qfv+ZrqTwiLULXeZiWGdE0KLMtOhS6R2LMFJZRJafYoXSek60tm6zEdCbyF0m7zz+VfRZe5cTueN2Pe3lhC6Zf79+5+xp7arizyX3LFEaCFC19qTExSZSaExUpZ4FE6sKJexc3kOmUlo0hihAYlVCM25b3nyvoG8JDQSA5NCQGgAyZXDU6LBWEJjNFjBUznAVuUgn4FJIYBwoclpUN+fSWigcgBoEZraAarrBgkN5sicJ5jBbofGblBbNyZVDqQGlTLTocFgh55sfunLG7z96Ze7HFqYhT+++WKlrnR2zrkw5QL/vsyPAiAzFA2/Ep5NdJPKAcYqh78w1rmyEjQ8tSv/16Huh/vz29KdCBKkoC8Xuujf+uSDWe+MpAbxOZ4VCGDqB4gvJSHWHQO00bBD7AcAaGy66MpfOcnTq0GSyKdC+8oPjNQgQuYqCU1agyiRq3RoujWIlLmuhJ70xEhsaDwAs4aeMHJDI+/iWUs7guAIHIX/ACok2cKgh1eSAAAAAElFTkSuQmCC">
-  <!-- Android Chrome / PWA -->
+  <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAGtElEQVR42u2dzW4bVRiGzzmetAi1lWyXOwCpEoWF8yNKItgkaZIFl4NgRZFYILgfClWlkhCE1ELVpF2wgDsgbeOuEELDIiRxUtvx/JyZ7/vO80izaBX/zJzHr99zxh77N5duuBbIHaSAb/oBMwSGBsfdaxYaiWGaE16D0EgMrcodkBkEVpNWExqRoU6pK6V1QGawlNZZydcDIoPItA7IDJbSOiAzWJI6K5DqyAxtSj2TqAGZwVJSB2QGS1IHZAZLUmfNfx4KIB6ZJ53B0CQxIDNYqh6B4wKWCKQzWErpgMxgSerMscwBhmDZDsx2aOoGqK8drHKA2YQGMCM0dQNM1A4SGqgcAFJh2Q7MJTT9Gcz06MwT0bXx6udnpW97dfkmB7AG/JUP3yWhG5YXyRE6CYARHKHNS4zcCG1aZMS+SOhlhD4RefeZ2ud+dQWxEdqAyIiN0CZFRuyEhbYscupiB2Rmf40J7V0qW2qDe1bqNMbYX1m+mdsf0KdM/08qyHvGE9r4ixaZx7y4DY+36Q796idkTu24BAYNqU0JbfGdB5lnl9ra2JtL6CEyJ328AoMDlo5bYFDA0vEzsWyHzDVKrX/ZTvceDHeQuVapd56q9iHoPvj7GMhxPUPG8FWnuzo48+8X9x83clswJHTbKXJexBj326bcw519d+2j9xHausyxRJ72WG2JrVHqDJnliSxJbG1Sc207wSKLEVuRI6pWOYbb+8nK3Obzavq4JyM0Mut5fnRoISmhSZQmK8hwe99d+1h+l+bqowZSr7s6aERqDa6oqByH23vILOD5NzEOdGhkplefEVr45000pEJKHG7v8SVZUo39oXI45w5/3GPwBe5X7HGhQyMzSc2kEBDaSN1IJb1i7qfU2kFCgyky59M6U5hat4x6FlGgOyQ00KGj9+cHT0hnBfsda5xIaACEBpNCSzwlT93Qs/9cfRQgauUQ9hJ7KXCiAZN5+eAJn7YDYFJIf+Y4zEDm+E4h1DI1JKEBEBoAoSEZuLYdWKrQJDRQOQAQGgChARAaUibzCXyn8MX9x5z+dvEuuyvJIRIamakcMSFJdcksbbxIaCChSSn2G6EBEBqgqNACv/bdXYsz0eCH4WueEK4NuII/AJWDlIYZ4TuFUAGuPlqgn82T0nUcx5pPfHRXByeby3OJCQ1QgVGpBXymI9lJISkd4X7y/HRrTWjBP6LYXZ9HaiFSF759W8t2wn9IlqQWIHWZ23H10Qn0Iqd0ahSVs5TMob0uzYkVl97a9MkqRcW/kYjvrg1yDU/0+b3f1EyeirxArH3+u810JqETT2qLBNlTwtOtt77QmNSIXSmjW92CEp8bP8uK1CVU7gQ+bVdoxeP2AlIDHZoK0lA6I7T8lEZsEtqs1IgtO52dc8531+dzrQfy+Q+/inge59eSywqvdU1aktB8fFTQ5PH4fjSJLUnmo8qhadnu3NbbWOAF0qbMWeBLsrX3aaSG0RdZ7/ZCbmFHDr5/ZHKApNaPkHVY5YhJf2ORpE5cZlNCW5YamRMV2qrUUlJauswmhSapE38H0bxsN23rbyJ1raLMdVSMu+kTK/3NRXdwV8fqx63de6/93y8r63JkVoLvbdhYtpuGZKnHiTxO7LaW7zTJbLZDj0tqiRVkFpmL/F3qMicj9KjY2mQ+5sadr5F5NqGNzgonbP3NJWZ4F8qcqR1f39tYzFMduIO7D1Wk8yi/3/msAZn1kqV8eej+1lFaH3z30IFz4ZL+RS8+D43YJkROclI4i9jHciOz0oTmBile5/r/Uv9lPLE7l+y9Qfv+ZrqTwiLULXeZiWGdE0KLMtOhS6R2LMFJZRJafYoXSek60tm6zEdCbyF0m7zz+VfRZe5cTueN2Pe3lhC6Zf79+5+xp7arizyX3LFEaCFC19qTExSZSaExUpZ4FE6sKJexc3kOmUlo0hihAYlVCM25b3nyvoG8JDQSA5NCQGgAyZXDU6LBWEJjNFjBUznAVuUgn4FJIYBwoclpUN+fSWigcgBoEZraAarrBgkN5sicJ5jBbofGblBbNyZVDqQGlTLTocFgh55sfunLG7z96Ze7HFqYhT+++WKlrnR2zrkw5QL/vsyPAiAzFA2/Ep5NdJPKAcYqh78w1rmyEjQ8tSv/16Huh/vz29KdCBKkoC8Xuujf+uSDWe+MpAbxOZ4VCGDqB4gvJSHWHQO00bBD7AcAaGy66MpfOcnTq0GSyKdC+8oPjNQgQuYqCU1agyiRq3RoujWIlLmuhJ70xEhsaDwAs4aeMHJDI+/iWUs7guAIHIX/ACok2cKgh1eSAAAAAElFTkSuQmCC">
   <link rel="manifest" id="pwa-manifest">
-  <!-- PWA meta -->
   <meta name="theme-color" content="#0a3628">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Oceango">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="Oceango">
-  <!-- Inject manifest dynamically (inline base64 icons) -->
   <script>
   (function(){
-    const manifest = {
-      "name": "Oceango — Gestión Documental",
-      "short_name": "Oceango",
-      "description": "Sistema de gestión comercial y documental",
-      "start_url": "./",
-      "display": "standalone",
-      "orientation": "portrait",
-      "background_color": "#0a3628",
-      "theme_color": "#0a3628",
-      "icons": [
-        {"src":"data:image/png;base64,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","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-        {"src":"data:image/png;base64,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","sizes":"512x512","type":"image/png","purpose":"any maskable"}
-      ]
-    };
-    const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-    const url  = URL.createObjectURL(blob);
-    document.getElementById('pwa-manifest').href = url;
+    const manifest={"name":"Oceango — Gestión Documental","short_name":"Oceango","description":"Sistema de gestión comercial y documental","start_url":"./","display":"standalone","orientation":"portrait","background_color":"#0a3628","theme_color":"#0a3628","icons":[{"src":"data:image/png;base64,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","sizes":"192x192","type":"image/png","purpose":"any maskable"}]};
+    const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+    document.getElementById('pwa-manifest').href=URL.createObjectURL(blob);
   })();
   </script>
 </head>
 <body>
 
-<!-- ── PIN LOCK ── -->
+<!-- PIN -->
 <div id="pinLock">
   <div class="pin-logo">O<span>ceango</span></div>
   <div class="pin-sub">Gestión Documental</div>
   <div class="pin-dots" id="pinDots">
-    <div class="pin-dot" id="d0"></div>
-    <div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div>
-    <div class="pin-dot" id="d3"></div>
+    <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
   </div>
   <div class="pin-grid">
     <button class="pin-btn" onclick="pinPress(1)">1</button>
@@ -334,7 +301,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
   <div class="pin-err" id="pinErr"></div>
 </div>
 
-<!-- ── LOADING ── -->
+<!-- LOADING -->
 <div id="loadingScreen" style="display:none">
   <div class="load-logo">O<span>ceango</span></div>
   <div class="load-sub">Gestión Documental</div>
@@ -346,9 +313,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 <div class="app" id="app"></div>
 
 <script>
-// ============================================================
-//  CONFIGURACIÓN
-// ============================================================
+// ═══ CONFIG ═══
 const SUPABASE_URL  = 'https://nnprymjwaxtpbiitlcyh.supabase.co/';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ucHJ5bWp3YXh0cGJpaXRsY3loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzkwODIsImV4cCI6MjA5MzE1NTA4Mn0.K7Zo3z0rrZea-iipqARGOC4iQdS1bJXVCLksxI_Ru0w';
 const PIN_CORRECT   = '1001';
@@ -357,9 +322,7 @@ const KEYS_OK = SUPABASE_URL.includes('supabase.co') && SUPABASE_ANON.length > 2
 let sb = null;
 if(KEYS_OK){ sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON); }
 
-// ============================================================
-//  PIN LOCK
-// ============================================================
+// ═══ PIN ═══
 let _pin = '';
 function pinPress(n){
   if(_pin.length >= 4) return;
@@ -371,8 +334,8 @@ function pinDel(){ _pin = _pin.slice(0,-1); updateDots(); }
 function pinClear(){ _pin = ''; updateDots(); }
 function updateDots(err=false){
   for(let i=0;i<4;i++){
-    const d = document.getElementById('d'+i);
-    d.className = 'pin-dot' + (i < _pin.length ? (err?' error':' filled') : '');
+    const d=document.getElementById('d'+i);
+    d.className='pin-dot'+(i<_pin.length?(err?' error':' filled'):'');
   }
 }
 function checkPin(){
@@ -381,14 +344,12 @@ function checkPin(){
     startApp();
   } else {
     updateDots(true);
-    document.getElementById('pinErr').textContent = 'PIN incorrecto';
-    setTimeout(()=>{ _pin=''; updateDots(); document.getElementById('pinErr').textContent=''; }, 900);
+    document.getElementById('pinErr').textContent='PIN incorrecto';
+    setTimeout(()=>{ _pin=''; updateDots(); document.getElementById('pinErr').textContent=''; },900);
   }
 }
 
-// ============================================================
-//  HELPERS
-// ============================================================
+// ═══ HELPERS ═══
 const $=id=>document.getElementById(id);
 const today=()=>new Date().toISOString().split('T')[0];
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);
@@ -401,6 +362,7 @@ function toast(msg,type='ts'){
   const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
   $('tw').appendChild(el);setTimeout(()=>el.remove(),3400);
 }
+
 function ic(name,size=16){
   const p={
     dash:'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
@@ -423,14 +385,13 @@ function ic(name,size=16){
     upload:'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12',
     img:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
     db:'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4',
-    lock:'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
+    lock:'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
+    star:'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z'
   };
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${p[name]||p.dash}"/></svg>`;
 }
 
-// ============================================================
-//  DATA
-// ============================================================
+// ═══ DATA ═══
 let DB={clients:[],projects:[],payment_schedule:[],tasks:[],orders:[],quotes:[]};
 const TABLES_WITH_UPDATED=['projects','payment_schedule','tasks','orders','quotes'];
 
@@ -484,7 +445,7 @@ async function dbDelete(table,id){
   DB[table]=DB[table].filter(r=>r.id!==id);return true;
 }
 
-// ── TEMPLATE (cloud-persisted) ──
+// ── TEMPLATE ──
 let _tpl=null;
 async function loadTemplate(){
   if(sb){
@@ -561,18 +522,20 @@ function scheduleNotifs(){
   });
 }
 
-// ============================================================
-//  STATE
-// ============================================================
-let S={tab:'dashboard',filterClient:null,filterProject:null,
-  projFilter:'all',taskFilter:'',finFilter:'all',
+// ═══ STATE ═══
+let S={
+  tab:'dashboard',
+  filterClient:null,filterProject:null,
+  projFilter:'all',
+  projClientFilter:'',   // NUEVO: filtro por cliente en proyectos
+  taskFilter:'',
+  finFilter:'all',
   calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),
-  dpPg:0,dtPg:0};
+  dpPg:0,dtPg:0
+};
 const PPP=5,TPP=6;
 
-// ============================================================
-//  RENDER
-// ============================================================
+// ═══ RENDER PRINCIPAL ═══
 function render(){
   const pend=DB.tasks.filter(t=>!t.done&&t.due_date&&t.due_date>=today()).length;
   const todayTasks=DB.tasks.filter(t=>!t.done&&t.due_date===today());
@@ -595,8 +558,7 @@ function render(){
     {id:'finance',icon:'money',label:'Finanzas'},
     {id:'quotes',icon:'quote',label:'Cotizaciones'}
   ];
-  const titles={dashboard:'Dashboard',clients:'Clientes',projects:'Proyectos',
-    tasks:'Tareas',finance:'Finanzas',quotes:'Cotizaciones'};
+  const titles={dashboard:'Dashboard',clients:'Clientes',projects:'Proyectos',tasks:'Tareas',finance:'Finanzas',quotes:'Cotizaciones'};
 
   $('app').innerHTML=`
   <aside class="sb">
@@ -615,7 +577,7 @@ function render(){
         ${ic('lock',14)} <span>Bloquear</span>
       </button>
     </div>
-    <div class="sbfoot">Oceango v6 · ${KEYS_OK?'☁ Nube':'📱 Local'}</div>
+    <div class="sbfoot">Oceango v7 · ${KEYS_OK?'☁ Nube':'📱 Local'}</div>
   </aside>
   <div class="main">
     ${cfgBanner}${notifBar}
@@ -631,10 +593,9 @@ function render(){
 }
 
 function goTab(t){S.tab=t;if(t!=='projects')S.filterClient=null;if(t!=='tasks')S.filterProject=null;render();}
-function goProjects(cid){S.filterClient=cid;S.tab='projects';render();}
+function goProjects(cid){S.filterClient=cid;S.projClientFilter=cid;S.tab='projects';render();}
 function goTasks(pid){S.filterProject=pid;S.tab='tasks';render();}
 
-// ── STAT CARD HELPER ──
 function statCard(label,value,sub,color){
   return `<div class="card csm">
     <div class="lbl">${label}</div>
@@ -643,9 +604,7 @@ function statCard(label,value,sub,color){
   </div>`;
 }
 
-// ============================================================
-//  DASHBOARD
-// ============================================================
+// ═══ DASHBOARD ═══
 function renderDash(){
   const allIn=DB.orders.filter(o=>o.type==='income');
   const allEx=DB.orders.filter(o=>o.type==='expense');
@@ -657,7 +616,8 @@ function renderDash(){
   const ap=DB.projects.filter(p=>p.status==='active');
   const up=DB.tasks.filter(t=>{
     if(t.done||!t.due_date)return false;
-    return(new Date(t.due_date+'T12:00:00')-new Date())/86400000>=-1&&(new Date(t.due_date+'T12:00:00')-new Date())/86400000<=7;
+    const diff=(new Date(t.due_date+'T12:00:00')-new Date())/86400000;
+    return diff>=-1&&diff<=7;
   }).sort((a,b)=>a.due_date.localeCompare(b.due_date));
 
   const tot1=Math.ceil(ap.length/PPP)||1,tot2=Math.ceil(up.length/TPP)||1;
@@ -745,8 +705,7 @@ function renderDash(){
       ${mkPager(S.dtPg,tot2,'dtPg')}
     </div>
   </div>
-  ${renderCalendar()}
-  <div id="modals"></div>`;
+  ${renderCalendar()}`;
 }
 
 function showProjectDetail(pid){
@@ -873,109 +832,292 @@ function showTaskDetail(tid){
   document.body.appendChild(wrap);
 }
 
-// ============================================================
-//  CLIENTS
-// ============================================================
+// ═══ CLIENTS — rediseñado con tarjetas y clic para resumen ═══
 function renderClients(){
   return`
   <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
     <button class="btn bp" onclick="openClientModal()">+ Nuevo Cliente</button>
   </div>
-  <div class="card" style="padding:0;overflow:hidden">
-    <div class="tw"><table class="tbl">
-      <thead><tr><th>Empresa</th><th>RUC</th><th>Representante Legal</th><th>C.I.</th><th>Proyectos</th><th>Acciones</th></tr></thead>
-      <tbody>${DB.clients.length===0?`<tr><td colspan="6"><div class="empty"><div class="ei">👥</div>Sin clientes</div></td></tr>`:
-        DB.clients.map(c=>{
-          const act=DB.projects.filter(p=>p.client_id===c.id&&p.status==='active').length;
-          const tot=DB.projects.filter(p=>p.client_id===c.id).length;
-          return`<tr>
-            <td><div style="font-weight:600;font-size:13px">${c.name}</div><div style="font-size:11px;color:var(--mu)">${fmtD(c.created_at)}</div></td>
-            <td style="font-family:monospace;font-size:12px">${c.ruc}</td>
-            <td>${c.rep||'—'}</td>
-            <td style="font-family:monospace;font-size:12px">${c.cedula||'—'}</td>
-            <td><span class="tag ttl">${act} activo${act!==1?'s':''}</span> <span style="font-size:11px;color:var(--mu)">${tot} total</span></td>
-            <td><div style="display:flex;gap:5px">
-              <button class="btn bo bxs" onclick="goProjects('${c.id}')">${ic('eye',13)}</button>
-              <button class="btn bo bxs" onclick="openClientModal('${c.id}')">${ic('edit',13)}</button>
-              <button class="btn bd bxs" onclick="deleteClient('${c.id}')">${ic('trash',13)}</button>
-            </div></td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table></div>
-  </div>`;
-}
-
-// ============================================================
-//  PROJECTS
-// ============================================================
-function renderProjects(){
-  let projs=DB.projects;
-  if(S.filterClient)projs=projs.filter(p=>p.client_id===S.filterClient);
-  if(S.projFilter!=='all')projs=projs.filter(p=>p.status===S.projFilter);
-  const sl={active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'};
-  const st={active:'tg',paused:'ty',finished:'tb',inactive:'tgr'};
-  return`
-  <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-    <div style="display:flex;gap:5px;flex-wrap:wrap">
-      ${['all','active','paused','finished','inactive'].map(s=>`<button class="btn bsm ${S.projFilter===s?'bp':'bo'}" onclick="setPF('${s}')">${s==='all'?'Todos':sl[s]}</button>`).join('')}
-    </div>
-    <button class="btn bp" onclick="openProjectModal()">+ Nuevo Proyecto</button>
-  </div>
-  ${projs.length===0?`<div class="card"><div class="empty"><div class="ei">📁</div>Sin proyectos</div></div>`:
-    projs.map(p=>{
-      const cl=DB.clients.find(c=>c.id===p.client_id);
-      const pt=DB.tasks.filter(t=>t.project_id===p.id);
-      const dn=pt.filter(t=>t.done).length;const pc=pt.length?Math.round(dn/pt.length*100):0;
-      const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
-      const ina=p.status==='finished'||p.status==='inactive';
-      return`<div class="card" style="margin-bottom:12px${ina?';opacity:.7':''}">
-        <div style="display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap">
-          <div style="flex:1;min-width:180px">
-            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">
-              <span class="tag ${st[p.status]||'tgr'}">${sl[p.status]}</span>
-              <span style="font-family:monospace;font-size:11px;color:var(--mu)">${p.code}</span>
-            </div>
-            <div style="font-family:Sora;font-weight:600;font-size:15px;margin-bottom:2px">${p.name}</div>
-            <div style="font-size:12px;color:var(--mu)">${cl?.name||'—'} · ${fmtD(p.start_date)} → ${fmtD(p.end_date)}</div>
-            <div style="margin-top:8px">
-              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
-                <span style="color:var(--mu)">${dn}/${pt.length} tareas</span>
-                <span style="font-weight:600;color:var(--base)">${pc}%</span>
-              </div>
-              <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
-            </div>
-          </div>
-          <div style="text-align:right;flex-shrink:0">
-            <div style="font-family:Sora;font-weight:700;font-size:20px">${fmtM(p.contract_value)}</div>
-            <div style="font-size:11px;color:var(--mu)">valor contrato</div>
-            <div style="margin-top:8px;display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap">
-              ${!ina?`<button class="btn bo bxs" onclick="goTasks('${p.id}')">Tareas</button>`:''}
-              ${!ina?`<button class="btn bo bxs" onclick="openProjectModal('${p.id}')">${ic('edit',12)}</button>`:''}
-              ${p.status==='active'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','paused')">Pausar</button>`:''}
-              ${p.status==='paused'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','active')">Reactivar</button>`:''}
-              ${p.status==='active'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','finished')">Finalizar</button>`:''}
-              <button class="btn bd bxs" onclick="deleteProject('${p.id}')">${ic('trash',12)}</button>
-            </div>
+  ${DB.clients.length===0?`<div class="card"><div class="empty"><div class="ei">👥</div>Sin clientes registrados</div></div>`:
+    DB.clients.map(c=>{
+      const act=DB.projects.filter(p=>p.client_id===c.id&&p.status==='active').length;
+      const tot=DB.projects.filter(p=>p.client_id===c.id).length;
+      const pendTasks=DB.tasks.filter(t=>{
+        const proj=DB.projects.find(p=>p.id===t.project_id&&p.client_id===c.id);
+        return proj&&!t.done;
+      }).length;
+      const initials=c.name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+      return`<div class="client-card" onclick="showClientSummary('${c.id}')">
+        <div class="client-avatar">${initials}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-family:Sora;font-weight:600;font-size:15px;color:var(--tx);margin-bottom:3px">${c.name}</div>
+          <div style="font-size:12px;color:var(--mu);display:flex;gap:10px;flex-wrap:wrap">
+            <span>RUC: <strong style="font-family:monospace">${c.ruc}</strong></span>
+            ${c.rep?`<span>Rep: ${c.rep}</span>`:''}
           </div>
         </div>
-        <div class="div"></div>
-        <div class="lbl" style="margin-bottom:8px">CRONOGRAMA DE PAGOS</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${ps.map(x=>`<div style="display:flex;align-items:center;gap:6px;background:${x.paid?'#dcfce7':'#f8faf9'};border:1px solid ${x.paid?'#86efac':'var(--br)'};border-radius:6px;padding:5px 10px;cursor:${ina?'default':'pointer'}" onclick="${ina?'':` togglePS('${x.id}',${!x.paid})`}">
-            <div style="width:13px;height:13px;border-radius:3px;background:${x.paid?'var(--base)':'white'};border:2px solid ${x.paid?'var(--base)':'var(--so)'};display:flex;align-items:center;justify-content:center">${x.paid?ic('check',9):''}</div>
-            <span style="font-size:12px;font-weight:500;color:${x.paid?'var(--gt)':'var(--mu)'}">${x.label}</span>
-            <span style="font-size:12px;font-weight:700">${x.pct}% · ${fmtM(p.contract_value*x.pct/100)}</span>
-            ${x.due_date?`<span style="font-size:10px;color:var(--mu)">${fmtD(x.due_date)}</span>`:''}
-          </div>`).join('')}
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+          ${act>0?`<span class="tag tg">${act} activo${act!==1?'s':''}</span>`:''}
+          ${pendTasks>0?`<span class="tag ty">${pendTasks} tarea${pendTasks!==1?'s':''}</span>`:''}
+          <span style="font-size:11px;color:var(--so)">${tot} proyecto${tot!==1?'s':''}</span>
+          <span style="color:var(--base)">${ic('eye',16)}</span>
+        </div>
+        <div style="display:flex;gap:4px;margin-left:8px" onclick="event.stopPropagation()">
+          <button class="btn bo bxs" onclick="openClientModal('${c.id}')">${ic('edit',12)}</button>
+          <button class="btn bd bxs" onclick="deleteClient('${c.id}')">${ic('trash',12)}</button>
         </div>
       </div>`;
     }).join('')}`;
 }
 
-// ============================================================
-//  TASKS
-// ============================================================
+// ═══ NUEVO: MODAL RESUMEN DE CLIENTE ═══
+function showClientSummary(cid){
+  const c=DB.clients.find(x=>x.id===cid);if(!c)return;
+  const projs=DB.projects.filter(p=>p.client_id===cid);
+  const pids=projs.map(p=>p.id);
+  const allTasks=DB.tasks.filter(t=>pids.includes(t.project_id));
+  const pendTasks=allTasks.filter(t=>!t.done);
+  const doneTasks=allTasks.filter(t=>t.done);
+  const cobros=DB.orders.filter(o=>pids.includes(o.project_id)&&o.type==='income');
+  const totalCobrado=cobros.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const totalPendiente=cobros.filter(o=>o.status!=='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const totalContrato=projs.reduce((s,p)=>s+Number(p.contract_value||0),0);
+  const activos=projs.filter(p=>p.status==='active');
+  const sl={active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'};
+  const sc={active:'tg',paused:'ty',finished:'tb',inactive:'tgr'};
+
+  // Próximas tareas con fecha
+  const upcomingTasks=pendTasks.filter(t=>t.due_date).sort((a,b)=>a.due_date.localeCompare(b.due_date)).slice(0,8);
+  // Reuniones/ubicaciones
+  const meetings=pendTasks.filter(t=>t.location||t.due_time).sort((a,b)=>(a.due_date||'').localeCompare(b.due_date||''));
+
+  const initials=c.name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+
+  const wrap=document.createElement('div');wrap.className='ov';wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
+  wrap.innerHTML=`<div class="modal modal-xl" style="max-height:92vh">
+    <!-- HEADER -->
+    <div class="mh" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--base),var(--teal));display:flex;align-items:center;justify-content:center;font-family:Sora;font-size:18px;font-weight:700;color:#fff;flex-shrink:0">${initials}</div>
+        <div>
+          <div class="mt" style="font-size:18px">${c.name}</div>
+          <div style="font-size:11px;color:var(--mu);margin-top:2px">RUC: <span style="font-family:monospace">${c.ruc}</span>${c.rep?' · '+c.rep:''}${c.cedula?' · C.I. '+c.cedula:''}</div>
+        </div>
+      </div>
+      <button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',14)}</button>
+    </div>
+
+    <!-- STATS -->
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="cl-stat"><div class="cl-stat-val" style="color:var(--base)">${projs.length}</div><div class="cl-stat-lbl">Proyectos</div></div>
+      <div class="cl-stat"><div class="cl-stat-val" style="color:var(--base)">${activos.length}</div><div class="cl-stat-lbl">Activos</div></div>
+      <div class="cl-stat"><div class="cl-stat-val" style="color:var(--yt)">${pendTasks.length}</div><div class="cl-stat-lbl">Tareas pendientes</div></div>
+      <div class="cl-stat"><div class="cl-stat-val" style="color:var(--so)">${doneTasks.length}</div><div class="cl-stat-lbl">Tareas completadas</div></div>
+      <div class="cl-stat"><div class="cl-stat-val" style="color:var(--base)">${fmtM(totalCobrado)}</div><div class="cl-stat-lbl">Cobrado</div></div>
+      <div class="cl-stat"><div class="cl-stat-val" style="color:var(--yt)">${fmtM(totalPendiente)}</div><div class="cl-stat-lbl">Por cobrar</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+      <!-- PROYECTOS -->
+      <div>
+        <div class="stitle" style="display:flex;align-items:center;gap:6px;margin-bottom:10px">${ic('proj',14)} Proyectos</div>
+        ${projs.length===0?`<div style="text-align:center;padding:20px;color:var(--mu);font-size:12px">Sin proyectos</div>`:
+          projs.map(p=>{
+            const pt=DB.tasks.filter(t=>t.project_id===p.id);
+            const dn=pt.filter(t=>t.done).length;
+            const pc=pt.length?Math.round(dn/pt.length*100):0;
+            const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
+            return`<div style="border:1px solid var(--br);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all .15s" onclick="this.closest('.ov').remove();showProjectDetail('${p.id}')" onmouseover="this.style.borderColor='var(--base)'" onmouseout="this.style.borderColor='var(--br)'">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px">
+                <div>
+                  <div style="font-weight:600;font-size:13px">${p.name}</div>
+                  <div style="font-size:10px;font-family:monospace;color:var(--mu)">${p.code}</div>
+                </div>
+                <span class="tag ${sc[p.status]||'tgr'}" style="font-size:10px">${sl[p.status]}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+                <span style="color:var(--mu)">${dn}/${pt.length} tareas · ${fmtD(p.start_date)}</span>
+                <span style="font-weight:700;color:var(--base)">${pc}%</span>
+              </div>
+              <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
+              <div style="margin-top:5px;display:flex;justify-content:space-between;align-items:center">
+                <div style="display:flex;gap:3px;flex-wrap:wrap">
+                  ${ps.map(x=>`<span style="font-size:9px;padding:1px 5px;border-radius:8px;background:${x.paid?'var(--gb)':'#f1f5f9'};color:${x.paid?'var(--gt)':'#475569'}">${x.label}${x.paid?' ✓':''}</span>`).join('')}
+                </div>
+                <span style="font-size:11px;font-weight:600;color:var(--tx)">${fmtM(p.contract_value)}</span>
+              </div>
+            </div>`;
+          }).join('')}
+      </div>
+
+      <div>
+        <!-- TAREAS PENDIENTES PRÓXIMAS -->
+        <div class="stitle" style="display:flex;align-items:center;gap:6px;margin-bottom:10px">${ic('tasks',14)} Próximas Tareas</div>
+        <div style="max-height:200px;overflow-y:auto;margin-bottom:14px">
+          ${upcomingTasks.length===0?`<div style="text-align:center;padding:16px;color:var(--mu);font-size:12px">${pendTasks.length===0?'✅ Sin tareas pendientes':'Sin tareas con fecha asignada'}</div>`:
+            upcomingTasks.map(t=>{
+              const proj=DB.projects.find(p=>p.id===t.project_id);
+              const diff=Math.round((new Date(t.due_date+'T12:00:00')-new Date())/86400000);
+              const urgTag=diff<0?`<span class="tag tr" style="font-size:9px">Vencida</span>`:diff===0?`<span class="tag tg" style="font-size:9px">Hoy</span>`:diff<=2?`<span class="tag ty" style="font-size:9px">En ${diff}d</span>`:`<span style="font-size:9px;color:var(--mu)">${fmtDS(t.due_date)}</span>`;
+              return`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:6px;border:1px solid var(--brl);margin-bottom:5px;background:var(--wh)">
+                <div class="chk ${t.done?'on':''}" style="width:14px;height:14px;flex-shrink:0;margin-top:1px" onclick="toggleTask('${t.id}',${!t.done});this.closest('.ov').remove()">${t.done?ic('check',9):''}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:12px;font-weight:500">${t.title}</div>
+                  <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;align-items:center">
+                    ${urgTag}
+                    ${t.due_time?`<span style="font-size:9px;color:var(--mu)">${t.due_time.slice(0,5)}</span>`:''}
+                    <span class="tag ttl" style="font-size:9px">${(proj?.name||'').slice(0,12)}</span>
+                  </div>
+                </div>
+              </div>`;
+            }).join('')}
+        </div>
+
+        <!-- REUNIONES Y CITAS -->
+        <div class="stitle" style="display:flex;align-items:center;gap:6px;margin-bottom:10px">${ic('pin',14)} Reuniones y Citas</div>
+        <div style="max-height:160px;overflow-y:auto">
+          ${meetings.length===0?`<div style="text-align:center;padding:16px;color:var(--mu);font-size:12px">Sin reuniones programadas</div>`:
+            meetings.map(t=>{
+              const proj=DB.projects.find(p=>p.id===t.project_id);
+              return`<div style="padding:7px 10px;border-radius:6px;border-left:3px solid var(--base);background:#f8fffe;margin-bottom:5px">
+                <div style="font-size:12px;font-weight:600">${t.title}</div>
+                <div style="font-size:11px;color:var(--mu);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap">
+                  ${t.due_date?`<span>${ic('cal',11)} ${fmtDS(t.due_date)}</span>`:''}
+                  ${t.due_time?`<span>${ic('clk',11)} ${t.due_time.slice(0,5)}</span>`:''}
+                  ${t.location?`<span>${ic('pin',11)} ${t.location}</span>`:''}
+                  <span class="tag ttl" style="font-size:9px">${(proj?.name||'').slice(0,12)}</span>
+                </div>
+              </div>`;
+            }).join('')}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mf">
+      <button class="btn bo" onclick="this.closest('.ov').remove()">Cerrar</button>
+      <button class="btn bo" onclick="this.closest('.ov').remove();genPDF('${cid}')">${ic('pdf',14)} Informe PDF</button>
+      <button class="btn bo" onclick="this.closest('.ov').remove();openClientModal('${cid}')">${ic('edit',14)} Editar</button>
+      <button class="btn bp" onclick="this.closest('.ov').remove();goProjects('${cid}')">${ic('proj',14)} Ver proyectos</button>
+    </div>
+  </div>`;
+  document.body.appendChild(wrap);
+}
+
+// ═══ PROJECTS — rediseñado con tarjetas más claras + filtro por cliente ═══
+function renderProjects(){
+  let projs=DB.projects;
+  if(S.projClientFilter)projs=projs.filter(p=>p.client_id===S.projClientFilter);
+  if(S.filterClient)projs=projs.filter(p=>p.client_id===S.filterClient);
+  if(S.projFilter!=='all')projs=projs.filter(p=>p.status===S.projFilter);
+  const sl={active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'};
+  const st={active:'tg',paused:'ty',finished:'tb',inactive:'tgr'};
+
+  return`
+  <!-- FILTROS -->
+  <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <!-- Filtro por cliente -->
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:11px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Cliente:</span>
+        <select class="fi" style="width:auto;padding:5px 10px;font-size:12px;min-width:140px" onchange="S.projClientFilter=this.value;S.filterClient=this.value;render()">
+          <option value="">Todos los clientes</option>
+          ${DB.clients.map(c=>`<option value="${c.id}"${(S.projClientFilter===c.id||S.filterClient===c.id)?' selected':''}>${c.name}</option>`).join('')}
+        </select>
+      </div>
+      <div style="width:1px;background:var(--br);height:24px;margin:0 2px"></div>
+      <!-- Filtro por estado -->
+      ${['all','active','paused','finished','inactive'].map(s=>`<button class="btn bsm ${S.projFilter===s?'bp':'bo'}" onclick="setPF('${s}')">${s==='all'?'Todos':sl[s]}</button>`).join('')}
+    </div>
+    <button class="btn bp" onclick="openProjectModal()">+ Nuevo Proyecto</button>
+  </div>
+
+  <!-- CONTADOR -->
+  ${(S.projClientFilter||S.filterClient)&&projs.length>0?`
+    <div style="margin-bottom:12px;font-size:12px;color:var(--mu);display:flex;align-items:center;gap:8px">
+      <span>${ic('users',13)}</span>
+      <span>Mostrando <strong>${projs.length}</strong> proyecto${projs.length!==1?'s':''} de <strong>${DB.clients.find(c=>c.id===(S.projClientFilter||S.filterClient))?.name||'—'}</strong></span>
+      <button class="btn bo bxs" onclick="S.projClientFilter='';S.filterClient=null;render()">× Quitar filtro</button>
+    </div>`:''
+  }
+
+  <!-- TARJETAS -->
+  ${projs.length===0?`<div class="card"><div class="empty"><div class="ei">📁</div>Sin proyectos${S.projClientFilter?' para este cliente':''}</div></div>`:
+    projs.map(p=>{
+      const cl=DB.clients.find(c=>c.id===p.client_id);
+      const pt=DB.tasks.filter(t=>t.project_id===p.id);
+      const dn=pt.filter(t=>t.done).length;
+      const pc=pt.length?Math.round(dn/pt.length*100):0;
+      const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
+      const cobrado=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+      const ina=p.status==='finished'||p.status==='inactive';
+
+      return`<div class="proj-card-new" style="${ina?'opacity:.75':''}">
+
+        <!-- HEADER: cliente + código + estado -->
+        <div class="proj-card-header">
+          <div class="proj-client-badge">${ic('users',11)} ${cl?.name||'Sin cliente'}</div>
+          <span style="font-size:11px;font-family:monospace;color:var(--mu);flex:1;padding-left:8px">${p.code}</span>
+          <span class="tag ${st[p.status]||'tgr'}">${sl[p.status]}</span>
+        </div>
+
+        <!-- BODY: info principal -->
+        <div class="proj-card-body">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
+            <div style="flex:1">
+              <div style="font-family:Sora;font-weight:600;font-size:15px;color:var(--tx);margin-bottom:3px">${p.name}</div>
+              <div style="font-size:12px;color:var(--mu)">${fmtD(p.start_date)} → ${fmtD(p.end_date)||'Sin fecha fin'}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:Sora;font-weight:700;font-size:18px;color:var(--tx)">${fmtM(p.contract_value)}</div>
+              <div style="font-size:11px;color:var(--mu)">Cobrado: <span style="color:var(--base);font-weight:600">${fmtM(cobrado)}</span></div>
+            </div>
+          </div>
+
+          <!-- PROGRESO TAREAS -->
+          <div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+              <span style="color:var(--mu)">${ic('tasks',11)} ${dn} de ${pt.length} tareas completadas</span>
+              <span style="font-weight:700;color:var(--base)">${pc}%</span>
+            </div>
+            <div class="pb" style="height:8px"><div class="pf" style="width:${pc}%"></div></div>
+          </div>
+
+          <!-- NOTAS -->
+          ${p.notes?`<div style="font-size:11px;color:var(--mu);background:var(--bg);border-radius:5px;padding:6px 10px;margin-bottom:10px;border-left:2px solid var(--tl)">${p.notes.slice(0,120)}${p.notes.length>120?'…':''}</div>`:''}
+        </div>
+
+        <!-- FOOTER: cuotas + acciones -->
+        <div class="proj-card-footer">
+          <!-- Cuotas -->
+          <div style="flex:1;display:flex;gap:5px;flex-wrap:wrap;align-items:center">
+            ${ps.length===0?`<span style="font-size:11px;color:var(--so)">Sin cuotas definidas</span>`:
+              ps.map(x=>`<div style="display:flex;align-items:center;gap:4px;background:${x.paid?'#dcfce7':'var(--wh)'};border:1px solid ${x.paid?'#86efac':'var(--br)'};border-radius:6px;padding:4px 8px;cursor:${ina?'default':'pointer'};font-size:11px"
+                ${!ina?`onclick="togglePS('${x.id}',${!x.paid})"`:''}>
+                <div style="width:10px;height:10px;border-radius:2px;background:${x.paid?'var(--base)':'transparent'};border:1.5px solid ${x.paid?'var(--base)':'var(--so)'}">${x.paid?'':''}
+                </div>
+                <span style="font-weight:600;color:${x.paid?'var(--gt)':'var(--mu)'}">${x.label}</span>
+                <span style="color:${x.paid?'var(--gt)':'var(--tx)'}">${x.pct}%</span>
+                ${x.paid?`<span style="color:var(--gt)">✓</span>`:''}
+              </div>`).join('')}
+          </div>
+          <!-- Botones acción -->
+          <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px">
+            ${!ina?`<button class="btn bo bxs" onclick="goTasks('${p.id}')" title="Ver tareas">${ic('tasks',12)}</button>`:''}
+            ${!ina?`<button class="btn bo bxs" onclick="openProjectModal('${p.id}')" title="Editar">${ic('edit',12)}</button>`:''}
+            ${p.status==='active'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','paused')" title="Pausar">⏸</button>`:''}
+            ${p.status==='paused'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','active')" title="Reactivar">▶</button>`:''}
+            ${p.status==='active'?`<button class="btn bo bxs" onclick="chgProjStatus('${p.id}','finished')" title="Finalizar">✓</button>`:''}
+            <button class="btn bd bxs" onclick="deleteProject('${p.id}')" title="Eliminar">${ic('trash',12)}</button>
+          </div>
+        </div>
+
+      </div>`;
+    }).join('')}`;
+}
+
+// ═══ TASKS ═══
 function renderTasks(){
   const fp=S.taskFilter||S.filterProject||'';
   let tasks=[...DB.tasks];
@@ -1025,9 +1167,7 @@ function renderTasks(){
     }).join('')}`;
 }
 
-// ============================================================
-//  FINANCE
-// ============================================================
+// ═══ FINANCE ═══
 function renderFinance(){
   const ff=S.finFilter||'all';
   const tiAll=DB.orders.filter(o=>o.type==='income').reduce((s,o)=>s+Number(o.amount),0);
@@ -1085,9 +1225,7 @@ function renderFinance(){
   </div>`;
 }
 
-// ============================================================
-//  QUOTES
-// ============================================================
+// ═══ QUOTES ═══
 function renderQuotes(){
   const quotes=DB.quotes||[];
   const tpl=_tpl;
@@ -1141,9 +1279,7 @@ function renderQuotes(){
     </table></div></div>`}`;
 }
 
-// ============================================================
-//  MODALS
-// ============================================================
+// ═══ MODALS ═══
 function modal(id,title,body,large=false){
   document.getElementById(id+'_wrap')?.remove();
   const wrap=document.createElement('div');
@@ -1194,10 +1330,14 @@ function openClientModal(cid=null){
     </div>`);
 }
 
+// ═══ FIX BUG DUPLICACIÓN: flag isSaving ═══
+let _isSavingProject=false;
+
 function openProjectModal(pid=null){
   const p=pid?DB.projects.find(x=>x.id===pid):null;
   const ps=pid?DB.payment_schedule.filter(x=>x.project_id===pid):[];
   window._prc=ps.length||1;
+  _isSavingProject=false; // reset flag al abrir
   modal('project',p?'Editar Proyecto':'Nuevo Proyecto',`
     <div class="fr">
       <div class="fg"><label class="fl">Cliente *</label>
@@ -1228,7 +1368,7 @@ function openProjectModal(pid=null){
     </div>
     <div class="mf">
       <button class="btn bo" onclick="document.getElementById('project_wrap').remove()">Cancelar</button>
-      <button class="btn bp" onclick="saveProject('${pid||''}')">Guardar Proyecto</button>
+      <button class="btn bp" id="save_proj_btn" onclick="saveProject('${pid||''}')">Guardar Proyecto</button>
     </div>`);
 }
 
@@ -1271,7 +1411,7 @@ function openOrderModal(oid=null){
       </div>
       <div class="tax-row">
         <label class="tax-label"><input type="checkbox" id="or_ivaret" ${o?.has_iva_retention?'checked':''} onchange="calcTax()"> Retención del IVA %</label>
-        <input class="fi" type="number" id="or_ivaret_pct" style="width:70px;padding:4px 8px;font-size:12px;margin-left:8px" placeholder="%" value="${o?.iva_retention_pct||30}" min="0" max="100" oninput="calcTax()" title="30% bienes · 70% servicios · 100% honorarios">
+        <input class="fi" type="number" id="or_ivaret_pct" style="width:70px;padding:4px 8px;font-size:12px;margin-left:8px" placeholder="%" value="${o?.iva_retention_pct||30}" min="0" max="100" oninput="calcTax()">
         <span id="ivaret_show" class="tax-amount" style="display:${o?.has_iva_retention?'inline':'none'}">${o?.has_iva_retention?'-'+fmtM(o.iva_retention_amount||0):''}</span>
       </div>
       <div style="font-size:10px;color:var(--so);margin-top:4px">Ret. IVA: 30% bienes · 70% servicios · 100% honorarios profesionales</div>
@@ -1324,7 +1464,7 @@ function openQuoteModal(qid=null){
         <button class="tb-btn" onclick="fmt('underline')"><u>U</u></button>
         <button class="tb-btn" onclick="fmt('insertOrderedList')">1.</button>
         <button class="tb-btn" onclick="fmt('insertUnorderedList')">•</button>
-        <button class="tb-btn" onclick="insertTable()" title="Tabla">⊞ Tabla</button>
+        <button class="tb-btn" onclick="insertTable()">⊞ Tabla</button>
         <select class="tb-btn" onchange="fmt('fontSize',this.value);this.value=''" style="width:80px">
           <option value="">Tamaño</option>
           <option value="2">Pequeño</option><option value="3">Normal</option>
@@ -1354,7 +1494,7 @@ function getQuoteTemplate(){
   return`<p>Estimados señores,</p><p>Por medio de la presente, tenemos el agrado de presentarles nuestra propuesta de servicios profesionales.</p><p><strong>Servicios incluidos:</strong></p><ul><li>Asesoría y gestión de trámites regulatorios</li><li>Seguimiento de procesos ante entidades competentes</li><li>Elaboración de informes de avance periódicos</li></ul><p>Quedamos a su disposición para cualquier consulta adicional.</p><p><br></p><p>Atentamente,<br><strong>Equipo Oceango</strong></p>`;
 }
 
-// ── QUOTE PRINT ──
+// ═══ QUOTE PRINT ═══
 function printQuote(qid){
   const q=DB.quotes.find(x=>x.id===qid);if(!q)return;
   const hasTpl=_tpl&&_tpl.pages?.length>0;
@@ -1415,9 +1555,7 @@ function printQuote(qid){
   w.document.write(html);w.document.close();
 }
 
-// ============================================================
-//  HELPERS FORM
-// ============================================================
+// ═══ HELPERS FORM ═══
 function togInv(){const t=$('or_tp')?.value;const g=$('or_inv_g');if(g)g.style.display=t==='income'?'block':'none';}
 function calcTax(){
   const a=parseFloat($('or_am')?.value||0);if(!a)return;
@@ -1455,9 +1593,7 @@ function calcPT(){
   const m=$('ptmsg');if(m){const ok=Math.abs(tot-100)<.5;m.textContent=`Total: ${tot}% ${ok?'✓':'— debe sumar 100%'}`;m.style.color=ok?'var(--base)':'var(--re)';}
 }
 
-// ============================================================
-//  CRUD
-// ============================================================
+// ═══ CRUD ═══
 async function saveTask(tid){
   const pid=$('t_proj')?.value;const ttl=$('t_ttl')?.value?.trim();
   if(!pid||!ttl){toast('Completa los campos obligatorios','te');return;}
@@ -1483,16 +1619,33 @@ async function deleteClient(id){
   await dbDelete('clients',id);toast('Cliente eliminado');render();
 }
 
+// ═══ FIX BUG DUPLICACIÓN: doble-click guard ═══
 async function saveProject(pid){
+  // GUARD: evitar doble submit
+  if(_isSavingProject){toast('Guardando, espera…','ti2');return;}
+  _isSavingProject=true;
+  const btn=$('save_proj_btn');
+  if(btn){btn.disabled=true;btn.textContent='Guardando…';}
+
   const cl=$('pr_cl')?.value;const nm=$('pr_nm')?.value?.trim();const s=$('pr_s')?.value;
-  if(!cl||!nm||!s){toast('Completa los campos obligatorios','te');return;}
+  if(!cl||!nm||!s){
+    toast('Completa los campos obligatorios','te');
+    _isSavingProject=false;
+    if(btn){btn.disabled=false;btn.textContent='Guardar Proyecto';}
+    return;
+  }
   const rows=document.querySelectorAll('#prows>div');const sched=[];let tot=0;
   rows.forEach(r=>{
     const ins=r.querySelectorAll('input');
     const pct=parseFloat(ins[0]?.value||0);const lbl=ins[1]?.value?.trim();const dt=ins[2]?.value;
     if(pct>0&&lbl){sched.push({pct,label:lbl,due_date:dt||null,paid:false});tot+=pct;}
   });
-  if(sched.length&&Math.abs(tot-100)>.5){toast('Porcentajes deben sumar 100%','te');return;}
+  if(sched.length&&Math.abs(tot-100)>.5){
+    toast('Porcentajes deben sumar 100%','te');
+    _isSavingProject=false;
+    if(btn){btn.disabled=false;btn.textContent='Guardar Proyecto';}
+    return;
+  }
   const pd={client_id:cl,name:nm,start_date:s,end_date:$('pr_e')?.value||null,
     contract_value:parseFloat($('pr_vl')?.value)||0,notes:$('pr_nt')?.value||null};
   if(pid){
@@ -1504,8 +1657,12 @@ async function saveProject(pid){
     const np=await dbInsert('projects',{...pd,code:await nextCode('PROJ'),status:'active'});
     if(np)for(const x of sched)await dbInsert('payment_schedule',{...x,project_id:np.id});
   }
-  toast(pid?'Proyecto actualizado':'Proyecto creado');document.getElementById('project_wrap')?.remove();render();
+  toast(pid?'Proyecto actualizado':'Proyecto creado');
+  document.getElementById('project_wrap')?.remove();
+  _isSavingProject=false;
+  render();
 }
+
 async function chgProjStatus(id,status){await dbUpdate('projects',id,{status});toast('Estado actualizado');render();}
 async function deleteProject(id){
   if(!confirm('¿Eliminar proyecto, tareas y órdenes?'))return;
@@ -1557,7 +1714,7 @@ async function saveQuote(qid,status){
 }
 async function deleteQuote(id){if(!confirm('¿Eliminar?'))return;await dbDelete('quotes',id);toast('Eliminada');render();}
 
-// ── PDF REPORT ──
+// ═══ PDF REPORT ═══
 function genPDF(cid){
   const cl=DB.clients.find(c=>c.id===cid);
   const projs=DB.projects.filter(p=>p.client_id===cid);
@@ -1639,9 +1796,7 @@ function setPF(v){S.projFilter=v;render();}
 function setTF(v){S.taskFilter=v;render();}
 function setFF(v){S.finFilter=v;render();}
 
-// ============================================================
-//  BOOT
-// ============================================================
+// ═══ BOOT ═══
 async function startApp(){
   $('loadingScreen').style.display='flex';
   $('loadMsg').textContent='Iniciando…';
@@ -1660,7 +1815,6 @@ async function startApp(){
   render();
   if('Notification'in window&&Notification.permission==='granted')scheduleNotifs();
 }
-// PIN inicia la app
 </script>
 </body>
 </html>
