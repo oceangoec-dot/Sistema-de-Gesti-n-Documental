@@ -397,48 +397,44 @@ async function loadFromSupabase(){
   if(!sb)return false;
   try{
     $('loadMsg').textContent='Cargando datos…';
-    const[c,p,ps,t,o,q]=await Promise.all([
+   const[c,p,ps,t,o,q,inv,ant]=await Promise.all([
       sb.from('clients').select('*'),sb.from('projects').select('*'),sb.from('payment_schedule').select('*'),
       sb.from('tasks').select('*').order('step_order'),sb.from('orders').select('*').order('order_date',{ascending:false}),
-      sb.from('quotes').select('*').order('created_at',{ascending:false})
+      sb.from('quotes').select('*').order('created_at',{ascending:false}),
+      sb.from('invoices').select('*').order('created_at',{ascending:false}),
+      sb.from('anticipos').select('*')
     ]);
     DB.clients=c.data||[];DB.projects=p.data||[];DB.payment_schedule=ps.data||[];
     DB.tasks=t.data||[];DB.orders=o.data||[];DB.quotes=q.data||[];
+    DB.invoices=inv.data||[];DB.anticipos=ant.data||[];
     // anticipos e invoices en local por ahora (o agregar tabla en Supabase)
     try{DB.invoices=JSON.parse(localStorage.getItem('oceango_invoices')||'[]');}catch{}
     try{DB.anticipos=JSON.parse(localStorage.getItem('oceango_anticipos')||'[]');}catch{}
     return true;
   }catch(e){console.error(e);return false;}
 }
-function saveInvoicesLocal(){try{localStorage.setItem('oceango_invoices',JSON.stringify(DB.invoices));}catch{}}
-function saveAnticiposLocal(){try{localStorage.setItem('oceango_anticipos',JSON.stringify(DB.anticipos));}catch{}}
 
 async function nextCode(prefix){const key=`oceango_seq_${prefix}`;const n=(parseInt(localStorage.getItem(key)||'0'))+1;localStorage.setItem(key,n);return`${prefix}-${String(n).padStart(4,'0')}-${new Date().getFullYear()}`;}
 
 async function dbInsert(table,row){
   const r={...row,id:uid(),created_at:new Date().toISOString()};
-  if(sb&&table!=='invoices'&&table!=='anticipos'){const{data,error}=await sb.from(table).insert(r).select().single();if(error){toast('Error: '+error.message,'te');return null;}DB[table]=[...(DB[table]||[]),data];return data;}
+  if(sb){const{data,error}=await sb.from(table).insert(r).select().single();if(error){toast('Error: '+error.message,'te');return null;}DB[table]=[...(DB[table]||[]),data];return data;}
   DB[table]=[...(DB[table]||[]),r];
-  if(table==='invoices')saveInvoicesLocal();
-  if(table==='anticipos')saveAnticiposLocal();
   return r;
 }
+
 async function dbUpdate(table,id,changes){
   const upd=TABLES_WITH_UPDATED.includes(table)?{...changes,updated_at:new Date().toISOString()}:{...changes};
-  if(sb&&table!=='invoices'&&table!=='anticipos'){const{error}=await sb.from(table).update(upd).eq('id',id);if(error){toast('Error: '+error.message,'te');return false;}}
+  if(sb){const{error}=await sb.from(table).update(upd).eq('id',id);if(error){toast('Error: '+error.message,'te');return false;}}
   DB[table]=DB[table].map(r=>r.id===id?{...r,...upd}:r);
-  if(table==='invoices')saveInvoicesLocal();
-  if(table==='anticipos')saveAnticiposLocal();
-  return true;
-}
-async function dbDelete(table,id){
-  if(sb&&table!=='invoices'&&table!=='anticipos'){const{error}=await sb.from(table).delete().eq('id',id);if(error){toast('Error: '+error.message,'te');return false;}}
-  DB[table]=DB[table].filter(r=>r.id!==id);
-  if(table==='invoices')saveInvoicesLocal();
-  if(table==='anticipos')saveAnticiposLocal();
   return true;
 }
 
+async function dbDelete(table,id){
+  if(sb){const{error}=await sb.from(table).delete().eq('id',id);if(error){toast('Error: '+error.message,'te');return false;}}
+  DB[table]=DB[table].filter(r=>r.id!==id);
+  return true;
+}
 // TEMPLATE
 let _tpl=null;
 async function loadTemplate(){
