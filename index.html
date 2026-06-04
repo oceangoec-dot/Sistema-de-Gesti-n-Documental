@@ -544,15 +544,18 @@ function goTasks(pid){S.taskFilter=pid;S.tab='tasks';render();}
 
 // DASHBOARD
 function renderDash(){
-  // Solo contar ingresos neto (órdenes tipo income pagadas, usando neto)
-  const incomePaid=DB.orders.filter(o=>o.type==='income'&&o.status==='paid');
-  const expPaid=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid');
-  const tiP=incomePaid.reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
-  const teP=expPaid.reduce((s,o)=>s+Number(o.amount),0);
-  const tiAll=DB.orders.filter(o=>o.type==='income').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
-  const teAll=DB.orders.filter(o=>o.type==='expense').reduce((s,o)=>s+Number(o.amount),0);
-
   const ap=DB.projects.filter(p=>p.status==='active');
+
+  // Stats con lógica correcta
+  const totalFacturado=DB.invoices.reduce((s,i)=>s+Number(i.subtotal||0),0);
+  const totalNetoBanco=DB.invoices.reduce((s,i)=>s+Number(i.neto||0),0);
+  const totalAnticiposCobrados=DB.orders.filter(o=>o.type==='income').reduce((s,o)=>{
+    return s+(DB.anticipos||[]).filter(a=>a.order_id===o.id&&a.pagado).reduce((sa,a)=>sa+Number(a.monto),0);
+  },0);
+  const teAll=DB.orders.filter(o=>o.type==='expense').reduce((s,o)=>s+Number(o.amount),0);
+  const teP=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const balanceReal=totalAnticiposCobrados-teP;
+
   const up=DB.tasks.filter(t=>{if(t.done||!t.due_date)return false;const d=(new Date(t.due_date+'T12:00:00')-new Date())/86400000;return d>=-1&&d<=7;}).sort((a,b)=>a.due_date.localeCompare(b.due_date));
   const tot1=Math.ceil(ap.length/PPP)||1,tot2=Math.ceil(up.length/TPP)||1;
   if(S.dpPg>=tot1)S.dpPg=0;if(S.dtPg>=tot2)S.dtPg=0;
@@ -562,10 +565,26 @@ function renderDash(){
 
   return`
   <div class="g4" style="margin-bottom:20px">
-    <div class="stat"><div class="stat-lbl">Proyectos activos</div><div class="stat-val">${ap.length}</div><div class="stat-sub">en curso</div></div>
-    <div class="stat"><div class="stat-lbl">Ingresos neto banco</div><div class="stat-val stat-accent">${fmtM(tiAll)}</div><div class="stat-sub">${fmtM(tiP)} cobrado</div></div>
-    <div class="stat"><div class="stat-lbl">Gastos registrados</div><div class="stat-val stat-red">${fmtM(teAll)}</div><div class="stat-sub">${fmtM(teP)} pagado</div></div>
-    <div class="stat"><div class="stat-lbl">Balance neto</div><div class="stat-val" style="color:${tiP-teP>=0?'var(--txt)':'var(--red)'}">${fmtM(tiP-teP)}</div><div class="stat-sub">cobrado − pagado</div></div>
+    <div class="stat">
+      <div class="stat-lbl">Proyectos activos</div>
+      <div class="stat-val">${ap.length}</div>
+      <div class="stat-sub">en curso</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Total facturado</div>
+      <div class="stat-val" style="color:var(--blue)">${fmtM(totalFacturado)}</div>
+      <div class="stat-sub">neto banco: ${fmtM(totalNetoBanco)}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Cobrado al banco</div>
+      <div class="stat-val stat-accent">${fmtM(totalAnticiposCobrados)}</div>
+      <div class="stat-sub">de ${fmtM(totalNetoBanco)} neto</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Balance real</div>
+      <div class="stat-val" style="color:${balanceReal>=0?'var(--txt)':'var(--red)'}">${fmtM(balanceReal)}</div>
+      <div class="stat-sub">cobrado − ${fmtM(teP)} gastos</div>
+    </div>
   </div>
   <div class="g2" style="margin-bottom:20px">
     <div class="card">
@@ -573,16 +592,43 @@ function renderDash(){
       ${ap.length===0?`<div class="empty"><div class="ei">📋</div>Sin proyectos activos</div>`:
         apS.map(p=>{
           const cl=DB.clients.find(c=>c.id===p.client_id);
-          const pt=DB.tasks.filter(t=>t.project_id===p.id);
-          const pc=pt.length?Math.round(pt.filter(t=>t.done).length/pt.length*100):0;
+          const contrato=Number(p.contract_value||0);
+
+          // Facturado del proyecto
+          const facturado=DB.invoices.filter(i=>i.project_id===p.id).reduce((s,i)=>s+Number(i.subtotal||0),0);
+          const netoBanco=DB.invoices.filter(i=>i.project_id===p.id).reduce((s,i)=>s+Number(i.neto||0),0);
+
+          // Anticipos cobrados del proyecto
+          const proyOrdenes=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income');
+          const antCobrado=proyOrdenes.reduce((s,o)=>{
+            return s+(DB.anticipos||[]).filter(a=>a.order_id===o.id&&a.pagado).reduce((sa,a)=>sa+Number(a.monto),0);
+          },0);
+
+          const saldo=round2(contrato-facturado);
+          const pctFac=contrato>0?Math.min(100,Math.round(facturado/contrato*100)):0;
+          const pctCob=netoBanco>0?Math.min(100,Math.round(antCobrado/netoBanco*100)):0;
+
           const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
           return`<div class="proj-row" onclick="showProjectDetail('${p.id}')">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-              <div><div style="font-weight:600;font-size:13px">${p.name}</div><div style="font-size:11px;color:var(--txt3);margin-top:1px">${cl?.name||'—'} · <span class="mono">${p.code}</span></div></div>
-              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--accent)">${pc}%</span>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+              <div>
+                <div style="font-weight:600;font-size:13px">${p.name}</div>
+                <div style="font-size:11px;color:var(--txt3);margin-top:1px">${cl?.name||'—'} · <span class="mono">${p.code}</span></div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent)">${fmtM(antCobrado)}</div>
+                <div style="font-size:9px;color:var(--txt3)">de ${fmtM(netoBanco)} neto</div>
+              </div>
             </div>
-            <div class="pb"><div class="pf" style="width:${pc}%"></div></div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:7px">
+            <div style="font-size:9px;color:var(--txt3);margin-bottom:2px;display:flex;justify-content:space-between">
+              <span>Facturado ${pctFac}%</span><span>${fmtM(facturado)} de ${fmtM(contrato)}</span>
+            </div>
+            <div class="pb" style="margin-bottom:6px"><div class="pf" style="width:${pctFac}%;background:var(--blue)"></div></div>
+            <div style="font-size:9px;color:var(--txt3);margin-bottom:2px;display:flex;justify-content:space-between">
+              <span>Cobrado al banco ${pctCob}%</span><span style="color:${saldo>0?'var(--gold)':'var(--accent)'}">Saldo: ${fmtM(saldo)}</span>
+            </div>
+            <div class="pb" style="margin-bottom:7px"><div class="pf" style="width:${pctCob}%"></div></div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
               ${ps.map(x=>`<span class="pay-chip ${x.paid?'paid':''}" onclick="event.stopPropagation();togglePS('${x.id}',${!x.paid})" style="font-size:10px"><span class="pay-dot"></span>${x.label} ${x.pct}%${x.paid?' ✓':''}</span>`).join('')}
             </div>
           </div>`;
@@ -807,12 +853,32 @@ function showProjectDetail(pid){
   const p=DB.projects.find(x=>x.id===pid);if(!p)return;
   const cl=DB.clients.find(c=>c.id===p.client_id);
   const pt=DB.tasks.filter(t=>t.project_id===p.id).sort((a,b)=>(a.step_order||0)-(b.step_order||0));
-  const dn=pt.filter(t=>t.done).length;const pc=pt.length?Math.round(dn/pt.length*100):0;
+  const dn=pt.filter(t=>t.done).length;
+  const pcTareas=pt.length?Math.round(dn/pt.length*100):0;
   const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
-  const cob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
+  const contrato=Number(p.contract_value||0);
+
+  // Facturas del proyecto
+  const facturas=DB.invoices.filter(i=>i.project_id===p.id);
+  const totalFacturado=facturas.reduce((s,i)=>s+Number(i.subtotal||0),0);
+  const totalNetoBanco=facturas.reduce((s,i)=>s+Number(i.neto||0),0);
+  const saldoContrato=round2(contrato-totalFacturado);
+
+  // Anticipos cobrados de todas las órdenes del proyecto
+  const proyOrdenes=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income');
+  const totalAntCobrado=proyOrdenes.reduce((s,o)=>{
+    return s+(DB.anticipos||[]).filter(a=>a.order_id===o.id&&a.pagado).reduce((sa,a)=>sa+Number(a.monto),0);
+  },0);
+  const totalAntPendiente=proyOrdenes.reduce((s,o)=>{
+    return s+(DB.anticipos||[]).filter(a=>a.order_id===o.id&&!a.pagado).reduce((sa,a)=>sa+Number(a.monto),0);
+  },0);
+
   const gasto=DB.orders.filter(o=>o.project_id===p.id&&o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const pendCob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status!=='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
-  const util=cob-gasto;
+  const util=totalAntCobrado-gasto;
+
+  const pctFac=contrato>0?Math.min(100,Math.round(totalFacturado/contrato*100)):0;
+  const pctCob=totalNetoBanco>0?Math.min(100,Math.round(totalAntCobrado/totalNetoBanco*100)):0;
+
   const sl={active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'};
   const sc={active:'tg',paused:'ty',finished:'tb',inactive:'tgr'};
   const wrap=document.createElement('div');wrap.className='ov';wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
@@ -824,21 +890,74 @@ function showProjectDetail(pid){
       </div>
       <button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',13)}</button>
     </div>
+
+    <!-- RESUMEN FINANCIERO -->
     <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:14px 18px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Total contrato</div><div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:700">${fmtM(p.contract_value)}</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div>
+          <div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Total contrato</div>
+          <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:700">${fmtM(contrato)}</div>
+        </div>
         <span class="tag ${sc[p.status]||'tgr'}" style="font-size:11px">${sl[p.status]}</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-        ${[['Cobrado (neto)',fmtM(cob),'var(--accent)'],['Gastado',fmtM(gasto),'var(--red)'],['Por cobrar',fmtM(pendCob),'var(--gold)'],['Utilidad',fmtM(util),util>=0?'var(--txt)':'var(--red)']].map(([l,v,col])=>`<div style="background:var(--bg2);border-radius:var(--r);padding:8px 10px;border:1px solid var(--border)"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px">${l}</div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:${col}">${v}</div></div>`).join('')}
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px">
+        ${[
+          ['Facturado',fmtM(totalFacturado),'var(--blue)'],
+          ['Neto banco',fmtM(totalNetoBanco),'var(--accent)'],
+          ['Cobrado',fmtM(totalAntCobrado),'var(--accent)'],
+          ['Por cobrar',fmtM(Math.max(0,totalNetoBanco-totalAntCobrado)),'var(--gold)'],
+          ['Utilidad',fmtM(util),util>=0?'var(--txt)':'var(--red)']
+        ].map(([l,v,col])=>`<div style="background:var(--bg2);border-radius:var(--r);padding:8px 10px;border:1px solid var(--border)">
+          <div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px">${l}</div>
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:${col}">${v}</div>
+        </div>`).join('')}
       </div>
+      <!-- BARRA FACTURADO -->
+      <div style="font-size:9px;color:var(--txt3);margin-bottom:3px;display:flex;justify-content:space-between">
+        <span>Facturado del contrato ${pctFac}%</span>
+        <span style="color:${saldoContrato>0?'var(--gold)':'var(--accent)'}">Saldo por facturar: ${fmtM(saldoContrato)}</span>
+      </div>
+      <div class="pb" style="height:5px;margin-bottom:8px"><div class="pf" style="width:${pctFac}%;background:var(--blue)"></div></div>
+      <!-- BARRA COBRADO -->
+      <div style="font-size:9px;color:var(--txt3);margin-bottom:3px;display:flex;justify-content:space-between">
+        <span>Cobrado al banco ${pctCob}%</span>
+        ${totalAntPendiente>0?`<span style="color:var(--gold)">${fmtM(totalAntPendiente)} anticipos pendientes</span>`:''}
+      </div>
+      <div class="pb" style="height:5px"><div class="pf" style="width:${pctCob}%"></div></div>
     </div>
-    <div style="font-size:11.5px;color:var(--txt3);margin-bottom:12px">${fmtD(p.start_date)} → ${fmtD(p.end_date)}</div>
+
+    <!-- FACTURAS DEL PROYECTO -->
+    ${facturas.length>0?`
+    <div class="stitle">Facturas emitidas (${facturas.length})</div>
+    <div style="margin-bottom:13px;max-height:130px;overflow-y:auto">
+      ${facturas.map(inv=>{
+        const antsCobrados=(DB.anticipos||[]).filter(a=>{
+          const ord=DB.orders.find(o=>o.invoice_id===inv.id||o.invoice_num===inv.number);
+          return ord&&a.order_id===ord.id&&a.pagado;
+        }).reduce((s,a)=>s+Number(a.monto),0);
+        const pctInv=inv.neto>0?Math.min(100,Math.round(antsCobrados/inv.neto*100)):0;
+        return`<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:4px;background:var(--bg2)">
+          <span class="mono" style="font-size:10px;color:var(--accent)">${inv.number}</span>
+          <span style="font-size:11px;flex:1">${fmtD(inv.date)}</span>
+          <span style="font-size:11px;color:var(--blue)">${fmtM(inv.subtotal)}</span>
+          <span style="font-size:11px;color:var(--accent);font-weight:700">→ ${fmtM(inv.neto)}</span>
+          <div style="width:60px">
+            <div style="height:4px;background:var(--bg4);border-radius:2px;overflow:hidden">
+              <div style="height:100%;background:${pctInv>=100?'var(--accent)':'var(--green-mid)'};width:${pctInv}%"></div>
+            </div>
+            <div style="font-size:9px;color:var(--txt3);text-align:right">${pctInv}%</div>
+          </div>
+          <span class="tag ${inv.cobrada?'tg':'ty'}" style="font-size:9px">${inv.cobrada?'Cobrada':'Pendiente'}</span>
+        </div>`;
+      }).join('')}
+    </div>`:''}
+
+    <div style="font-size:11.5px;color:var(--txt3);margin-bottom:12px">${fmtD(p.start_date)} → ${fmtD(p.end_date)||'Sin fecha fin'}</div>
     ${p.notes?`<div style="background:var(--green-pale);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--txt2);margin-bottom:13px;border-left:2px solid var(--accent)">${p.notes}</div>`:''}
     <div class="div"></div>
-    <div class="stitle">Tareas · ${dn}/${pt.length} (${pc}%)</div>
-    <div class="pb" style="margin-bottom:11px"><div class="pf" style="width:${pc}%"></div></div>
-    <div style="max-height:150px;overflow-y:auto;margin-bottom:13px">
+    <div class="stitle">Tareas · ${dn}/${pt.length} (${pcTareas}%)</div>
+    <div class="pb" style="margin-bottom:11px"><div class="pf" style="width:${pcTareas}%"></div></div>
+    <div style="max-height:130px;overflow-y:auto;margin-bottom:13px">
       ${pt.map(t=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid var(--border)">
         <div style="width:13px;height:13px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${t.done?'var(--accent)':'var(--bg4)'}">${t.done?ic('check',8):''}</div>
         <span style="font-size:12px;flex:1;${t.done?'text-decoration:line-through;color:var(--txt3)':''}">${t.step_order||'·'}. ${t.title}</span>
