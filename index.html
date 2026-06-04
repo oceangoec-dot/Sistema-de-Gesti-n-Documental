@@ -1718,57 +1718,102 @@ function calcTaxSRI(){
 // MODAL ANTICIPOS
 function openAnticiposModal(orderId){
   const o=DB.orders.find(x=>x.id===orderId);if(!o)return;
-  const ants=DB.anticipos.filter(a=>a.order_id===orderId);
+  const ants=(DB.anticipos||[]).filter(a=>a.order_id===orderId).sort((a,b)=>(a.fecha||'').localeCompare(b.fecha||''));
   const neto=Number(o.neto_banco||o.amount);
   const antPag=ants.filter(a=>a.pagado).reduce((s,a)=>s+Number(a.monto),0);
+  const antPend=ants.filter(a=>!a.pagado).reduce((s,a)=>s+Number(a.monto),0);
+  const antTot=antPag+antPend;
   const pct=neto>0?Math.min(100,Math.round(antPag/neto*100)):0;
   const proj=DB.projects.find(p=>p.id===o.project_id);
+  const exceso=Math.max(0,antPag-neto);
+
+  // Saldo total del proyecto (contrato - todos los anticipos cobrados de todas sus órdenes)
+  let saldoProyecto=null;
+  if(proj){
+    const contratoTotal=Number(proj.contract_value||0);
+    const proyOrdenes=DB.orders.filter(x=>x.project_id===proj.id&&x.type==='income');
+    const totalCobradoProyecto=proyOrdenes.reduce((s,x)=>{
+      const xa=(DB.anticipos||[]).filter(a=>a.order_id===x.id&&a.pagado).reduce((sa,a)=>sa+Number(a.monto),0);
+      return s+xa;
+    },0);
+    saldoProyecto={contrato:contratoTotal,cobrado:totalCobradoProyecto,pendiente:round2(contratoTotal-totalCobradoProyecto)};
+  }
 
   const wrap=document.createElement('div');wrap.id='ant_wrap';wrap.className='ov';wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
   wrap.innerHTML=`<div class="modal">
     <div class="mh">
       <div><div class="mt">Anticipos · ${o.code}</div>
-        <div style="font-size:11px;color:var(--txt3);margin-top:2px">${o.concept} — ${proj?.name||'sin proyecto'}</div>
+        <div style="font-size:11px;color:var(--txt3);margin-top:2px">${o.concept}${proj?' — '+proj.name:''}</div>
       </div>
       <button class="btn bo bxs" onclick="document.getElementById('ant_wrap').remove()">${ic('x',13)}</button>
     </div>
-    <!-- RESUMEN -->
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:13px 16px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-        <div><div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);margin-bottom:3px">Total neto a cobrar</div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700">${fmtM(neto)}</div></div>
-        <div style="text-align:right"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);margin-bottom:3px">Cobrado</div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--accent)">${fmtM(antPag)}</div></div>
-        <div style="text-align:right"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);margin-bottom:3px">Pendiente</div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--gold)">${fmtM(neto-antPag)}</div></div>
+
+    <!-- RESUMEN FACTURA -->
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:13px 16px;margin-bottom:10px">
+      <div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700">Esta factura</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">
+        <div><div style="font-size:9px;color:var(--txt3);margin-bottom:2px">Neto a cobrar</div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700">${fmtM(neto)}</div></div>
+        <div><div style="font-size:9px;color:var(--txt3);margin-bottom:2px">Cobrado</div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--accent)">${fmtM(antPag)}</div></div>
+        <div><div style="font-size:9px;color:var(--txt3);margin-bottom:2px">Pendiente reg.</div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--gold)">${fmtM(antPend)}</div></div>
+        <div><div style="font-size:9px;color:var(--txt3);margin-bottom:2px">Por cobrar</div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:${Math.max(0,neto-antPag)===0?'var(--accent)':'var(--gold)'}">
+          ${fmtM(Math.max(0,neto-antPag))}</div></div>
       </div>
-      <div style="height:8px;background:var(--bg4);border-radius:4px;overflow:hidden">
+      <div style="height:7px;background:var(--bg4);border-radius:4px;overflow:hidden">
         <div style="height:100%;background:${pct>=100?'var(--accent)':'var(--green-mid)'};width:${pct}%;border-radius:4px;transition:width .4s"></div>
       </div>
-      <div style="text-align:right;font-size:11px;color:var(--txt3);margin-top:4px">${pct}% cobrado</div>
-      ${pct>=100?`<div style="text-align:center;margin-top:6px"><span class="tag tg" style="font-size:11px">✓ Pagado al 100%</span></div>`:''}
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:4px">
+        <span>${pct}% cobrado de esta factura</span>
+        ${pct>=100?`<span class="tag tg">✓ Factura cobrada al 100%</span>`:''}
+      </div>
+      ${exceso>0?`<div style="margin-top:8px;background:var(--blue-dim);border:1px solid #a8cdd8;border-radius:var(--r);padding:7px 10px;font-size:11.5px;color:var(--blue)">
+        ${ic('send',11)} Exceso de <strong>${fmtM(exceso)}</strong> sobre esta factura — se aplica al saldo del proyecto
+      </div>`:''}
     </div>
-    <!-- LISTA -->
-    <div id="ant_list" style="margin-bottom:14px">
-      ${ants.length===0?`<div style="text-align:center;padding:18px;color:var(--txt3);font-size:12px">Sin anticipos registrados</div>`:''}
-      ${ants.map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:5px;background:var(--bg2)">
+
+    <!-- SALDO PROYECTO -->
+    ${saldoProyecto?`<div style="background:var(--green-pale);border:1px solid #b8ddc2;border-radius:var(--rl);padding:10px 14px;margin-bottom:10px">
+      <div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:700">Proyecto: ${proj.name}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <div><div style="font-size:9px;color:var(--txt3);margin-bottom:1px">Contrato</div><div style="font-weight:700;font-size:13px">${fmtM(saldoProyecto.contrato)}</div></div>
+        <div><div style="font-size:9px;color:var(--txt3);margin-bottom:1px">Total cobrado</div><div style="font-weight:700;font-size:13px;color:var(--accent)">${fmtM(saldoProyecto.cobrado)}</div></div>
+        <div><div style="font-size:9px;color:var(--txt3);margin-bottom:1px">Saldo proyecto</div><div style="font-weight:700;font-size:13px;color:${saldoProyecto.pendiente<=0?'var(--accent)':'var(--gold)'}">
+          ${saldoProyecto.pendiente<=0?'✓ Saldo 0':fmtM(saldoProyecto.pendiente)}</div></div>
+      </div>
+    </div>`:''}
+
+    <!-- LISTA ANTICIPOS -->
+    <div style="margin-bottom:12px">
+      ${ants.length===0?`<div style="text-align:center;padding:18px;color:var(--txt3);font-size:12px;border:1px dashed var(--border);border-radius:var(--r)">Sin anticipos — registra el primer pago recibido</div>`:''}
+      ${ants.map((a,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:5px;background:var(--bg2)">
+        <div style="width:20px;height:20px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--txt3);flex-shrink:0">${i+1}</div>
         <div class="chk ${a.pagado?'on':''}" onclick="toggleAnticipo('${a.id}',${!a.pagado})" style="flex-shrink:0">${a.pagado?ic('check',8):''}</div>
         <div style="flex:1">
-          <div style="font-weight:600;font-size:12.5px">${fmtM(a.monto)}</div>
+          <div style="font-weight:700;font-size:13px;color:${a.pagado?'var(--accent)':'var(--txt)'}">${fmtM(a.monto)}</div>
           <div style="font-size:11px;color:var(--txt3)">${a.concepto||'Anticipo'} · ${fmtD(a.fecha)}</div>
         </div>
-        <span class="tag ${a.pagado?'tg':'ty'}">${a.pagado?'Recibido':'Pendiente'}</span>
+        <span class="tag ${a.pagado?'tg':'ty'}" style="cursor:pointer" onclick="toggleAnticipo('${a.id}',${!a.pagado})">${a.pagado?'✓ Recibido':'Pendiente'}</span>
         <button class="btn bd bxs" onclick="deleteAnticipo('${a.id}')">${ic('trash',10)}</button>
       </div>`).join('')}
     </div>
-    <!-- AGREGAR -->
+
+    <!-- FORMULARIO NUEVO ANTICIPO -->
     <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:13px">
-      <div class="stitle" style="margin-bottom:10px">Registrar anticipo</div>
+      <div class="stitle" style="margin-bottom:10px">Registrar nuevo pago</div>
       <div class="fr" style="margin-bottom:8px">
-        <div class="fg" style="margin-bottom:0"><label class="fl">Monto</label><input class="fi" type="number" id="ant_monto" placeholder="0.00" step="0.01"></div>
+        <div class="fg" style="margin-bottom:0">
+          <label class="fl">Monto</label>
+          <input class="fi" type="number" id="ant_monto" placeholder="0.00" step="0.01">
+          ${neto-antPag>0?`<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">
+            <button class="btn bo bxs" style="font-size:10px" onclick="$('ant_monto').value='${round2(neto-antPag).toFixed(2)}'">Saldo completo ${fmtM(neto-antPag)}</button>
+            <button class="btn bo bxs" style="font-size:10px" onclick="$('ant_monto').value='${round2((neto-antPag)*0.5).toFixed(2)}'">50% ${fmtM(round2((neto-antPag)*0.5))}</button>
+          </div>`:''}
+        </div>
         <div class="fg" style="margin-bottom:0"><label class="fl">Fecha</label><input class="fi" type="date" id="ant_fecha" value="${today()}"></div>
       </div>
-      <div class="fg"><label class="fl">Concepto</label><input class="fi" id="ant_concepto" placeholder="Ej: 1er anticipo 50%"></div>
+      <div class="fg"><label class="fl">Concepto</label><input class="fi" id="ant_concepto" placeholder="Ej: 2do anticipo, saldo final..."></div>
       <div style="display:flex;gap:6px;justify-content:flex-end">
-        <button class="btn bo bsm" onclick="addAnticipo('${orderId}',false)">+ Pendiente</button>
-        <button class="btn bp bsm" onclick="addAnticipo('${orderId}',true)">+ Recibido</button>
+        <button class="btn bo bsm" onclick="addAnticipo('${orderId}',false)">+ Registrar pendiente</button>
+        <button class="btn bp bsm" onclick="addAnticipo('${orderId}',true)">+ Marcar recibido</button>
       </div>
     </div>
     <div class="mf"><button class="btn bo" onclick="document.getElementById('ant_wrap').remove()">Cerrar</button></div>
@@ -1806,6 +1851,16 @@ async function deleteAnticipo(id){
 function openInvoiceModal(iid=null){
   const inv=iid?DB.invoices.find(x=>x.id===iid):null;
   const ap=DB.projects;
+
+  // Calcular saldo del proyecto si hay uno seleccionado
+  function getSaldoProyecto(pid){
+    if(!pid)return null;
+    const p=DB.projects.find(x=>x.id===pid);if(!p)return null;
+    const contrato=Number(p.contract_value||0);
+    const facturado=DB.invoices.filter(x=>x.project_id===pid&&x.id!==iid).reduce((s,x)=>s+Number(x.subtotal||0),0);
+    return{contrato,facturado,saldo:round2(contrato-facturado)};
+  }
+
   const wrap=document.createElement('div');wrap.id='inv_wrap';wrap.className='ov';wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
   wrap.innerHTML=`<div class="modal modal-lg">
     <div class="mh"><div class="mt">${inv?'Editar Factura':'Registrar Factura SRI'}</div><button class="btn bo bxs" onclick="document.getElementById('inv_wrap').remove()">${ic('x',13)}</button></div>
@@ -1815,7 +1870,7 @@ function openInvoiceModal(iid=null){
     </div>
     <div class="fr">
       <div class="fg"><label class="fl">Proyecto</label>
-        <select class="fi" id="inv_proj" onchange="autoFillClient()">
+        <select class="fi" id="inv_proj" onchange="autoFillClient();updateSaldoProyecto()">
           <option value="">Sin proyecto</option>
           ${ap.map(p=>`<option value="${p.id}"${inv?.project_id===p.id?' selected':''}>${p.name}</option>`).join('')}
         </select></div>
@@ -1825,6 +1880,10 @@ function openInvoiceModal(iid=null){
           ${DB.clients.map(c=>`<option value="${c.id}"${inv?.client_id===c.id?' selected':''}>${c.name}</option>`).join('')}
         </select></div>
     </div>
+
+    <!-- SALDO DEL PROYECTO -->
+    <div id="inv_saldo_box" style="display:none;margin-bottom:12px"></div>
+
     <div class="fg"><label class="fl">Concepto</label><input class="fi" id="inv_concept" value="${inv?.concept||''}" placeholder="Servicios profesionales"></div>
     <div class="div"></div>
     <div class="stitle">Valores de la factura</div>
@@ -1864,7 +1923,6 @@ function openInvoiceModal(iid=null){
     <div class="div"></div>
     <div class="stitle">Resumen fiscal</div>
     <div id="inv_summary">${inv?invSummaryHTML(calcInvoice(inv.subtotal,inv.iva_pct,inv.ret_renta_pct,inv.ret_iva_pct),inv.iva_pct,inv.ret_renta_pct,inv.ret_iva_pct):'<div style="text-align:center;padding:12px;color:var(--txt3);font-size:12px">Ingresa el subtotal para ver el desglose</div>'}</div>
-    <!-- FOTO FACTURA -->
     <div style="margin-top:14px">
       <label class="fl">Foto de la factura (opcional)</label>
       ${inv?.foto_url?`<div><img src="${inv.foto_url}" class="foto-thumb" style="max-height:80px"><button class="btn bd bxs" style="display:block;margin-top:4px" onclick="clearFotoInv()">Eliminar</button></div>`:
@@ -1885,7 +1943,38 @@ function openInvoiceModal(iid=null){
     </div>
   </div>`;
   document.body.appendChild(wrap);
+
+  // Al abrir, si ya tiene proyecto mostrar saldo
+  if(inv?.project_id)setTimeout(()=>updateSaldoProyecto(inv.project_id,iid,getSaldoProyecto),50);
   if(inv)setTimeout(calcInvModal,50);
+}
+
+// Función auxiliar para mostrar saldo del proyecto en modal factura
+function updateSaldoProyecto(pidOverride=null,iidOverride=null,fnSaldo=null){
+  const pid=pidOverride||$('inv_proj')?.value;
+  const iid=iidOverride||null;
+  const box=$('inv_saldo_box');if(!box)return;
+  if(!pid){box.style.display='none';return;}
+  const p=DB.projects.find(x=>x.id===pid);if(!p){box.style.display='none';return;}
+  const contrato=Number(p.contract_value||0);
+  const facturado=DB.invoices.filter(x=>x.project_id===pid&&x.id!==iid).reduce((s,x)=>s+Number(x.subtotal||0),0);
+  const saldo=round2(contrato-facturado);
+  const pct=contrato>0?Math.min(100,Math.round(facturado/contrato*100)):0;
+  box.style.display='block';
+  box.innerHTML=`<div style="background:${saldo<=0?'var(--red-dim)':'var(--green-pale)'};border:1px solid ${saldo<=0?'#e8b8b4':'#b8ddc2'};border-radius:var(--rl);padding:12px 16px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">
+      <div><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Contrato total</div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700">${fmtM(contrato)}</div></div>
+      <div><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Ya facturado</div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--blue)">${fmtM(facturado)}</div></div>
+      <div><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Saldo disponible</div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:${saldo<=0?'var(--red)':'var(--accent)'}">${fmtM(saldo)}</div></div>
+    </div>
+    <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+      <div style="height:100%;background:${pct>=100?'var(--red)':'var(--accent)'};width:${pct}%;border-radius:3px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:4px">
+      <span>${pct}% del contrato facturado</span>
+      ${saldo>0?`<button class="btn bo bxs" style="font-size:10px" onclick="$('inv_sub').value='${saldo.toFixed(2)}';calcInvModal()">Usar saldo ${fmtM(saldo)}</button>`:'<span style="color:var(--red);font-weight:700">Contrato completamente facturado</span>'}
+    </div>
+  </div>`;
 }
 function clearFotoInv(){const z=$('foto_zone_inv');if(z)z.innerHTML=`${ic('photo',18)}<div>Foto de la factura SRI</div>`;}
 
