@@ -1002,33 +1002,96 @@ function renderTasks(){
     }).join('')}`;
 }
 
-// ===== FINANZAS =====
+// =====// ===== FINANZAS =====
 function renderFinance(){
   const ff=S.finFilter||'all';
-  // Ingresos: usar neto_banco si existe, sino amount
+
   const incomeOrders=DB.orders.filter(o=>o.type==='income');
   const expenseOrders=DB.orders.filter(o=>o.type==='expense');
 
-  const tiAll=incomeOrders.reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
-  const teAll=expenseOrders.reduce((s,o)=>s+Number(o.amount),0);
-  const tiP=incomeOrders.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
-  const teP=expenseOrders.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const bal=tiP-teP;
+  // Total facturado bruto (con IVA)
+  const totalFacturado=incomeOrders.reduce((s,o)=>s+Number(o.amount),0);
 
-  // Por cobrar = órdenes income pendientes, su neto
-  const porCobrar=incomeOrders.filter(o=>o.status!=='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
+  // Total neto banco (después de retenciones) — lo que DEBERÍA llegar
+  const totalNetoBanco=incomeOrders.reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
+
+  // Total anticipos cobrados (pagado=true) de todas las órdenes income
+  const totalAnticiposCobrados=incomeOrders.reduce((s,o)=>{
+    const ants=(DB.anticipos||[]).filter(a=>a.order_id===o.id&&a.pagado);
+    return s+ants.reduce((sa,a)=>sa+Number(a.monto),0);
+  },0);
+
+  // Total anticipos pendientes (pagado=false)
+  const totalAnticiposPendientes=incomeOrders.reduce((s,o)=>{
+    const ants=(DB.anticipos||[]).filter(a=>a.order_id===o.id&&!a.pagado);
+    return s+ants.reduce((sa,a)=>sa+Number(a.monto),0);
+  },0);
+
+  // Gastos pagados
+  const teP=expenseOrders.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const teAll=expenseOrders.reduce((s,o)=>s+Number(o.amount),0);
+
+  // Por cobrar real = neto banco − anticipos ya cobrados
+  const porCobrar=Math.max(0,totalNetoBanco-totalAnticiposCobrados);
+
+  // Balance real = lo que llegó al banco − gastos pagados
+  const balanceReal=totalAnticiposCobrados-teP;
 
   let ords=[...DB.orders];
   if(ff!=='all')ords=ords.filter(o=>o.type===ff);
   ords.sort((a,b)=>(b.order_date||'').localeCompare(a.order_date||''));
 
   return`
-  <div class="g4" style="margin-bottom:20px">
-    <div class="stat"><div class="stat-lbl">Ingresos neto banco</div><div class="stat-val stat-accent">${fmtM(tiAll)}</div><div class="stat-sub">${fmtM(tiP)} cobrado</div></div>
-    <div class="stat"><div class="stat-lbl">Total gastos</div><div class="stat-val stat-red">${fmtM(teAll)}</div><div class="stat-sub">${fmtM(teP)} pagado</div></div>
-    <div class="stat"><div class="stat-lbl">Balance</div><div class="stat-val" style="color:${bal>=0?'var(--txt)':'var(--red)'}">${fmtM(bal)}</div><div class="stat-sub">cobrado − pagado</div></div>
-    <div class="stat"><div class="stat-lbl">Por cobrar (neto)</div><div class="stat-val stat-gold">${fmtM(porCobrar)}</div><div class="stat-sub">órdenes pendientes</div></div>
+  <!-- RESUMEN 6 STATS -->
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px">
+    <div class="stat">
+      <div class="stat-lbl">Total facturado</div>
+      <div class="stat-val" style="font-size:18px;color:var(--blue)">${fmtM(totalFacturado)}</div>
+      <div class="stat-sub">bruto con IVA</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Neto banco</div>
+      <div class="stat-val" style="font-size:18px;color:var(--accent)">${fmtM(totalNetoBanco)}</div>
+      <div class="stat-sub">después de retenciones</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Cobrado (anticipos)</div>
+      <div class="stat-val" style="font-size:18px;color:var(--accent)">${fmtM(totalAnticiposCobrados)}</div>
+      <div class="stat-sub">llegó al banco</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Por cobrar</div>
+      <div class="stat-val" style="font-size:18px;color:var(--gold)">${fmtM(porCobrar)}</div>
+      <div class="stat-sub">neto − cobrado</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Total gastos</div>
+      <div class="stat-val" style="font-size:18px;color:var(--red)">${fmtM(teAll)}</div>
+      <div class="stat-sub">${fmtM(teP)} pagado</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Balance real</div>
+      <div class="stat-val" style="font-size:18px;color:${balanceReal>=0?'var(--txt)':'var(--red)'}">${fmtM(balanceReal)}</div>
+      <div class="stat-sub">cobrado − gastos</div>
+    </div>
   </div>
+
+  <!-- BARRA VISUAL DE COBRO -->
+  ${totalNetoBanco>0?`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px 18px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt3);margin-bottom:6px">
+      <span>Progreso de cobro sobre neto banco</span>
+      <span style="font-weight:700;color:var(--accent)">${Math.min(100,Math.round(totalAnticiposCobrados/totalNetoBanco*100))}%</span>
+    </div>
+    <div style="height:8px;background:var(--bg4);border-radius:4px;overflow:hidden">
+      <div style="height:100%;border-radius:4px;background:var(--accent);width:${Math.min(100,Math.round(totalAnticiposCobrados/totalNetoBanco*100))}%;transition:width .5s"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:5px">
+      <span>Cobrado: <strong style="color:var(--accent)">${fmtM(totalAnticiposCobrados)}</strong></span>
+      <span>Pendiente: <strong style="color:var(--gold)">${fmtM(porCobrar)}</strong></span>
+      <span>Total neto: <strong>${fmtM(totalNetoBanco)}</strong></span>
+    </div>
+  </div>`:''}
+
   <div class="filter-bar">
     <div class="filter-group">
       ${[['all','Todos'],['income','Cobros'],['expense','Gastos']].map(([v,l])=>`<button class="btn bsm ${ff===v?'bp':'bo'}" onclick="setFF('${v}')">${l}</button>`).join('')}
@@ -1037,16 +1100,18 @@ function renderFinance(){
     </div>
     <button class="btn bp" onclick="openOrderModal()">+ Nueva Orden</button>
   </div>
+
   <div class="card" style="padding:0;overflow:hidden">
     <div class="tw"><table class="tbl">
-      <thead><tr><th>Código</th><th>Fecha</th><th>Proyecto</th><th>Concepto</th><th>Tipo</th><th>Monto bruto</th><th>Neto banco</th><th>Estado</th><th>Anticipos</th><th></th></tr></thead>
-      <tbody>${ords.length===0?`<tr><td colspan="10"><div class="empty"><div class="ei">💳</div>Sin órdenes</div></td></tr>`:
+      <thead><tr><th>Código</th><th>Fecha</th><th>Proyecto</th><th>Concepto</th><th>Tipo</th><th>Facturado (bruto)</th><th>Neto banco</th><th>Anticipos cobrados</th><th>Por cobrar</th><th>Estado</th><th></th></tr></thead>
+      <tbody>${ords.length===0?`<tr><td colspan="11"><div class="empty"><div class="ei">💳</div>Sin órdenes</div></td></tr>`:
         ords.map(o=>{
           const proj=DB.projects.find(p=>p.id===o.project_id);
-          const ants=DB.anticipos.filter(a=>a.order_id===o.id);
+          const ants=(DB.anticipos||[]).filter(a=>a.order_id===o.id);
           const antPag=ants.filter(a=>a.pagado).reduce((s,a)=>s+Number(a.monto),0);
-          const antTot=ants.reduce((s,a)=>s+Number(a.monto),0);
+          const antPend=ants.filter(a=>!a.pagado).reduce((s,a)=>s+Number(a.monto),0);
           const neto=Number(o.neto_banco||o.amount);
+          const porcobrar=Math.max(0,neto-antPag);
           const pctAnt=neto>0?Math.min(100,Math.round(antPag/neto*100)):0;
           const isIncome=o.type==='income';
           const isFacSRI=o.billing_type==='factura_sri';
@@ -1061,21 +1126,40 @@ function renderFinance(){
               <span class="tag ${isIncome?'tg':'tr'}" style="display:block;margin-bottom:2px">${isIncome?'Cobro':'Gasto'}</span>
               <span class="tag ${typeColor}" style="font-size:9px">${typeLabel}</span>
             </td>
-            <td><span style="font-weight:600;color:${isIncome?'var(--accent)':'var(--red)'}">${isIncome?'+':'-'}${fmtM(o.amount)}</span>
-              ${isFacSRI&&o.invoice_num?`<div style="font-size:9.5px;color:var(--txt3);font-family:'DM Mono',monospace">${o.invoice_num}</div>`:''}
+            <td>
+              ${isIncome
+                ?`<span style="font-weight:600;color:var(--blue)">${fmtM(o.amount)}</span>
+                  ${isFacSRI&&o.invoice_num?`<div style="font-size:9px;color:var(--txt3);font-family:'DM Mono',monospace">${o.invoice_num}</div>`:''}`
+                :`<span style="font-weight:600;color:var(--red)">-${fmtM(o.amount)}</span>`}
             </td>
             <td>
-              ${isIncome?`<span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--accent)">${fmtM(neto)}</span>
-                ${neto!==Number(o.amount)?`<div style="font-size:9px;color:var(--txt3)">de ${fmtM(o.amount)}</div>`:''}
-              `:`<span style="color:var(--txt3)">—</span>`}
+              ${isIncome
+                ?`<span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--accent)">${fmtM(neto)}</span>
+                  ${neto!==Number(o.amount)?`<div style="font-size:9px;color:var(--txt3)">de ${fmtM(o.amount)}</div>`:''}`
+                :`<span style="color:var(--txt3)">—</span>`}
             </td>
-            <td><span class="tag ${o.status==='paid'?'tg':'ty'}" style="cursor:pointer" onclick="toggleOrder('${o.id}','${o.status}')">${o.status==='paid'?'Pagado':'Pendiente'}</span></td>
             <td>
-              ${isIncome?`<div style="min-width:70px">
-                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-bottom:2px"><span>${fmtM(antPag)}/${fmtM(neto)}</span><span>${pctAnt}%</span></div>
-                <div style="height:4px;background:var(--bg4);border-radius:3px;overflow:hidden"><div style="height:100%;background:${pctAnt>=100?'var(--accent)':'var(--green-mid)'};width:${pctAnt}%;border-radius:3px"></div></div>
-                <button class="btn bo bxs" style="margin-top:3px;font-size:10px" onclick="openAnticiposModal('${o.id}')">Anticipos</button>
+              ${isIncome?`<div style="min-width:80px">
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-bottom:3px">
+                  <span style="font-weight:700;color:${antPag>0?'var(--accent)':'var(--txt3)'}">${fmtM(antPag)}</span>
+                  <span>${pctAnt}%</span>
+                </div>
+                <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden">
+                  <div style="height:100%;background:${pctAnt>=100?'var(--accent)':'var(--green-mid)'};width:${pctAnt}%;border-radius:3px"></div>
+                </div>
+                ${antPend>0?`<div style="font-size:9px;color:var(--gold);margin-top:2px">${fmtM(antPend)} pend.</div>`:''}
+                <button class="btn bo bxs" style="margin-top:4px;font-size:10px;width:100%" onclick="openAnticiposModal('${o.id}')">+ Anticipos</button>
               </div>`:'<span style="color:var(--txt3)">—</span>'}
+            </td>
+            <td>
+              ${isIncome
+                ?porcobrar>0
+                  ?`<span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--gold)">${fmtM(porcobrar)}</span>`
+                  :`<span class="tag tg">✓ Cobrado</span>`
+                :`<span style="color:var(--txt3)">—</span>`}
+            </td>
+            <td>
+              <span class="tag ${o.status==='paid'?'tg':'ty'}" style="cursor:pointer" onclick="toggleOrder('${o.id}','${o.status}')">${o.status==='paid'?'Pagado':'Pendiente'}</span>
             </td>
             <td><div style="display:flex;gap:3px">
               ${o.foto_url?`<button class="btn bo bxs" onclick="verFoto('${o.id}')" title="Ver comprobante">${ic('photo',10)}</button>`:''}
