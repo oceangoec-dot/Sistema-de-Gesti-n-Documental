@@ -396,15 +396,15 @@ const TABLES_WITH_UPDATED=['projects','payment_schedule','tasks','orders','quote
 async function loadFromSupabase(){
   if(!sb)return false;
   try{
-    $('loadMsg').textContent='Cargando datos…';
-   const[c,p,ps,t,o,q,inv,ant]=await Promise.all([
+    const lm=$('loadMsg');if(lm)lm.textContent='Cargando datos…';
+    const[c,p,ps,t,o,q,inv,ant]=await Promise.all([
       sb.from('clients').select('*'),sb.from('projects').select('*'),sb.from('payment_schedule').select('*'),
       sb.from('tasks').select('*').order('step_order'),sb.from('orders').select('*').order('order_date',{ascending:false}),
       sb.from('quotes').select('*').order('created_at',{ascending:false}),
       sb.from('invoices').select('*').order('created_at',{ascending:false}),
       sb.from('anticipos').select('*')
     ]);
-   DB.clients=c.data||[];DB.projects=p.data||[];DB.payment_schedule=ps.data||[];
+    DB.clients=c.data||[];DB.projects=p.data||[];DB.payment_schedule=ps.data||[];
     DB.tasks=t.data||[];DB.orders=o.data||[];DB.quotes=q.data||[];
     DB.invoices=inv.data||[];DB.anticipos=ant.data||[];
     return true;
@@ -2327,10 +2327,15 @@ function scheduleNotifs(){
 // BOOT
 async function startApp(){
   $('loadingScreen').style.display='flex';
-  if(KEYS_OK){$('loadMsg').textContent='Conectando con Supabase…';const ok=await loadFromSupabase();if(!ok){$('loadMsg').textContent='Sin conexión — modo local';}else{$('loadMsg').textContent='Cargando plantilla…';await loadTemplate();}}
-  else{try{DB.invoices=JSON.parse(localStorage.getItem('oceango_invoices')||'[]');}catch{}
-       try{DB.anticipos=JSON.parse(localStorage.getItem('oceango_anticipos')||'[]');}catch{}}
-  $('loadMsg').textContent='¡Listo!';
+  if(KEYS_OK){
+    $('loadMsg').textContent='Conectando con Supabase…';
+    const ok=await loadFromSupabase();
+    if(!ok){$('loadMsg').textContent='Sin conexión — modo local';}
+    else{$('loadMsg').textContent='Cargando plantilla…';await loadTemplate();}
+  }
+  const lm=$('loadMsg');if(lm)lm.textContent='¡Listo!';
+  console.log('INVOICES CARGADOS:',DB.invoices.length,DB.invoices);
+  console.log('ANTICIPOS CARGADOS:',DB.anticipos.length,DB.anticipos);
   const ls=$('loadingScreen');ls.classList.add('fade');setTimeout(()=>ls.remove(),400);
   render();
   if('Notification'in window&&Notification.permission==='granted')scheduleNotifs();
