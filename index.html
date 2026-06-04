@@ -404,12 +404,9 @@ async function loadFromSupabase(){
       sb.from('invoices').select('*').order('created_at',{ascending:false}),
       sb.from('anticipos').select('*')
     ]);
-    DB.clients=c.data||[];DB.projects=p.data||[];DB.payment_schedule=ps.data||[];
+   DB.clients=c.data||[];DB.projects=p.data||[];DB.payment_schedule=ps.data||[];
     DB.tasks=t.data||[];DB.orders=o.data||[];DB.quotes=q.data||[];
     DB.invoices=inv.data||[];DB.anticipos=ant.data||[];
-    // anticipos e invoices en local por ahora (o agregar tabla en Supabase)
-    try{DB.invoices=JSON.parse(localStorage.getItem('oceango_invoices')||'[]');}catch{}
-    try{DB.anticipos=JSON.parse(localStorage.getItem('oceango_anticipos')||'[]');}catch{}
     return true;
   }catch(e){console.error(e);return false;}
 }
