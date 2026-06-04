@@ -9,49 +9,16 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* Fondos — crema y blanco corporativo */
-  --bg:#f5f4f0;
-  --bg2:#ffffff;
-  --bg3:#f0efe9;
-  --bg4:#e8e7e0;
-  --surface:#ffffff;
-  --surface2:#f0efe9;
-
-  /* Bordes */
-  --border:#dddbd3;
-  --border2:#c8c6bc;
-  --border3:#b0ae a4;
-
-  /* Textos */
-  --txt:#1a2218;
-  --txt2:#3d4a39;
-  --txt3:#7a8a75;
-
-  /* Verde principal Oceango (verde oscuro corporativo) */
-  --accent:#2d6a3f;
-  --accent2:#235530;
-  --accent-dim:#2d6a3f14;
-
-  /* Verde medio (para hover y elementos secundarios) */
-  --green-mid:#5a9e6f;
-  --green-light:#a8c9b0;
-  --green-pale:#d4e8da;
-
-  /* Dorado/advertencia */
-  --gold:#b8860b;
-  --gold-dim:#b8860b14;
-
-  /* Rojo/error */
-  --red:#c0392b;
-  --red-dim:#c0392b12;
-
-  /* Azul/info */
-  --blue:#1a6b8a;
-  --blue-dim:#1a6b8a12;
-
+  --bg:#f5f4f0;--bg2:#ffffff;--bg3:#f0efe9;--bg4:#e8e7e0;--surface:#ffffff;--surface2:#f0efe9;
+  --border:#dddbd3;--border2:#c8c6bc;
+  --txt:#1a2218;--txt2:#3d4a39;--txt3:#7a8a75;
+  --accent:#2d6a3f;--accent2:#235530;--accent-dim:#2d6a3f14;
+  --green-mid:#5a9e6f;--green-light:#a8c9b0;--green-pale:#d4e8da;
+  --gold:#b8860b;--gold-dim:#b8860b14;
+  --red:#c0392b;--red-dim:#c0392b12;
+  --blue:#1a6b8a;--blue-dim:#1a6b8a12;
   --r:6px;--rl:10px;--rx:16px;
 }
-
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow:hidden;font-size:14px;-webkit-font-smoothing:antialiased;line-height:1.5}
 
 /* PIN */
@@ -303,6 +270,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-
 .filter-group{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 .filter-label{font-size:10px;color:var(--txt3);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
 
+/* TIPO ORDEN TABS */
+.order-type-tabs{display:flex;gap:0;border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.ott{flex:1;padding:9px 10px;background:var(--bg3);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:600;color:var(--txt3);transition:all .15s;text-align:center;border-right:1px solid var(--border2)}
+.ott:last-child{border-right:none}
+.ott.on{background:var(--accent);color:#fff}
+.ott.income.on{background:var(--accent)}
+.ott.expense.on{background:var(--red)}
+.ott.nofac.on{background:var(--gold)}
+
+/* ANTICIPO BAR */
+.anticipo-bar{background:linear-gradient(90deg,var(--green-pale),#fff);border:1px solid #b8ddc2;border-radius:var(--r);padding:8px 12px;margin-bottom:5px;display:flex;align-items:center;gap:10px}
+.anticipo-bar .pct-fill{height:5px;background:var(--accent);border-radius:3px;transition:width .4s}
+
+/* FOTO UPLOAD */
+.foto-zone{border:1.5px dashed var(--border2);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer;background:var(--bg3);position:relative;transition:all .2s}
+.foto-zone:hover{border-color:var(--accent);background:var(--green-pale)}
+.foto-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.foto-thumb{width:100%;max-height:120px;object-fit:cover;border-radius:var(--r);border:1px solid var(--border)}
+
 @media(max-width:900px){.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.sb{width:48px}.sb-logo-text,.sb-logo-tag,.sb-footer,.ni span:not(.nbadge),.sb-section{display:none}.ni{justify-content:center}.g2,.g4,.g3{grid-template-columns:1fr}.fr,.fr3{grid-template-columns:1fr}.modal,.modal-lg{padding:16px;width:98vw}.content{padding:12px}}
 @media print{.sb,.topbar,.notif-bar,.twrap,#loadingScreen,.cfg-banner,#pinLock{display:none!important}.main{overflow:visible}.content{padding:0;overflow:visible}body{overflow:visible}}
@@ -396,13 +382,15 @@ function ic(name,size=14){
     send:'M12 19l9 2-9-18-9 18 9-2zm0 0v-8',
     upload:'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12',
     db:'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4',
-    lock:'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
+    lock:'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
+    photo:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
+    link:'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'
   };
   return`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="${p[name]||p.dash}"/></svg>`;
 }
 
 // DATA
-let DB={clients:[],projects:[],payment_schedule:[],tasks:[],orders:[],quotes:[],invoices:[]};
+let DB={clients:[],projects:[],payment_schedule:[],tasks:[],orders:[],quotes:[],invoices:[],anticipos:[]};
 const TABLES_WITH_UPDATED=['projects','payment_schedule','tasks','orders','quotes','invoices'];
 
 async function loadFromSupabase(){
@@ -416,27 +404,39 @@ async function loadFromSupabase(){
     ]);
     DB.clients=c.data||[];DB.projects=p.data||[];DB.payment_schedule=ps.data||[];
     DB.tasks=t.data||[];DB.orders=o.data||[];DB.quotes=q.data||[];
+    // anticipos e invoices en local por ahora (o agregar tabla en Supabase)
     try{DB.invoices=JSON.parse(localStorage.getItem('oceango_invoices')||'[]');}catch{}
+    try{DB.anticipos=JSON.parse(localStorage.getItem('oceango_anticipos')||'[]');}catch{}
     return true;
   }catch(e){console.error(e);return false;}
 }
 function saveInvoicesLocal(){try{localStorage.setItem('oceango_invoices',JSON.stringify(DB.invoices));}catch{}}
+function saveAnticiposLocal(){try{localStorage.setItem('oceango_anticipos',JSON.stringify(DB.anticipos));}catch{}}
 
 async function nextCode(prefix){const key=`oceango_seq_${prefix}`;const n=(parseInt(localStorage.getItem(key)||'0'))+1;localStorage.setItem(key,n);return`${prefix}-${String(n).padStart(4,'0')}-${new Date().getFullYear()}`;}
 
 async function dbInsert(table,row){
   const r={...row,id:uid(),created_at:new Date().toISOString()};
-  if(sb&&table!=='invoices'){const{data,error}=await sb.from(table).insert(r).select().single();if(error){toast('Error: '+error.message,'te');return null;}DB[table]=[...(DB[table]||[]),data];return data;}
-  DB[table]=[...(DB[table]||[]),r];if(table==='invoices')saveInvoicesLocal();return r;
+  if(sb&&table!=='invoices'&&table!=='anticipos'){const{data,error}=await sb.from(table).insert(r).select().single();if(error){toast('Error: '+error.message,'te');return null;}DB[table]=[...(DB[table]||[]),data];return data;}
+  DB[table]=[...(DB[table]||[]),r];
+  if(table==='invoices')saveInvoicesLocal();
+  if(table==='anticipos')saveAnticiposLocal();
+  return r;
 }
 async function dbUpdate(table,id,changes){
   const upd=TABLES_WITH_UPDATED.includes(table)?{...changes,updated_at:new Date().toISOString()}:{...changes};
-  if(sb&&table!=='invoices'){const{error}=await sb.from(table).update(upd).eq('id',id);if(error){toast('Error: '+error.message,'te');return false;}}
-  DB[table]=DB[table].map(r=>r.id===id?{...r,...upd}:r);if(table==='invoices')saveInvoicesLocal();return true;
+  if(sb&&table!=='invoices'&&table!=='anticipos'){const{error}=await sb.from(table).update(upd).eq('id',id);if(error){toast('Error: '+error.message,'te');return false;}}
+  DB[table]=DB[table].map(r=>r.id===id?{...r,...upd}:r);
+  if(table==='invoices')saveInvoicesLocal();
+  if(table==='anticipos')saveAnticiposLocal();
+  return true;
 }
 async function dbDelete(table,id){
-  if(sb&&table!=='invoices'){const{error}=await sb.from(table).delete().eq('id',id);if(error){toast('Error: '+error.message,'te');return false;}}
-  DB[table]=DB[table].filter(r=>r.id!==id);if(table==='invoices')saveInvoicesLocal();return true;
+  if(sb&&table!=='invoices'&&table!=='anticipos'){const{error}=await sb.from(table).delete().eq('id',id);if(error){toast('Error: '+error.message,'te');return false;}}
+  DB[table]=DB[table].filter(r=>r.id!==id);
+  if(table==='invoices')saveInvoicesLocal();
+  if(table==='anticipos')saveAnticiposLocal();
+  return true;
 }
 
 // TEMPLATE
@@ -472,6 +472,23 @@ function calcInvoice(base,ivaPct,retRentaPct,retIvaPct){
   const subtotal=round2(base);const ivaAmt=round2(subtotal*ivaPct/100);const totalConIva=round2(subtotal+ivaAmt);
   const retRenta=round2(subtotal*retRentaPct/100);const retIva=round2(ivaAmt*retIvaPct/100);const neto=round2(totalConIva-retRenta-retIva);
   return{subtotal,ivaAmt,totalConIva,retRenta,retIva,neto};
+}
+
+// Calcular neto de una orden
+function calcOrderNeto(amount,hasIva,ivaPct,hasRet,retPct,hasIvaRet,ivaRetPct){
+  const base=Number(amount)||0;
+  const ivaAmt=hasIva?round2(base*ivaPct/100):0;
+  const retAmt=hasRet?round2(base*retPct/100):0;
+  const ivaRetAmt=hasIvaRet?round2(ivaAmt*ivaRetPct/100):0;
+  return round2(base+ivaAmt-retAmt-ivaRetAmt);
+}
+
+// Obtener suma de anticipos pagados de una orden
+function getAnticiposPagados(orderId){
+  return (DB.anticipos||[]).filter(a=>a.order_id===orderId&&a.pagado).reduce((s,a)=>s+Number(a.monto),0);
+}
+function getAnticiposTotal(orderId){
+  return (DB.anticipos||[]).filter(a=>a.order_id===orderId).reduce((s,a)=>s+Number(a.monto),0);
 }
 
 // RENDER
@@ -512,7 +529,7 @@ function render(){
       <button class="ni" onclick="requestNotifPermission()">${ic('bell',14)}<span style="font-size:11px">Notificaciones</span></button>
       <button class="ni" onclick="document.getElementById('pinLock').classList.remove('gone')">${ic('lock',14)}<span style="font-size:11px">Bloquear</span></button>
     </nav>
-    <div class="sb-footer"><div class="sb-dot"></div>v10 · ${KEYS_OK?'Nube':'Local'}</div>
+    <div class="sb-footer"><div class="sb-dot"></div>v11 · ${KEYS_OK?'Nube':'Local'}</div>
   </aside>
   <div class="main">
     ${cfgBanner}${notifBar}
@@ -534,12 +551,14 @@ function goTasks(pid){S.taskFilter=pid;S.tab='tasks';render();}
 
 // DASHBOARD
 function renderDash(){
-  const allIn=DB.orders.filter(o=>o.type==='income');
-  const allEx=DB.orders.filter(o=>o.type==='expense');
-  const ti=allIn.reduce((s,o)=>s+Number(o.amount),0);
-  const te=allEx.reduce((s,o)=>s+Number(o.amount),0);
-  const tiP=allIn.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const teP=allEx.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  // Solo contar ingresos neto (órdenes tipo income pagadas, usando neto)
+  const incomePaid=DB.orders.filter(o=>o.type==='income'&&o.status==='paid');
+  const expPaid=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid');
+  const tiP=incomePaid.reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
+  const teP=expPaid.reduce((s,o)=>s+Number(o.amount),0);
+  const tiAll=DB.orders.filter(o=>o.type==='income').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
+  const teAll=DB.orders.filter(o=>o.type==='expense').reduce((s,o)=>s+Number(o.amount),0);
+
   const ap=DB.projects.filter(p=>p.status==='active');
   const up=DB.tasks.filter(t=>{if(t.done||!t.due_date)return false;const d=(new Date(t.due_date+'T12:00:00')-new Date())/86400000;return d>=-1&&d<=7;}).sort((a,b)=>a.due_date.localeCompare(b.due_date));
   const tot1=Math.ceil(ap.length/PPP)||1,tot2=Math.ceil(up.length/TPP)||1;
@@ -551,8 +570,8 @@ function renderDash(){
   return`
   <div class="g4" style="margin-bottom:20px">
     <div class="stat"><div class="stat-lbl">Proyectos activos</div><div class="stat-val">${ap.length}</div><div class="stat-sub">en curso</div></div>
-    <div class="stat"><div class="stat-lbl">Ingresos registrados</div><div class="stat-val stat-accent">${fmtM(ti)}</div><div class="stat-sub">${fmtM(tiP)} cobrado</div></div>
-    <div class="stat"><div class="stat-lbl">Gastos registrados</div><div class="stat-val stat-red">${fmtM(te)}</div><div class="stat-sub">${fmtM(teP)} pagado</div></div>
+    <div class="stat"><div class="stat-lbl">Ingresos neto banco</div><div class="stat-val stat-accent">${fmtM(tiAll)}</div><div class="stat-sub">${fmtM(tiP)} cobrado</div></div>
+    <div class="stat"><div class="stat-lbl">Gastos registrados</div><div class="stat-val stat-red">${fmtM(teAll)}</div><div class="stat-sub">${fmtM(teP)} pagado</div></div>
     <div class="stat"><div class="stat-lbl">Balance neto</div><div class="stat-val" style="color:${tiP-teP>=0?'var(--txt)':'var(--red)'}">${fmtM(tiP-teP)}</div><div class="stat-sub">cobrado − pagado</div></div>
   </div>
   <div class="g2" style="margin-bottom:20px">
@@ -642,7 +661,7 @@ function renderClients(){
       const projs=DB.projects.filter(p=>p.client_id===c.id);
       const act=projs.filter(p=>p.status==='active').length;
       const pend=DB.tasks.filter(t=>{const pr=DB.projects.find(p=>p.id===t.project_id&&p.client_id===c.id);return pr&&!t.done;}).length;
-      const cobrado=DB.orders.filter(o=>projs.map(p=>p.id).includes(o.project_id)&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+      const cobrado=DB.orders.filter(o=>projs.map(p=>p.id).includes(o.project_id)&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
       const totalContrato=projs.reduce((s,p)=>s+Number(p.contract_value||0),0);
       const initials=c.name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
       const sl={active:'Activo',paused:'Pausa',finished:'Finalizado',inactive:'Inactivo'};
@@ -677,7 +696,7 @@ function renderClients(){
             <tbody>${projs.map(p=>{
               const pt=DB.tasks.filter(t=>t.project_id===p.id);
               const pc=pt.length?Math.round(pt.filter(t=>t.done).length/pt.length*100):0;
-              const fact=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+              const fact=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
               const gasto=DB.orders.filter(o=>o.project_id===p.id&&o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
               const util=fact-gasto;
               return`<tr style="cursor:pointer" onclick="showProjectDetail('${p.id}')">
@@ -718,9 +737,9 @@ function showClientSummary(cid){
   const pendTasks=allTasks.filter(t=>!t.done);
   const cobros=DB.orders.filter(o=>pids.includes(o.project_id)&&o.type==='income');
   const gastos=DB.orders.filter(o=>pids.includes(o.project_id)&&o.type==='expense');
-  const totalCobrado=cobros.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const totalCobrado=cobros.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
   const totalGastado=gastos.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const totalPendiente=cobros.filter(o=>o.status!=='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const totalPendiente=cobros.filter(o=>o.status!=='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
   const totalContrato=projs.reduce((s,p)=>s+Number(p.contract_value||0),0);
   const utilidad=totalCobrado-totalGastado;
   const upcomingTasks=pendTasks.filter(t=>t.due_date).sort((a,b)=>a.due_date.localeCompare(b.due_date)).slice(0,8);
@@ -737,7 +756,7 @@ function showClientSummary(cid){
       <button class="btn bo bxs" onclick="this.closest('.ov').remove()">${ic('x',13)}</button>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
-      ${[['Total contrato',fmtM(totalContrato),'var(--txt)'],['Cobrado',fmtM(totalCobrado),'var(--accent)'],['Gastado',fmtM(totalGastado),'var(--red)'],['Utilidad',fmtM(utilidad),utilidad>=0?'var(--txt)':'var(--red)'],['Por cobrar',fmtM(totalPendiente),'var(--gold)'],['Tareas pend.',pendTasks.length,'var(--txt2)']].map(([l,v,col])=>`<div style="flex:1;min-width:90px;background:var(--bg3);border-radius:var(--r);padding:10px 13px;border:1px solid var(--border)"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-weight:700">${l}</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:${col}">${v}</div></div>`).join('')}
+      ${[['Total contrato',fmtM(totalContrato),'var(--txt)'],['Cobrado (neto)',fmtM(totalCobrado),'var(--accent)'],['Gastado',fmtM(totalGastado),'var(--red)'],['Utilidad',fmtM(utilidad),utilidad>=0?'var(--txt)':'var(--red)'],['Por cobrar',fmtM(totalPendiente),'var(--gold)'],['Tareas pend.',pendTasks.length,'var(--txt2)']].map(([l,v,col])=>`<div style="flex:1;min-width:90px;background:var(--bg3);border-radius:var(--r);padding:10px 13px;border:1px solid var(--border)"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-weight:700">${l}</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:${col}">${v}</div></div>`).join('')}
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
       <div>
@@ -746,7 +765,7 @@ function showClientSummary(cid){
           projs.map(p=>{
             const pt=DB.tasks.filter(t=>t.project_id===p.id);const dn=pt.filter(t=>t.done).length;const pc=pt.length?Math.round(dn/pt.length*100):0;
             const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
-            const fact=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+            const fact=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
             const gasto=DB.orders.filter(o=>o.project_id===p.id&&o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
             return`<div style="border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;cursor:pointer;transition:all .15s;background:var(--bg2)" onclick="this.closest('.ov').remove();showProjectDetail('${p.id}')">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
@@ -797,9 +816,9 @@ function showProjectDetail(pid){
   const pt=DB.tasks.filter(t=>t.project_id===p.id).sort((a,b)=>(a.step_order||0)-(b.step_order||0));
   const dn=pt.filter(t=>t.done).length;const pc=pt.length?Math.round(dn/pt.length*100):0;
   const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
-  const cob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const cob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
   const gasto=DB.orders.filter(o=>o.project_id===p.id&&o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const pendCob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status!=='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const pendCob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status!=='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
   const util=cob-gasto;
   const sl={active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'};
   const sc={active:'tg',paused:'ty',finished:'tb',inactive:'tgr'};
@@ -818,7 +837,7 @@ function showProjectDetail(pid){
         <span class="tag ${sc[p.status]||'tgr'}" style="font-size:11px">${sl[p.status]}</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-        ${[['Cobrado',fmtM(cob),'var(--accent)'],['Gastado',fmtM(gasto),'var(--red)'],['Por cobrar',fmtM(pendCob),'var(--gold)'],['Utilidad',fmtM(util),util>=0?'var(--txt)':'var(--red)']].map(([l,v,col])=>`<div style="background:var(--bg2);border-radius:var(--r);padding:8px 10px;border:1px solid var(--border)"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px">${l}</div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:${col}">${v}</div></div>`).join('')}
+        ${[['Cobrado (neto)',fmtM(cob),'var(--accent)'],['Gastado',fmtM(gasto),'var(--red)'],['Por cobrar',fmtM(pendCob),'var(--gold)'],['Utilidad',fmtM(util),util>=0?'var(--txt)':'var(--red)']].map(([l,v,col])=>`<div style="background:var(--bg2);border-radius:var(--r);padding:8px 10px;border:1px solid var(--border)"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px">${l}</div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:${col}">${v}</div></div>`).join('')}
       </div>
     </div>
     <div style="font-size:11.5px;color:var(--txt3);margin-bottom:12px">${fmtD(p.start_date)} → ${fmtD(p.end_date)}</div>
@@ -884,7 +903,7 @@ function renderProjects(){
       const pt=DB.tasks.filter(t=>t.project_id===p.id);
       const dn=pt.filter(t=>t.done).length;const pc=pt.length?Math.round(dn/pt.length*100):0;
       const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);
-      const cobrado=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+      const cobrado=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
       const gastado=DB.orders.filter(o=>o.project_id===p.id&&o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
       const util=cobrado-gastado;
       const isDone=p.status==='finished'||p.status==='inactive';
@@ -903,7 +922,7 @@ function renderProjects(){
             </div>
             <div>
               <div class="proj-value">${fmtM(p.contract_value)}</div>
-              <div class="proj-sub">Cob: <span style="color:var(--accent)">${fmtM(cobrado)}</span> · Gst: <span style="color:var(--red)">${fmtM(gastado)}</span></div>
+              <div class="proj-sub">Cob(neto): <span style="color:var(--accent)">${fmtM(cobrado)}</span> · Gst: <span style="color:var(--red)">${fmtM(gastado)}</span></div>
               <div class="proj-sub">Utilidad: <span style="font-weight:700;color:${util>=0?'var(--txt)':'var(--red)'}">${fmtM(util)}</span></div>
             </div>
           </div>
@@ -987,23 +1006,32 @@ function renderTasks(){
     }).join('')}`;
 }
 
-// FINANCE
+// ===== FINANZAS =====
 function renderFinance(){
   const ff=S.finFilter||'all';
-  const tiAll=DB.orders.filter(o=>o.type==='income').reduce((s,o)=>s+Number(o.amount),0);
-  const teAll=DB.orders.filter(o=>o.type==='expense').reduce((s,o)=>s+Number(o.amount),0);
-  const tiP=DB.orders.filter(o=>o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
-  const teP=DB.orders.filter(o=>o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  // Ingresos: usar neto_banco si existe, sino amount
+  const incomeOrders=DB.orders.filter(o=>o.type==='income');
+  const expenseOrders=DB.orders.filter(o=>o.type==='expense');
+
+  const tiAll=incomeOrders.reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
+  const teAll=expenseOrders.reduce((s,o)=>s+Number(o.amount),0);
+  const tiP=incomeOrders.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
+  const teP=expenseOrders.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
   const bal=tiP-teP;
+
+  // Por cobrar = órdenes income pendientes, su neto
+  const porCobrar=incomeOrders.filter(o=>o.status!=='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
+
   let ords=[...DB.orders];
   if(ff!=='all')ords=ords.filter(o=>o.type===ff);
   ords.sort((a,b)=>(b.order_date||'').localeCompare(a.order_date||''));
+
   return`
   <div class="g4" style="margin-bottom:20px">
-    <div class="stat"><div class="stat-lbl">Total ingresos</div><div class="stat-val stat-accent">${fmtM(tiAll)}</div><div class="stat-sub">${fmtM(tiP)} cobrado</div></div>
+    <div class="stat"><div class="stat-lbl">Ingresos neto banco</div><div class="stat-val stat-accent">${fmtM(tiAll)}</div><div class="stat-sub">${fmtM(tiP)} cobrado</div></div>
     <div class="stat"><div class="stat-lbl">Total gastos</div><div class="stat-val stat-red">${fmtM(teAll)}</div><div class="stat-sub">${fmtM(teP)} pagado</div></div>
     <div class="stat"><div class="stat-lbl">Balance</div><div class="stat-val" style="color:${bal>=0?'var(--txt)':'var(--red)'}">${fmtM(bal)}</div><div class="stat-sub">cobrado − pagado</div></div>
-    <div class="stat"><div class="stat-lbl">IVA acumulado</div><div class="stat-val">${fmtM(DB.orders.filter(o=>o.has_iva).reduce((s,o)=>s+Number(o.iva_amount||0),0))}</div></div>
+    <div class="stat"><div class="stat-lbl">Por cobrar (neto)</div><div class="stat-val stat-gold">${fmtM(porCobrar)}</div><div class="stat-sub">órdenes pendientes</div></div>
   </div>
   <div class="filter-bar">
     <div class="filter-group">
@@ -1015,24 +1043,46 @@ function renderFinance(){
   </div>
   <div class="card" style="padding:0;overflow:hidden">
     <div class="tw"><table class="tbl">
-      <thead><tr><th>Código</th><th>Fecha</th><th>Proyecto</th><th>Concepto</th><th>Tipo</th><th>Monto</th><th>Fiscal</th><th>Estado</th><th></th></tr></thead>
-      <tbody>${ords.length===0?`<tr><td colspan="9"><div class="empty"><div class="ei">💳</div>Sin órdenes</div></td></tr>`:
+      <thead><tr><th>Código</th><th>Fecha</th><th>Proyecto</th><th>Concepto</th><th>Tipo</th><th>Monto bruto</th><th>Neto banco</th><th>Estado</th><th>Anticipos</th><th></th></tr></thead>
+      <tbody>${ords.length===0?`<tr><td colspan="10"><div class="empty"><div class="ei">💳</div>Sin órdenes</div></td></tr>`:
         ords.map(o=>{
           const proj=DB.projects.find(p=>p.id===o.project_id);
-          const tags=[];
-          if(o.has_iva)tags.push(`<span class="tag tb" style="font-size:9.5px">IVA ${o.iva_pct||15}%</span>`);
-          if(o.has_retention)tags.push(`<span class="tag ty" style="font-size:9.5px">Ret.${o.retention_pct||''}%</span>`);
-          if(o.has_iva_retention)tags.push(`<span class="tag tr" style="font-size:9.5px">RetIVA ${o.iva_retention_pct||''}%</span>`);
+          const ants=DB.anticipos.filter(a=>a.order_id===o.id);
+          const antPag=ants.filter(a=>a.pagado).reduce((s,a)=>s+Number(a.monto),0);
+          const antTot=ants.reduce((s,a)=>s+Number(a.monto),0);
+          const neto=Number(o.neto_banco||o.amount);
+          const pctAnt=neto>0?Math.min(100,Math.round(antPag/neto*100)):0;
+          const isIncome=o.type==='income';
+          const isFacSRI=o.billing_type==='factura_sri';
+          const typeLabel=o.billing_type==='factura_sri'?'Fac. SRI':o.billing_type==='gasto'?'Gasto':o.billing_type==='sin_factura'?'Sin Fac.':'Cobro';
+          const typeColor=o.billing_type==='gasto'?'tr':o.billing_type==='factura_sri'?'tb':'tgr';
           return`<tr>
             <td><span class="mono" style="color:var(--accent)">${o.code}</span></td>
             <td style="font-size:11.5px;color:var(--txt2)">${fmtD(o.order_date)}</td>
             <td style="font-size:11.5px;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt2)">${proj?.name||'—'}</td>
-            <td style="font-size:11.5px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt2)">${o.concept}</td>
-            <td><span class="tag ${o.type==='income'?'tg':'tr'}">${o.type==='income'?'Cobro':'Gasto'}</span></td>
-            <td><span style="font-weight:700;color:${o.type==='income'?'var(--accent)':'var(--red)'}">${o.type==='income'?'+':'-'}${fmtM(o.amount)}</span></td>
-            <td><div style="display:flex;gap:2px;flex-wrap:wrap">${tags.length?tags.join(''):'<span style="color:var(--txt3);font-size:11.5px">—</span>'}</div></td>
+            <td style="font-size:11.5px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt2)">${o.concept}</td>
+            <td>
+              <span class="tag ${isIncome?'tg':'tr'}" style="display:block;margin-bottom:2px">${isIncome?'Cobro':'Gasto'}</span>
+              <span class="tag ${typeColor}" style="font-size:9px">${typeLabel}</span>
+            </td>
+            <td><span style="font-weight:600;color:${isIncome?'var(--accent)':'var(--red)'}">${isIncome?'+':'-'}${fmtM(o.amount)}</span>
+              ${isFacSRI&&o.invoice_num?`<div style="font-size:9.5px;color:var(--txt3);font-family:'DM Mono',monospace">${o.invoice_num}</div>`:''}
+            </td>
+            <td>
+              ${isIncome?`<span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--accent)">${fmtM(neto)}</span>
+                ${neto!==Number(o.amount)?`<div style="font-size:9px;color:var(--txt3)">de ${fmtM(o.amount)}</div>`:''}
+              `:`<span style="color:var(--txt3)">—</span>`}
+            </td>
             <td><span class="tag ${o.status==='paid'?'tg':'ty'}" style="cursor:pointer" onclick="toggleOrder('${o.id}','${o.status}')">${o.status==='paid'?'Pagado':'Pendiente'}</span></td>
+            <td>
+              ${isIncome?`<div style="min-width:70px">
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-bottom:2px"><span>${fmtM(antPag)}/${fmtM(neto)}</span><span>${pctAnt}%</span></div>
+                <div style="height:4px;background:var(--bg4);border-radius:3px;overflow:hidden"><div style="height:100%;background:${pctAnt>=100?'var(--accent)':'var(--green-mid)'};width:${pctAnt}%;border-radius:3px"></div></div>
+                <button class="btn bo bxs" style="margin-top:3px;font-size:10px" onclick="openAnticiposModal('${o.id}')">Anticipos</button>
+              </div>`:'<span style="color:var(--txt3)">—</span>'}
+            </td>
             <td><div style="display:flex;gap:3px">
+              ${o.foto_url?`<button class="btn bo bxs" onclick="verFoto('${o.id}')" title="Ver comprobante">${ic('photo',10)}</button>`:''}
               <button class="btn bo bxs" onclick="openOrderModal('${o.id}')">${ic('edit',10)}</button>
               <button class="btn bd bxs" onclick="deleteOrder('${o.id}')">${ic('trash',10)}</button>
             </div></td>
@@ -1043,18 +1093,25 @@ function renderFinance(){
   </div>`;
 }
 
-// INVOICES
+// ===== FACTURAS SRI =====
 function renderInvoices(){
   const invs=DB.invoices||[];
   const totalFact=invs.reduce((s,i)=>s+i.total_con_iva,0);
   const totalNeto=invs.reduce((s,i)=>s+i.neto,0);
   const totalRetRenta=invs.reduce((s,i)=>s+i.ret_renta,0);
   const totalRetIva=invs.reduce((s,i)=>s+i.ret_iva,0);
+
+  // Facturas sin orden de ingreso asociada (pendientes de ingresar a finanzas)
+  const ordenesFacSRI=DB.orders.filter(o=>o.billing_type==='factura_sri'&&o.invoice_num);
+  const facsPendientes=invs.filter(inv=>{
+    return !ordenesFacSRI.some(o=>o.invoice_num===inv.number||o.invoice_id===inv.id);
+  });
+
   return`
   <div style="display:flex;gap:12px;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap">
     <div>
       <div class="section-title">Facturas y retenciones SRI</div>
-      <div style="font-size:11.5px;color:var(--txt3);margin-top:2px">Registra facturas con IVA, retención de renta y retención de IVA.</div>
+      <div style="font-size:11.5px;color:var(--txt3);margin-top:2px">Registra facturas con IVA, retención de renta y retención de IVA. Al crear una orden tipo "Factura SRI" se empareja automáticamente.</div>
     </div>
     <button class="btn bp" onclick="openInvoiceModal()">+ Nueva Factura</button>
   </div>
@@ -1064,6 +1121,22 @@ function renderInvoices(){
     <div class="stat"><div class="stat-lbl">Ret. Renta total</div><div class="stat-val stat-red">${fmtM(totalRetRenta)}</div></div>
     <div class="stat"><div class="stat-lbl">Ret. IVA total</div><div class="stat-val stat-red">${fmtM(totalRetIva)}</div></div>
   </div>
+
+  ${facsPendientes.length>0?`
+  <div style="background:var(--gold-dim);border:1px solid #e8d28a;border-radius:var(--rl);padding:14px 18px;margin-bottom:18px">
+    <div style="font-weight:700;font-size:12.5px;color:var(--gold);margin-bottom:8px">${ic('bell',13)} ${facsPendientes.length} factura${facsPendientes.length>1?'s':''} pendiente${facsPendientes.length>1?'s':''} de ingresar a Finanzas</div>
+    ${facsPendientes.map(inv=>{
+      const cl=DB.clients.find(c=>c.id===inv.client_id);
+      return`<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:rgba(255,255,255,.6);border-radius:var(--r);margin-bottom:5px;border:1px solid #e8d28a">
+        <span class="mono" style="color:var(--gold);font-size:11px">${inv.number}</span>
+        <span style="flex:1;font-size:12px;font-weight:600">${cl?.name||'—'}</span>
+        <span style="font-size:12px;font-weight:700">${fmtM(inv.total_con_iva)}</span>
+        <span style="font-size:11px;color:var(--txt3)">→ neto: <strong>${fmtM(inv.neto)}</strong></span>
+        <button class="btn bam bxs" onclick="crearOrdenDesdeFac('${inv.id}')">+ Crear ingreso</button>
+      </div>`;
+    }).join('')}
+  </div>`:''}
+
   <div class="card" style="margin-bottom:20px">
     <div class="stitle">Calculadora rápida</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px">
@@ -1079,14 +1152,27 @@ function renderInvoices(){
       </div>
     </div>
   </div>
+
   ${invs.length===0?`<div class="card"><div class="empty"><div class="ei">🧾</div>Sin facturas registradas</div></div>`:
   `<div class="card" style="padding:0;overflow:hidden"><div class="tw"><table class="tbl">
-    <thead><tr><th>N° Factura</th><th>Fecha</th><th>Proyecto / Cliente</th><th>Subtotal</th><th>IVA</th><th>Total c/IVA</th><th>Ret. Renta</th><th>Ret. IVA</th><th>Neto</th><th>Estado</th><th></th></tr></thead>
+    <thead><tr><th>N° Factura</th><th>Fecha</th><th>Proyecto / Cliente</th><th>Subtotal</th><th>IVA</th><th>Total c/IVA</th><th>Ret. Renta</th><th>Ret. IVA</th><th>Neto</th><th>Anticipos</th><th>Estado</th><th></th></tr></thead>
     <tbody>${invs.map(inv=>{
       const proj=DB.projects.find(p=>p.id===inv.project_id);
       const cl=DB.clients.find(c=>c.id===inv.client_id||c.id===proj?.client_id);
+      // Buscar orden emparejada
+      const ordEmparejada=DB.orders.find(o=>o.invoice_id===inv.id||o.invoice_num===inv.number);
+      // Anticipos de la orden emparejada
+      const ants=ordEmparejada?(DB.anticipos||[]).filter(a=>a.order_id===ordEmparejada.id):[];
+      const antPag=ants.filter(a=>a.pagado).reduce((s,a)=>s+Number(a.monto),0);
+      const pctAnt=inv.neto>0?Math.min(100,Math.round(antPag/inv.neto*100)):0;
       return`<tr>
-        <td><span class="mono" style="color:var(--accent)">${inv.number||'—'}</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px">
+            <span class="mono" style="color:var(--accent)">${inv.number||'—'}</span>
+            ${ordEmparejada?`<span class="tag tg" style="font-size:8px">Emparejada</span>`:`<span class="tag ty" style="font-size:8px">Sin orden</span>`}
+          </div>
+          ${inv.foto_url?`<button class="btn bo bxs" style="margin-top:3px;font-size:9px" onclick="verFotoInv('${inv.id}')">${ic('photo',9)} Ver</button>`:''}
+        </td>
         <td style="font-size:11.5px;color:var(--txt2)">${fmtD(inv.date)}</td>
         <td><div style="font-size:12px;font-weight:600">${proj?.name||cl?.name||'—'}</div>${cl?`<div style="font-size:9.5px;color:var(--txt3)">${cl.name}</div>`:''}</td>
         <td style="font-size:12.5px">${fmtM(inv.subtotal)}</td>
@@ -1095,6 +1181,13 @@ function renderInvoices(){
         <td style="color:var(--red);font-size:12px">${inv.ret_renta>0?'-'+fmtM(inv.ret_renta)+`<span style='font-size:9px;color:var(--txt3)'> (${inv.ret_renta_pct}%)</span>`:'<span style="color:var(--txt3)">—</span>'}</td>
         <td style="color:var(--red);font-size:12px">${inv.ret_iva>0?'-'+fmtM(inv.ret_iva)+`<span style='font-size:9px;color:var(--txt3)'> (${inv.ret_iva_pct}%)</span>`:'<span style="color:var(--txt3)">—</span>'}</td>
         <td><span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:${inv.neto>=0?'var(--txt)':'var(--red)'}">${fmtM(inv.neto)}</span></td>
+        <td>
+          <div style="min-width:80px">
+            <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--txt3);margin-bottom:2px"><span>${fmtM(antPag)}</span><span>${pctAnt}%</span></div>
+            <div style="height:4px;background:var(--bg4);border-radius:3px;overflow:hidden"><div style="height:100%;background:${pctAnt>=100?'var(--accent)':'var(--green-mid)'};width:${pctAnt}%;border-radius:3px"></div></div>
+            ${ordEmparejada?`<button class="btn bo bxs" style="margin-top:3px;font-size:9px" onclick="openAnticiposModal('${ordEmparejada.id}')">Ver anticipos</button>`:''}
+          </div>
+        </td>
         <td><span class="tag ${inv.cobrada?'tg':'ty'}" style="cursor:pointer" onclick="toggleInvoicePaid('${inv.id}',${!inv.cobrada})">${inv.cobrada?'Cobrada':'Pendiente'}</span></td>
         <td><div style="display:flex;gap:3px">
           <button class="btn bo bxs" onclick="openInvoiceModal('${inv.id}')">${ic('edit',10)}</button>
@@ -1103,6 +1196,37 @@ function renderInvoices(){
       </tr>`;
     }).join('')}</tbody>
   </table></div></div>`}`;
+}
+
+// Crear orden de ingreso desde factura SRI
+async function crearOrdenDesdeFac(invId){
+  const inv=DB.invoices.find(x=>x.id===invId);if(!inv)return;
+  const proj=inv.project_id?DB.projects.find(p=>p.id===inv.project_id):null;
+  const code=await nextCode('ODC');
+  const d={
+    project_id:inv.project_id||null,
+    type:'income',
+    billing_type:'factura_sri',
+    concept:inv.concept||`Factura ${inv.number}`,
+    amount:inv.subtotal,
+    neto_banco:inv.neto,
+    order_date:inv.date||today(),
+    status:'pending',
+    invoice_num:inv.number,
+    invoice_id:inv.id,
+    has_iva:inv.iva_pct>0,
+    iva_pct:inv.iva_pct,
+    iva_amount:inv.iva_amt,
+    has_retention:inv.ret_renta>0,
+    retention_pct:inv.ret_renta_pct,
+    retention_amount:inv.ret_renta,
+    has_iva_retention:inv.ret_iva>0,
+    iva_retention_pct:inv.ret_iva_pct,
+    iva_retention_amount:inv.ret_iva,
+    code
+  };
+  const res=await dbInsert('orders',d);
+  if(res){toast('Ingreso creado y emparejado con factura');render();}
 }
 
 function liveCalc(){
@@ -1159,7 +1283,7 @@ function renderQuotes(){
     </table></div></div>`}`;
 }
 
-// MODALS
+// ===== MODALES =====
 function modal(id,title,body,large=false){
   document.getElementById(id+'_wrap')?.remove();
   const wrap=document.createElement('div');wrap.id=id+'_wrap';wrap.className='ov';
@@ -1261,12 +1385,15 @@ function openProjectModal(pid=null){
     </div>
     <div class="div"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <div class="stitle" style="margin-bottom:0">Cronograma de pagos</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="stitle" style="margin-bottom:0">Cronograma de pagos</div>
+        <span style="font-size:10px;color:var(--txt3)">(opcional)</span>
+      </div>
       <button class="btn bo bsm" onclick="addPR()">+ Cuota</button>
     </div>
-    <div style="font-size:11.5px;color:var(--txt3);margin-bottom:9px" id="ptmsg">Los porcentajes deben sumar 100%</div>
+    <div style="font-size:11.5px;color:var(--txt3);margin-bottom:9px" id="ptmsg">Agrega cuotas si deseas dividir el cobro en etapas</div>
     <div id="prows">
-      ${(ps.length?ps:[{pct:'',label:'',due_date:''}]).map((x,i)=>`<div id="pr_${i}" style="display:grid;grid-template-columns:65px 1fr 1fr auto;gap:5px;margin-bottom:6px;align-items:center">
+      ${ps.map((x,i)=>`<div id="pr_${i}" style="display:grid;grid-template-columns:65px 1fr 1fr auto;gap:5px;margin-bottom:6px;align-items:center">
         <input class="fi" type="number" value="${x.pct||''}" placeholder="%" min="0" max="100" oninput="calcPT()">
         <input class="fi" value="${x.label||''}" placeholder="Etapa...">
         <input class="fi" type="date" value="${x.due_date||''}">
@@ -1288,73 +1415,312 @@ function calcProjFiscal(){
   if(!base||base<=0){el.innerHTML='<span style="color:var(--txt3)">Ingresa el valor del contrato para ver el desglose</span>';return;}
   const ivaAmt=round2(base*iva/100);const total=round2(base+ivaAmt);
   const retIvaAmt=round2(ivaAmt*retiva/100);const retRentaAmt=round2(base*retrenta/100);const neto=round2(total-retIvaAmt-retRentaAmt);
-  el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">
-    ${[['Subtotal',fmtM(base),'var(--txt2)'],['+ IVA '+iva+'%',fmtM(ivaAmt),'var(--accent)'],['Total c/IVA',fmtM(total),'var(--txt)'],['− Ret.Renta '+retrenta+'%','-'+fmtM(retRentaAmt),'var(--red)'],['− Ret.IVA '+retiva+'%','-'+fmtM(retIvaAmt),'var(--red)'],['Neto banco',fmtM(neto),'var(--accent)']].map(([l,v,col])=>`<div style="background:var(--bg2);border-radius:var(--r);padding:7px 9px;border:1px solid var(--border)"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">${l}</div><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:${col}">${v}</div></div>`).join('')}
-  </div>`;
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px">
+      ${[['Subtotal',fmtM(base),'var(--txt2)'],['+ IVA '+iva+'%',fmtM(ivaAmt),'var(--accent)'],['Total c/IVA',fmtM(total),'var(--txt)']].map(([l,v,col])=>`<div style="background:var(--bg2);border-radius:var(--r);padding:7px 9px;border:1px solid var(--border)"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px">${l}</div><div style="font-size:12px;font-weight:700;color:${col}">${v}</div></div>`).join('')}
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:14px;font-size:11.5px">
+        <span style="color:var(--red)">− Ret.Renta ${retrenta}%: <strong>-${fmtM(retRentaAmt)}</strong></span>
+        <span style="color:var(--red)">− Ret.IVA ${retiva}%: <strong>-${fmtM(retIvaAmt)}</strong></span>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.7px">Neto a mi banco</div>
+        <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--accent)">${fmtM(neto)}</div>
+      </div>
+    </div>`;
 }
 
+// ===== MODAL NUEVA ORDEN (3 TIPOS) =====
 function openOrderModal(oid=null){
   const o=oid?DB.orders.find(x=>x.id===oid):null;
   const ap=DB.projects;
-  modal('order',o?'Editar orden':'Nueva orden',`
-    <div class="fr">
-      <div class="fg"><label class="fl">Tipo *</label>
-        <select class="fi" id="or_tp" onchange="togInv()">
-          <option value="income"${o?.type==='income'?' selected':''}>Cobro (ingreso)</option>
-          <option value="expense"${o?.type==='expense'?' selected':''}>Pago (gasto)</option>
-        </select></div>
-      <div class="fg"><label class="fl">Proyecto *</label>
-        <select class="fi" id="or_pj">
-          <option value="">Seleccionar...</option>
-          ${ap.map(p=>`<option value="${p.id}"${o?.project_id===p.id?' selected':''}>${p.name}</option>`).join('')}
-        </select></div>
+  const curBt=o?.billing_type||(o?.type==='expense'?'gasto':'factura_sri');
+
+  const wrap=document.createElement('div');wrap.id='order_wrap';wrap.className='ov';
+  wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
+  wrap.innerHTML=`<div class="modal modal-lg">
+    <div class="mh"><div class="mt">${o?'Editar orden':'Nueva orden'}</div><button class="btn bo bxs" onclick="document.getElementById('order_wrap').remove()">${ic('x',13)}</button></div>
+
+    <!-- TIPO TABS -->
+    <div class="order-type-tabs">
+      <button class="ott income ${curBt==='factura_sri'?'on':''}" onclick="setOrderTab('factura_sri')" id="tab_factura_sri">${ic('invoice',13)} Factura SRI</button>
+      <button class="ott expense ${curBt==='gasto'?'on':''}" onclick="setOrderTab('gasto')" id="tab_gasto">${ic('money',13)} Gasto</button>
+      <button class="ott nofac ${curBt==='sin_factura'?'on':''}" onclick="setOrderTab('sin_factura')" id="tab_sin_factura">${ic('x',13)} Sin Factura</button>
     </div>
-    <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="or_cn" value="${o?.concept||''}" placeholder="Descripción"></div>
-    <div class="fr">
-      <div class="fg"><label class="fl">Monto ($) *</label><input class="fi" type="number" id="or_am" value="${o?.amount||''}" oninput="calcTax()"></div>
-      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="or_dt" value="${o?.order_date||today()}"></div>
-    </div>
-    <div class="fg" id="or_inv_g" style="display:${!o||o?.type==='income'?'block':'none'}">
-      <label class="fl">N° Factura SRI</label>
-      <input class="fi" id="or_iv" value="${o?.invoice_num||''}" placeholder="001-001-000000000">
-    </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:13px">
-      <div class="stitle" style="margin-bottom:10px">Campos fiscales SRI</div>
-      <div class="chk-row"><input type="checkbox" id="or_iva" ${o?.has_iva?'checked':''} onchange="calcTax()"><label for="or_iva">IVA</label>
-        <input class="pct-input fi" type="number" id="or_iva_pct" value="${o?.iva_pct||15}" min="0" max="100" style="width:55px;margin-left:4px" oninput="calcTax()"><span style="font-size:11.5px;color:var(--txt3)">%</span>
-        <span id="iva_show" style="margin-left:auto;font-size:12px;font-weight:700;color:var(--blue);display:${o?.has_iva?'inline':'none'}">${o?.has_iva?fmtM(o.iva_amount||0):''}</span></div>
-      <div class="chk-row"><input type="checkbox" id="or_ret" ${o?.has_retention?'checked':''} onchange="calcTax()"><label for="or_ret">Retención renta</label>
-        <input class="pct-input fi" type="number" id="or_rp" value="${o?.retention_pct||1}" min="0" max="100" style="width:55px;margin-left:4px" oninput="calcTax()"><span style="font-size:11.5px;color:var(--txt3)">%</span>
-        <span id="ret_show" style="margin-left:auto;font-size:12px;font-weight:700;color:var(--red);display:${o?.has_retention?'inline':'none'}">${o?.has_retention?'-'+fmtM(o.retention_amount||0):''}</span></div>
-      <div class="chk-row"><input type="checkbox" id="or_ivaret" ${o?.has_iva_retention?'checked':''} onchange="calcTax()"><label for="or_ivaret">Retención IVA</label>
-        <input class="pct-input fi" type="number" id="or_ivaret_pct" value="${o?.iva_retention_pct||30}" min="0" max="100" style="width:55px;margin-left:4px" oninput="calcTax()"><span style="font-size:11.5px;color:var(--txt3)">%</span>
-        <span id="ivaret_show" style="margin-left:auto;font-size:12px;font-weight:700;color:var(--red);display:${o?.has_iva_retention?'inline':'none'}">${o?.has_iva_retention?'-'+fmtM(o.iva_retention_amount||0):''}</span></div>
-      <div id="tax_summary" style="display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(--border)">
-        <div id="tax_lines" style="font-size:11.5px;color:var(--txt2);line-height:2"></div>
-        <div id="tax_total" style="font-size:12.5px;font-weight:700;color:var(--txt);margin-top:4px"></div>
+
+    <!-- SECCIÓN FACTURA SRI -->
+    <div id="sec_factura_sri" style="display:${curBt==='factura_sri'?'block':'none'}">
+      <div style="background:var(--blue-dim);border:1px solid #a8cdd8;border-radius:var(--r);padding:8px 12px;margin-bottom:12px;font-size:11.5px;color:var(--blue)">
+        ${ic('invoice',12)} Ingreso con factura emitida al SRI. Los porcentajes determinan el neto que llega a tu banco.
       </div>
-    </div>
-    <div class="fr">
+      <div class="fr">
+        <div class="fg"><label class="fl">Proyecto</label>
+          <select class="fi" id="or_pj_sri">
+            <option value="">Sin proyecto</option>
+            ${ap.map(p=>`<option value="${p.id}"${o?.project_id===p.id?' selected':''}>${p.name}</option>`).join('')}
+          </select></div>
+        <div class="fg"><label class="fl">N° Factura SRI</label><input class="fi" id="or_iv_sri" value="${o?.invoice_num||''}" placeholder="001-001-000000000"></div>
+      </div>
+      <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="or_cn_sri" value="${o?.concept||''}" placeholder="Descripción del servicio"></div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Monto (subtotal sin IVA) *</label><input class="fi" type="number" id="or_am_sri" value="${o?.amount||''}" oninput="calcTaxSRI()" step="0.01"></div>
+        <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="or_dt_sri" value="${o?.order_date||today()}"></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:13px">
+        <div class="stitle" style="margin-bottom:10px">Retenciones SRI</div>
+        <div class="fr3" style="margin-bottom:10px">
+          <div><label class="fl">% IVA</label><input class="fi pct-input" type="number" id="or_iva_pct_sri" value="${o?.iva_pct||15}" oninput="calcTaxSRI()" style="width:100%"></div>
+          <div><label class="fl">% Ret. Renta</label><input class="fi pct-input" type="number" id="or_rp_sri" value="${o?.retention_pct||1}" oninput="calcTaxSRI()" style="width:100%"></div>
+          <div><label class="fl">% Ret. IVA</label><input class="fi pct-input" type="number" id="or_ivaret_pct_sri" value="${o?.iva_retention_pct||30}" oninput="calcTaxSRI()" style="width:100%">
+            <div style="font-size:9px;color:var(--txt3);margin-top:2px">30 bienes·70 serv·100 hon</div>
+          </div>
+        </div>
+        <div id="sri_desglose"></div>
+      </div>
       <div class="fg"><label class="fl">Estado</label>
-        <select class="fi" id="or_st">
+        <select class="fi" id="or_st_sri">
           <option value="pending"${o?.status==='pending'?' selected':''}>Pendiente</option>
           <option value="paid"${o?.status==='paid'?' selected':''}>Pagado</option>
         </select></div>
-      <div class="fg"><label class="fl">Categoría</label>
-        <select class="fi" id="or_cat">
-          <option value="">— sin categoría —</option>
-          <option value="proveedor"${o?.expense_category==='proveedor'?' selected':''}>Proveedor</option>
-          <option value="operativo"${o?.expense_category==='operativo'?' selected':''}>Operativo</option>
-          <option value="tasa_regulatoria"${o?.expense_category==='tasa_regulatoria'?' selected':''}>Tasa regulatoria</option>
-          <option value="honorarios"${o?.expense_category==='honorarios'?' selected':''}>Honorarios</option>
-          <option value="otro"${o?.expense_category==='otro'?' selected':''}>Otro</option>
+      <!-- FOTO COMPROBANTE -->
+      <div class="fg"><label class="fl">Comprobante (foto/imagen)</label>
+        ${o?.foto_url?`<div style="margin-bottom:6px"><img src="${o.foto_url}" class="foto-thumb"><button class="btn bd bxs" style="margin-top:4px" onclick="clearFotoOrder()">Eliminar foto</button></div>`:
+          `<div class="foto-zone" id="foto_zone_sri" onclick="document.getElementById('foto_input_sri').click()">
+            ${ic('photo',20)}<div style="font-size:12px;color:var(--txt3);margin-top:4px">Subir comprobante de pago</div>
+            <input type="file" id="foto_input_sri" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="previewFoto(this,'foto_zone_sri','foto_data_sri')">
+          </div>
+          <input type="hidden" id="foto_data_sri">`}
+      </div>
+    </div>
+
+    <!-- SECCIÓN GASTO -->
+    <div id="sec_gasto" style="display:${curBt==='gasto'?'block':'none'}">
+      <div style="background:var(--red-dim);border:1px solid #e8b8b4;border-radius:var(--r);padding:8px 12px;margin-bottom:12px;font-size:11.5px;color:var(--red)">
+        ${ic('money',12)} Gasto o pago realizado. Se resta de tus ingresos netos.
+      </div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Proyecto</label>
+          <select class="fi" id="or_pj_gasto">
+            <option value="">Sin proyecto</option>
+            ${ap.map(p=>`<option value="${p.id}"${o?.project_id===p.id?' selected':''}>${p.name}</option>`).join('')}
+          </select></div>
+        <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="or_dt_gasto" value="${o?.order_date||today()}"></div>
+      </div>
+      <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="or_cn_gasto" value="${o?.concept||''}" placeholder="Descripción del gasto"></div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Monto *</label><input class="fi" type="number" id="or_am_gasto" value="${o?.amount||''}" step="0.01"></div>
+        <div class="fg"><label class="fl">Categoría</label>
+          <select class="fi" id="or_cat_gasto">
+            <option value="">— sin categoría —</option>
+            <option value="proveedor"${o?.expense_category==='proveedor'?' selected':''}>Proveedor</option>
+            <option value="operativo"${o?.expense_category==='operativo'?' selected':''}>Operativo</option>
+            <option value="tasa_regulatoria"${o?.expense_category==='tasa_regulatoria'?' selected':''}>Tasa regulatoria</option>
+            <option value="honorarios"${o?.expense_category==='honorarios'?' selected':''}>Honorarios</option>
+            <option value="otro"${o?.expense_category==='otro'?' selected':''}>Otro</option>
+          </select></div>
+      </div>
+      <div class="fg"><label class="fl">N° Documento (opcional)</label><input class="fi" id="or_iv_gasto" value="${o?.invoice_num||''}" placeholder="Factura, recibo..."></div>
+      <div class="fg"><label class="fl">Estado</label>
+        <select class="fi" id="or_st_gasto">
+          <option value="pending"${o?.status==='pending'?' selected':''}>Pendiente</option>
+          <option value="paid"${o?.status==='paid'?' selected':''}>Pagado</option>
+        </select></div>
+      <div class="fg"><label class="fl">Comprobante</label>
+        <div class="foto-zone" id="foto_zone_gasto" onclick="document.getElementById('foto_input_gasto').click()">
+          ${ic('photo',20)}<div style="font-size:12px;color:var(--txt3);margin-top:4px">Subir comprobante</div>
+          <input type="file" id="foto_input_gasto" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="previewFoto(this,'foto_zone_gasto','foto_data_gasto')">
+        </div>
+        <input type="hidden" id="foto_data_gasto">
+      </div>
+    </div>
+
+    <!-- SECCIÓN SIN FACTURA -->
+    <div id="sec_sin_factura" style="display:${curBt==='sin_factura'?'block':'none'}">
+      <div style="background:var(--gold-dim);border:1px solid #e8d28a;border-radius:var(--r);padding:8px 12px;margin-bottom:12px;font-size:11.5px;color:var(--gold)">
+        ${ic('x',12)} Ingreso sin factura (anticipo, abono, transferencia sin documentar).
+      </div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Proyecto</label>
+          <select class="fi" id="or_pj_nofac">
+            <option value="">Sin proyecto</option>
+            ${ap.map(p=>`<option value="${p.id}"${o?.project_id===p.id?' selected':''}>${p.name}</option>`).join('')}
+          </select></div>
+        <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="or_dt_nofac" value="${o?.order_date||today()}"></div>
+      </div>
+      <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="or_cn_nofac" value="${o?.concept||''}" placeholder="Ej: Anticipo 50%"></div>
+      <div class="fg"><label class="fl">Monto *</label><input class="fi" type="number" id="or_am_nofac" value="${o?.amount||''}" step="0.01"></div>
+      <div class="fg"><label class="fl">Estado</label>
+        <select class="fi" id="or_st_nofac">
+          <option value="pending"${o?.status==='pending'?' selected':''}>Pendiente</option>
+          <option value="paid"${o?.status==='paid'?' selected':''}>Pagado</option>
         </select></div>
     </div>
+
+    <input type="hidden" id="order_billing_type" value="${curBt}">
     <div class="mf">
       <button class="btn bo" onclick="document.getElementById('order_wrap').remove()">Cancelar</button>
       <button class="btn bp" onclick="saveOrder('${oid||''}')">${o?'Actualizar':'Registrar'}</button>
-    </div>`);
-  if(o)setTimeout(calcTax,50);
+    </div>
+  </div>`;
+  document.body.appendChild(wrap);
+  if(o)setTimeout(()=>{if(curBt==='factura_sri')calcTaxSRI();},50);
+}
+
+function setOrderTab(tab){
+  ['factura_sri','gasto','sin_factura'].forEach(t=>{
+    const btn=$(`tab_${t}`);const sec=$(`sec_${t}`);
+    if(btn){btn.classList.toggle('on',t===tab);}
+    if(sec){sec.style.display=t===tab?'block':'none';}
+  });
+  const bt=$('order_billing_type');if(bt)bt.value=tab;
+}
+
+function previewFoto(input,zoneId,dataId){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const data=e.target.result;
+    const zone=$(zoneId);if(!zone)return;
+    zone.innerHTML=`<img src="${data}" class="foto-thumb"><div style="font-size:10px;color:var(--txt3);margin-top:4px">${file.name}</div>`;
+    const di=$(dataId);if(di)di.value=data;
+  };
+  reader.readAsDataURL(file);
+}
+function clearFotoOrder(){const z=$('foto_zone_sri');if(z)z.innerHTML=`${ic('photo',20)}<div>Subir comprobante</div>`;}
+function verFoto(oid){
+  const o=DB.orders.find(x=>x.id===oid);if(!o?.foto_url)return;
+  const wrap=document.createElement('div');wrap.className='ov';wrap.onclick=()=>wrap.remove();
+  wrap.innerHTML=`<div style="background:#fff;border-radius:10px;padding:16px;max-width:600px;width:95%;text-align:center">
+    <img src="${o.foto_url}" style="max-width:100%;border-radius:8px;max-height:70vh;object-fit:contain">
+    <div style="margin-top:10px"><button class="btn bo" onclick="this.closest('.ov').remove()">Cerrar</button></div>
+  </div>`;
+  document.body.appendChild(wrap);
+}
+function verFotoInv(invId){
+  const inv=DB.invoices.find(x=>x.id===invId);if(!inv?.foto_url)return;
+  const wrap=document.createElement('div');wrap.className='ov';wrap.onclick=()=>wrap.remove();
+  wrap.innerHTML=`<div style="background:#fff;border-radius:10px;padding:16px;max-width:600px;width:95%;text-align:center">
+    <img src="${inv.foto_url}" style="max-width:100%;border-radius:8px;max-height:70vh;object-fit:contain">
+    <div style="margin-top:10px"><button class="btn bo" onclick="this.closest('.ov').remove()">Cerrar</button></div>
+  </div>`;
+  document.body.appendChild(wrap);
+}
+
+function calcTaxSRI(){
+  const a=parseFloat($('or_am_sri')?.value||0);
+  const ivaPct=parseFloat($('or_iva_pct_sri')?.value||15);
+  const retPct=parseFloat($('or_rp_sri')?.value||0);
+  const ivaRetPct=parseFloat($('or_ivaret_pct_sri')?.value||30);
+  const el=$('sri_desglose');if(!el||!a)return;
+  const ivaAmt=round2(a*ivaPct/100);
+  const totalConIva=round2(a+ivaAmt);
+  const retRenta=round2(a*retPct/100);
+  const retIva=round2(ivaAmt*ivaRetPct/100);
+  const neto=round2(totalConIva-retRenta-retIva);
+  el.innerHTML=`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11.5px;margin-bottom:6px">
+      <span>Base: <strong>${fmtM(a)}</strong></span>
+      <span style="color:var(--accent)">+IVA: <strong>+${fmtM(ivaAmt)}</strong></span>
+      <span style="font-weight:700">Total c/IVA: <strong>${fmtM(totalConIva)}</strong></span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11.5px;margin-bottom:8px">
+      <span style="color:var(--red)">−Ret.Renta: <strong>-${fmtM(retRenta)}</strong></span>
+      <span style="color:var(--red)">−Ret.IVA: <strong>-${fmtM(retIva)}</strong></span>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--green-pale);border-radius:var(--r);padding:7px 10px;border:1px solid #b8ddc2">
+      <span style="font-size:11px;font-weight:700;color:var(--txt3)">NETO A MI BANCO</span>
+      <span style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--accent)">${fmtM(neto)}</span>
+    </div>
+  </div>`;
+}
+
+// MODAL ANTICIPOS
+function openAnticiposModal(orderId){
+  const o=DB.orders.find(x=>x.id===orderId);if(!o)return;
+  const ants=DB.anticipos.filter(a=>a.order_id===orderId);
+  const neto=Number(o.neto_banco||o.amount);
+  const antPag=ants.filter(a=>a.pagado).reduce((s,a)=>s+Number(a.monto),0);
+  const pct=neto>0?Math.min(100,Math.round(antPag/neto*100)):0;
+  const proj=DB.projects.find(p=>p.id===o.project_id);
+
+  const wrap=document.createElement('div');wrap.id='ant_wrap';wrap.className='ov';wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
+  wrap.innerHTML=`<div class="modal">
+    <div class="mh">
+      <div><div class="mt">Anticipos · ${o.code}</div>
+        <div style="font-size:11px;color:var(--txt3);margin-top:2px">${o.concept} — ${proj?.name||'sin proyecto'}</div>
+      </div>
+      <button class="btn bo bxs" onclick="document.getElementById('ant_wrap').remove()">${ic('x',13)}</button>
+    </div>
+    <!-- RESUMEN -->
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:13px 16px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <div><div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);margin-bottom:3px">Total neto a cobrar</div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700">${fmtM(neto)}</div></div>
+        <div style="text-align:right"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);margin-bottom:3px">Cobrado</div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--accent)">${fmtM(antPag)}</div></div>
+        <div style="text-align:right"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);margin-bottom:3px">Pendiente</div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--gold)">${fmtM(neto-antPag)}</div></div>
+      </div>
+      <div style="height:8px;background:var(--bg4);border-radius:4px;overflow:hidden">
+        <div style="height:100%;background:${pct>=100?'var(--accent)':'var(--green-mid)'};width:${pct}%;border-radius:4px;transition:width .4s"></div>
+      </div>
+      <div style="text-align:right;font-size:11px;color:var(--txt3);margin-top:4px">${pct}% cobrado</div>
+      ${pct>=100?`<div style="text-align:center;margin-top:6px"><span class="tag tg" style="font-size:11px">✓ Pagado al 100%</span></div>`:''}
+    </div>
+    <!-- LISTA -->
+    <div id="ant_list" style="margin-bottom:14px">
+      ${ants.length===0?`<div style="text-align:center;padding:18px;color:var(--txt3);font-size:12px">Sin anticipos registrados</div>`:''}
+      ${ants.map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:5px;background:var(--bg2)">
+        <div class="chk ${a.pagado?'on':''}" onclick="toggleAnticipo('${a.id}',${!a.pagado})" style="flex-shrink:0">${a.pagado?ic('check',8):''}</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:12.5px">${fmtM(a.monto)}</div>
+          <div style="font-size:11px;color:var(--txt3)">${a.concepto||'Anticipo'} · ${fmtD(a.fecha)}</div>
+        </div>
+        <span class="tag ${a.pagado?'tg':'ty'}">${a.pagado?'Recibido':'Pendiente'}</span>
+        <button class="btn bd bxs" onclick="deleteAnticipo('${a.id}')">${ic('trash',10)}</button>
+      </div>`).join('')}
+    </div>
+    <!-- AGREGAR -->
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:13px">
+      <div class="stitle" style="margin-bottom:10px">Registrar anticipo</div>
+      <div class="fr" style="margin-bottom:8px">
+        <div class="fg" style="margin-bottom:0"><label class="fl">Monto</label><input class="fi" type="number" id="ant_monto" placeholder="0.00" step="0.01"></div>
+        <div class="fg" style="margin-bottom:0"><label class="fl">Fecha</label><input class="fi" type="date" id="ant_fecha" value="${today()}"></div>
+      </div>
+      <div class="fg"><label class="fl">Concepto</label><input class="fi" id="ant_concepto" placeholder="Ej: 1er anticipo 50%"></div>
+      <div style="display:flex;gap:6px;justify-content:flex-end">
+        <button class="btn bo bsm" onclick="addAnticipo('${orderId}',false)">+ Pendiente</button>
+        <button class="btn bp bsm" onclick="addAnticipo('${orderId}',true)">+ Recibido</button>
+      </div>
+    </div>
+    <div class="mf"><button class="btn bo" onclick="document.getElementById('ant_wrap').remove()">Cerrar</button></div>
+  </div>`;
+  document.body.appendChild(wrap);
+}
+
+async function addAnticipo(orderId,pagado){
+  const monto=parseFloat($('ant_monto')?.value||0);
+  if(!monto||monto<=0){toast('Ingresa el monto','te');return;}
+  const d={order_id:orderId,monto,concepto:$('ant_concepto')?.value||'Anticipo',fecha:$('ant_fecha')?.value||today(),pagado};
+  await dbInsert('anticipos',d);
+  toast(pagado?'Anticipo registrado como recibido':'Anticipo registrado como pendiente');
+  document.getElementById('ant_wrap')?.remove();
+  openAnticiposModal(orderId);
+  render();
+}
+async function toggleAnticipo(id,pagado){
+  await dbUpdate('anticipos',id,{pagado,pagado_at:pagado?new Date().toISOString():null});
+  const ant=DB.anticipos.find(a=>a.id===id);
+  document.getElementById('ant_wrap')?.remove();
+  if(ant)openAnticiposModal(ant.order_id);
+  render();
+}
+async function deleteAnticipo(id){
+  if(!confirm('¿Eliminar este anticipo?'))return;
+  const ant=DB.anticipos.find(a=>a.id===id);
+  await dbDelete('anticipos',id);
+  toast('Anticipo eliminado');
+  document.getElementById('ant_wrap')?.remove();
+  if(ant)openAnticiposModal(ant.order_id);
+  render();
 }
 
 function openInvoiceModal(iid=null){
@@ -1362,7 +1728,7 @@ function openInvoiceModal(iid=null){
   const ap=DB.projects;
   const wrap=document.createElement('div');wrap.id='inv_wrap';wrap.className='ov';wrap.onclick=e=>{if(e.target===wrap)wrap.remove();};
   wrap.innerHTML=`<div class="modal modal-lg">
-    <div class="mh"><div class="mt">${inv?'Editar Factura':'Registrar Factura'}</div><button class="btn bo bxs" onclick="document.getElementById('inv_wrap').remove()">${ic('x',13)}</button></div>
+    <div class="mh"><div class="mt">${inv?'Editar Factura':'Registrar Factura SRI'}</div><button class="btn bo bxs" onclick="document.getElementById('inv_wrap').remove()">${ic('x',13)}</button></div>
     <div class="fr">
       <div class="fg"><label class="fl">N° Factura *</label><input class="fi" id="inv_num" value="${inv?.number||''}" placeholder="001-001-000000000"></div>
       <div class="fg"><label class="fl">Fecha *</label><input class="fi" type="date" id="inv_dt" value="${inv?.date||today()}"></div>
@@ -1386,7 +1752,7 @@ function openInvoiceModal(iid=null){
       <div class="fr3">
         <div class="fg" style="margin-bottom:0"><label class="fl">Subtotal sin IVA *</label><input class="fi" type="number" id="inv_sub" value="${inv?.subtotal||''}" placeholder="0.00" step="0.01" oninput="calcInvModal()"></div>
         <div class="fg" style="margin-bottom:0"><label class="fl">% IVA</label><input class="fi pct-input" type="number" id="inv_iva_pct" value="${inv?.iva_pct??15}" oninput="calcInvModal()" style="width:100%"></div>
-        <div class="fg" style="margin-bottom:0"><label class="fl">Total c/IVA</label><input class="fi" type="number" id="inv_total" value="${inv?.total_con_iva||''}" placeholder="0.00" step="0.01" oninput="calcFromTotal()" style="background:var(--green-pale);border-color:var(--accent)"><div style="font-size:9.5px;color:var(--txt3);margin-top:3px">O ingresa el total e se calcula el subtotal</div></div>
+        <div class="fg" style="margin-bottom:0"><label class="fl">Total c/IVA</label><input class="fi" type="number" id="inv_total" value="${inv?.total_con_iva||''}" placeholder="0.00" step="0.01" oninput="calcFromTotal()" style="background:var(--green-pale);border-color:var(--accent)"><div style="font-size:9.5px;color:var(--txt3);margin-top:3px">O ingresa el total y se calcula el subtotal</div></div>
       </div>
     </div>
     <div class="div"></div>
@@ -1418,6 +1784,16 @@ function openInvoiceModal(iid=null){
     <div class="div"></div>
     <div class="stitle">Resumen fiscal</div>
     <div id="inv_summary">${inv?invSummaryHTML(calcInvoice(inv.subtotal,inv.iva_pct,inv.ret_renta_pct,inv.ret_iva_pct),inv.iva_pct,inv.ret_renta_pct,inv.ret_iva_pct):'<div style="text-align:center;padding:12px;color:var(--txt3);font-size:12px">Ingresa el subtotal para ver el desglose</div>'}</div>
+    <!-- FOTO FACTURA -->
+    <div style="margin-top:14px">
+      <label class="fl">Foto de la factura (opcional)</label>
+      ${inv?.foto_url?`<div><img src="${inv.foto_url}" class="foto-thumb" style="max-height:80px"><button class="btn bd bxs" style="display:block;margin-top:4px" onclick="clearFotoInv()">Eliminar</button></div>`:
+        `<div class="foto-zone" id="foto_zone_inv" onclick="document.getElementById('foto_input_inv').click()">
+          ${ic('photo',18)}<div style="font-size:11px;color:var(--txt3);margin-top:3px">Foto de la factura SRI</div>
+          <input type="file" id="foto_input_inv" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer" onchange="previewFoto(this,'foto_zone_inv','foto_data_inv')">
+        </div>
+        <input type="hidden" id="foto_data_inv">`}
+    </div>
     <div class="fr" style="margin-top:13px">
       <div class="fg"><label class="fl">Estado</label>
         <select class="fi" id="inv_status"><option value="0"${!inv?.cobrada?' selected':''}>Pendiente</option><option value="1"${inv?.cobrada?' selected':''}>Cobrada</option></select></div>
@@ -1431,6 +1807,7 @@ function openInvoiceModal(iid=null){
   document.body.appendChild(wrap);
   if(inv)setTimeout(calcInvModal,50);
 }
+function clearFotoInv(){const z=$('foto_zone_inv');if(z)z.innerHTML=`${ic('photo',18)}<div>Foto de la factura SRI</div>`;}
 
 function invSummaryHTML(c,ivaPct,retPct,retIvaPct){
   return`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden">
@@ -1465,7 +1842,9 @@ async function saveInvoice(iid=''){
   if(!sub||sub<=0){toast('Ingresa el subtotal','te');return;}
   const ivaPct=parseFloat($('inv_iva_pct')?.value||0);const retPct=parseFloat($('inv_ret_pct')?.value||0);const retIvaPct=parseFloat($('inv_retiva_pct')?.value||0);
   const c=calcInvoice(sub,ivaPct,retPct,retIvaPct);
+  const fotoData=$('foto_data_inv')?.value||null;
   const d={number:num,date:$('inv_dt')?.value||today(),project_id:$('inv_proj')?.value||null,client_id:$('inv_cl')?.value||null,concept:$('inv_concept')?.value||null,subtotal:c.subtotal,iva_pct:ivaPct,iva_amt:c.ivaAmt,total_con_iva:c.totalConIva,ret_renta_pct:retPct,ret_renta:c.retRenta,ret_iva_pct:retIvaPct,ret_iva:c.retIva,neto:c.neto,cobrada:$('inv_status')?.value==='1',notes:$('inv_notes')?.value||null};
+  if(fotoData)d.foto_url=fotoData;
   if(iid){await dbUpdate('invoices',iid,d);toast('Factura actualizada');}
   else{const code=await nextCode('FAC');await dbInsert('invoices',{...d,code});toast('Factura registrada');}
   document.getElementById('inv_wrap')?.remove();render();
@@ -1558,30 +1937,9 @@ function printQuote(qid){
 }
 
 // FORM HELPERS
-function togInv(){const t=$('or_tp')?.value;const g=$('or_inv_g');if(g)g.style.display=t==='income'?'block':'none';}
-function calcTax(){
-  const a=parseFloat($('or_am')?.value||0);if(!a)return;
-  const ivaPct=parseFloat($('or_iva_pct')?.value||15);
-  const hasIva=$('or_iva')?.checked;const hasRet=$('or_ret')?.checked;const hasIvaRet=$('or_ivaret')?.checked;
-  const rp=parseFloat($('or_rp')?.value||0);const ivaRetPct=parseFloat($('or_ivaret_pct')?.value||30);
-  const ivaAmt=hasIva?a*ivaPct/100:0;const retAmt=hasRet&&rp?a*rp/100:0;const ivaRetAmt=hasIvaRet?(hasIva?ivaAmt:a*ivaPct/100)*ivaRetPct/100:0;
-  const is=$('iva_show');if(is){is.style.display=hasIva?'inline':'none';is.textContent=fmtM(ivaAmt);}
-  const rs=$('ret_show');if(rs){rs.style.display=hasRet?'inline':'none';rs.textContent='-'+fmtM(retAmt);}
-  const ir=$('ivaret_show');if(ir){ir.style.display=hasIvaRet?'inline':'none';ir.textContent='-'+fmtM(ivaRetAmt);}
-  const sum=$('tax_summary');const lin=$('tax_lines');const tot=$('tax_total');
-  if(!sum)return;
-  if(!hasIva&&!hasRet&&!hasIvaRet){sum.style.display='none';return;}
-  let html=`Base: ${fmtM(a)}`;
-  if(hasIva)html+=` + IVA ${ivaPct}%: +${fmtM(ivaAmt)}`;
-  if(hasRet&&rp)html+=` − Ret.Renta ${rp}%: -${fmtM(retAmt)}`;
-  if(hasIvaRet)html+=` − Ret.IVA ${ivaRetPct}%: -${fmtM(ivaRetAmt)}`;
-  const net=a+ivaAmt-retAmt-ivaRetAmt;
-  if(lin)lin.innerHTML=html;if(tot)tot.textContent=`Neto: ${fmtM(net)}`;
-  sum.style.display='block';
-}
 function addPR(){const n=window._prc||0;const d=document.createElement('div');d.id=`pr_${n}`;d.style.cssText='display:grid;grid-template-columns:65px 1fr 1fr auto;gap:5px;margin-bottom:6px;align-items:center';d.innerHTML=`<input class="fi" type="number" placeholder="%" min="0" max="100" oninput="calcPT()"><input class="fi" placeholder="Etapa..."><input class="fi" type="date"><button class="btn bd bxs" onclick="rmPR('pr_${n}')">${ic('x',11)}</button>`;$('prows')?.appendChild(d);window._prc=n+1;}
 function rmPR(id){$(id)?.remove();calcPT();}
-function calcPT(){const rows=document.querySelectorAll('#prows>div');let tot=0;rows.forEach(r=>tot+=parseFloat(r.querySelector('input')?.value||0));const m=$('ptmsg');if(m){const ok=Math.abs(tot-100)<.5;m.textContent=`Total: ${tot}% ${ok?'✓':'— debe sumar 100%'}`;m.style.color=ok?'var(--accent)':'var(--red)';m.style.fontWeight='700';}}
+function calcPT(){const rows=document.querySelectorAll('#prows>div');let tot=0;rows.forEach(r=>tot+=parseFloat(r.querySelector('input')?.value||0));const m=$('ptmsg');if(m){if(rows.length===0){m.textContent='Agrega cuotas si deseas dividir el cobro en etapas';m.style.color='var(--txt3)';m.style.fontWeight='400';return;}const ok=Math.abs(tot-100)<.5;m.textContent=`Total: ${tot}% ${ok?'✓':'— debe sumar 100%'}`;m.style.color=ok?'var(--accent)':'var(--red)';m.style.fontWeight='700';}}
 
 // CRUD
 async function saveTask(tid){
@@ -1613,10 +1971,11 @@ async function saveProject(pid){
   if(!cl||!nm||!s){toast('Completa los campos obligatorios','te');_isSavingProject=false;if(btn){btn.disabled=false;btn.textContent='Guardar proyecto';}return;}
   const rows=document.querySelectorAll('#prows>div');const sched=[];let tot=0;
   rows.forEach(r=>{const ins=r.querySelectorAll('input');const pct=parseFloat(ins[0]?.value||0);const lbl=ins[1]?.value?.trim();const dt=ins[2]?.value;if(pct>0&&lbl){sched.push({pct,label:lbl,due_date:dt||null,paid:false});tot+=pct;}});
-  if(sched.length&&Math.abs(tot-100)>.5){toast('Porcentajes deben sumar 100%','te');_isSavingProject=false;if(btn){btn.disabled=false;btn.textContent='Guardar proyecto';}return;}
+  // Cronograma es opcional — si hay cuotas deben sumar 100%
+  if(sched.length&&Math.abs(tot-100)>.5){toast('Si agregas cuotas deben sumar 100%','te');_isSavingProject=false;if(btn){btn.disabled=false;btn.textContent='Guardar proyecto';}return;}
   const pd={client_id:cl,name:nm,start_date:s,end_date:$('pr_e')?.value||null,contract_value:parseFloat($('pr_vl')?.value)||0,notes:$('pr_nt')?.value||null};
   if(pid){await dbUpdate('projects',pid,pd);const old=DB.payment_schedule.filter(x=>x.project_id===pid);for(const x of old)await dbDelete('payment_schedule',x.id);for(const x of sched)await dbInsert('payment_schedule',{...x,project_id:pid});}
-  else{const np=await dbInsert('projects',{...pd,code:await nextCode('PROJ'),status:'active'});if(np)for(const x of sched)await dbInsert('payment_schedule',{...x,project_id:np.id});}
+  else{const np=await dbInsert('projects',{...pd,code:await nextCode('PROJ'),status:'active'});if(np&&sched.length)for(const x of sched)await dbInsert('payment_schedule',{...x,project_id:np.id});}
   toast(pid?'Proyecto actualizado':'Proyecto creado');document.getElementById('project_wrap')?.remove();_isSavingProject=false;render();
 }
 async function chgProjStatus(id,status){await dbUpdate('projects',id,{status});toast('Estado actualizado');render();}
@@ -1628,18 +1987,81 @@ async function deleteProject(id){
 }
 async function togglePS(id,paid){await dbUpdate('payment_schedule',id,{paid,paid_at:paid?new Date().toISOString():null});render();}
 
+// SAVE ORDER — nueva lógica 3 tipos
 async function saveOrder(oid=''){
-  const pid=$('or_pj')?.value;const cn=$('or_cn')?.value?.trim();const am=parseFloat($('or_am')?.value||0);
-  if(!pid||!cn||!am){toast('Completa los campos obligatorios','te');return;}
-  const tp=$('or_tp')?.value;const ivaPct=parseFloat($('or_iva_pct')?.value||15);
-  const hasIva=$('or_iva')?.checked||false;const hasRet=$('or_ret')?.checked||false;const hasIvaRet=$('or_ivaret')?.checked||false;
-  const retPct=hasRet?parseFloat($('or_rp')?.value||0):0;const ivaRetPct=hasIvaRet?parseFloat($('or_ivaret_pct')?.value||30):0;
-  const ivaAmt=hasIva?am*ivaPct/100:0;const retAmt=hasRet?am*retPct/100:0;const ivaRetAmt=hasIvaRet?(hasIva?ivaAmt:am*ivaPct/100)*ivaRetPct/100:0;
-  const d={project_id:pid,type:tp,concept:cn,amount:am,order_date:$('or_dt')?.value||today(),status:$('or_st')?.value||'pending',invoice_num:tp==='income'?($('or_iv')?.value||null):null,has_iva:hasIva,iva_pct:ivaPct,iva_amount:ivaAmt,has_retention:hasRet,retention_pct:retPct,retention_amount:retAmt,has_iva_retention:hasIvaRet,iva_retention_pct:ivaRetPct,iva_retention_amount:ivaRetAmt,expense_category:$('or_cat')?.value||null};
+  const bt=$('order_billing_type')?.value||'factura_sri';
+  let pid,cn,am,dt,status,inv_num=null,foto_url=null,neto_banco=null;
+  let hasIva=false,ivaPct=0,ivaAmt=0,hasRet=false,retPct=0,retAmt=0,hasIvaRet=false,ivaRetPct=0,ivaRetAmt=0;
+  let expCat=null;
+
+  if(bt==='factura_sri'){
+    pid=$('or_pj_sri')?.value||null;
+    cn=$('or_cn_sri')?.value?.trim();
+    am=parseFloat($('or_am_sri')?.value||0);
+    dt=$('or_dt_sri')?.value||today();
+    status=$('or_st_sri')?.value||'pending';
+    inv_num=$('or_iv_sri')?.value?.trim()||null;
+    ivaPct=parseFloat($('or_iva_pct_sri')?.value||15);
+    retPct=parseFloat($('or_rp_sri')?.value||0);
+    ivaRetPct=parseFloat($('or_ivaret_pct_sri')?.value||30);
+    hasIva=ivaPct>0;hasRet=retPct>0;hasIvaRet=ivaRetPct>0;
+    ivaAmt=round2(am*ivaPct/100);
+    const totalConIva=round2(am+ivaAmt);
+    retAmt=round2(am*retPct/100);
+    ivaRetAmt=round2(ivaAmt*ivaRetPct/100);
+    neto_banco=round2(totalConIva-retAmt-ivaRetAmt);
+    foto_url=$('foto_data_sri')?.value||null;
+    if(!cn||!am){toast('Completa concepto y monto','te');return;}
+  } else if(bt==='gasto'){
+    pid=$('or_pj_gasto')?.value||null;
+    cn=$('or_cn_gasto')?.value?.trim();
+    am=parseFloat($('or_am_gasto')?.value||0);
+    dt=$('or_dt_gasto')?.value||today();
+    status=$('or_st_gasto')?.value||'pending';
+    inv_num=$('or_iv_gasto')?.value?.trim()||null;
+    expCat=$('or_cat_gasto')?.value||null;
+    foto_url=$('foto_data_gasto')?.value||null;
+    if(!cn||!am){toast('Completa concepto y monto','te');return;}
+  } else {
+    // sin_factura
+    pid=$('or_pj_nofac')?.value||null;
+    cn=$('or_cn_nofac')?.value?.trim();
+    am=parseFloat($('or_am_nofac')?.value||0);
+    dt=$('or_dt_nofac')?.value||today();
+    status=$('or_st_nofac')?.value||'pending';
+    neto_banco=am;
+    if(!cn||!am){toast('Completa concepto y monto','te');return;}
+  }
+
+  const isIncome=bt!=='gasto';
+  const d={
+    project_id:pid,
+    type:isIncome?'income':'expense',
+    billing_type:bt,
+    concept:cn,
+    amount:am,
+    neto_banco:isIncome?(neto_banco||am):null,
+    order_date:dt,
+    status,
+    invoice_num:inv_num,
+    has_iva:hasIva,iva_pct:ivaPct,iva_amount:ivaAmt,
+    has_retention:hasRet,retention_pct:retPct,retention_amount:retAmt,
+    has_iva_retention:hasIvaRet,iva_retention_pct:ivaRetPct,iva_retention_amount:ivaRetAmt,
+    expense_category:expCat,
+    foto_url
+  };
+
+  // Si es factura SRI, buscar factura por número y enlazar
+  if(bt==='factura_sri'&&inv_num){
+    const invMatch=DB.invoices.find(x=>x.number===inv_num);
+    if(invMatch)d.invoice_id=invMatch.id;
+  }
+
   if(oid){await dbUpdate('orders',oid,d);toast('Orden actualizada');}
-  else{d.code=await nextCode(tp==='income'?'ODC':'ODP');await dbInsert('orders',d);toast('Orden registrada');}
+  else{d.code=await nextCode(isIncome?'ODC':'ODP');await dbInsert('orders',d);toast('Orden registrada');}
   document.getElementById('order_wrap')?.remove();render();
 }
+
 async function toggleOrder(id,cur){const ns=cur==='paid'?'pending':'paid';await dbUpdate('orders',id,{status:ns,paid_at:ns==='paid'?new Date().toISOString():null});render();}
 async function deleteOrder(id){if(!confirm('¿Eliminar orden?'))return;await dbDelete('orders',id);toast('Orden eliminada');render();}
 
@@ -1662,7 +2084,7 @@ function genPDF(cid){
   const pids=projs.map(p=>p.id);
   const cobros=DB.orders.filter(o=>pids.includes(o.project_id)&&o.type==='income');
   const tasks=DB.tasks.filter(t=>pids.includes(t.project_id));
-  const total=cobros.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+  const total=cobros.filter(o=>o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
   const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe ${cl?.name}</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',Arial,sans-serif;color:#111827;font-size:13px}
@@ -1697,13 +2119,13 @@ function genPDF(cid){
   <div class="section"><h2>Proyectos</h2>
     ${projs.map(p=>{
       const pt=DB.tasks.filter(t=>t.project_id===p.id);const dn=pt.filter(t=>t.done).length;const pc=pt.length?Math.round(dn/pt.length*100):0;
-      const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);const cob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
+      const ps=DB.payment_schedule.filter(x=>x.project_id===p.id);const cob=DB.orders.filter(o=>o.project_id===p.id&&o.type==='income'&&o.status==='paid').reduce((s,o)=>s+Number(o.neto_banco||o.amount),0);
       const gst=DB.orders.filter(o=>o.project_id===p.id&&o.type==='expense'&&o.status==='paid').reduce((s,o)=>s+Number(o.amount),0);
       return`<div class="proj-card"><div class="proj-name">${p.name}</div><div style="font-size:10px;font-family:'DM Mono',monospace;color:#6b7280;margin-bottom:5px">${p.code}</div>
         <div class="row"><span>Estado</span><span>${{active:'Activo',paused:'En Pausa',finished:'Finalizado',inactive:'Inactivo'}[p.status]||p.status}</span></div>
         <div class="row"><span>Período</span><span>${fmtD(p.start_date)} → ${fmtD(p.end_date)}</span></div>
         <div class="row"><span>Valor Contrato</span><strong>${fmtM(p.contract_value)}</strong></div>
-        <div class="row"><span>Cobrado</span><strong style="color:#2d6a3f">${fmtM(cob)}</strong></div>
+        <div class="row"><span>Cobrado (neto banco)</span><strong style="color:#2d6a3f">${fmtM(cob)}</strong></div>
         <div class="row"><span>Gastado</span><strong style="color:#c0392b">${fmtM(gst)}</strong></div>
         <div class="row"><span>Utilidad</span><strong style="color:${cob-gst>=0?'#111827':'#c0392b'}">${fmtM(cob-gst)}</strong></div>
         <div style="font-size:10px;color:#6b7280;margin-top:5px">Avance: ${dn}/${pt.length} tareas (${pc}%)</div>
@@ -1711,10 +2133,10 @@ function genPDF(cid){
       </div>`;
     }).join('')}
   </div>
-  <div class="section"><h2>Pagos recibidos</h2>
-    <table><thead><tr><th>Código</th><th>Fecha</th><th>Concepto</th><th>Factura</th><th>Monto</th><th>Estado</th></tr></thead>
-    <tbody>${cobros.map(o=>`<tr><td style="font-family:'DM Mono',monospace;font-size:10px">${o.code}</td><td>${fmtD(o.order_date)}</td><td>${o.concept}</td><td style="font-family:'DM Mono',monospace;font-size:10px">${o.invoice_num||'—'}</td><td><strong>${fmtM(o.amount)}</strong></td><td style="color:${o.status==='paid'?'#2d6a3f':'#b8860b'};font-weight:700">${o.status==='paid'?'Pagado':'Pendiente'}</td></tr>`).join('')}
-      <tr class="totrow"><td colspan="4">TOTAL COBRADO</td><td colspan="2">${fmtM(total)}</td></tr>
+  <div class="section"><h2>Pagos recibidos (neto banco)</h2>
+    <table><thead><tr><th>Código</th><th>Fecha</th><th>Concepto</th><th>Tipo</th><th>Monto</th><th>Neto</th><th>Estado</th></tr></thead>
+    <tbody>${cobros.map(o=>`<tr><td style="font-family:'DM Mono',monospace;font-size:10px">${o.code}</td><td>${fmtD(o.order_date)}</td><td>${o.concept}</td><td>${o.billing_type||'—'}</td><td><strong>${fmtM(o.amount)}</strong></td><td style="color:#2d6a3f;font-weight:700">${fmtM(o.neto_banco||o.amount)}</td><td style="color:${o.status==='paid'?'#2d6a3f':'#b8860b'};font-weight:700">${o.status==='paid'?'Pagado':'Pendiente'}</td></tr>`).join('')}
+      <tr class="totrow"><td colspan="5">TOTAL COBRADO (NETO)</td><td colspan="2">${fmtM(total)}</td></tr>
     </tbody></table>
   </div>
   <div class="footer"><span>oceango.ec@gmail.com · +593 969245676</span><span>Guayaquil, Ecuador</span></div>
@@ -1740,7 +2162,8 @@ function scheduleNotifs(){
 async function startApp(){
   $('loadingScreen').style.display='flex';
   if(KEYS_OK){$('loadMsg').textContent='Conectando con Supabase…';const ok=await loadFromSupabase();if(!ok){$('loadMsg').textContent='Sin conexión — modo local';}else{$('loadMsg').textContent='Cargando plantilla…';await loadTemplate();}}
-  else{try{DB.invoices=JSON.parse(localStorage.getItem('oceango_invoices')||'[]');}catch{}}
+  else{try{DB.invoices=JSON.parse(localStorage.getItem('oceango_invoices')||'[]');}catch{}
+       try{DB.anticipos=JSON.parse(localStorage.getItem('oceango_anticipos')||'[]');}catch{}}
   $('loadMsg').textContent='¡Listo!';
   const ls=$('loadingScreen');ls.classList.add('fade');setTimeout(()=>ls.remove(),400);
   render();
